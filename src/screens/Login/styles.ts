@@ -6,7 +6,6 @@ const styles = StyleSheet.create({
     height: '100%',
     flex: 1,
     alignItems: 'center',
-
     marginTop: 60
   },
   bannerContainer: {
@@ -19,15 +18,27 @@ const styles = StyleSheet.create({
   },
   loginSection: {
     width: '100%',
-    alignItems: 'flex-start',
-    paddingLeft: 30,
-    paddingRight: 30
+    paddingHorizontal: 30
   },
   loginText: {
     marginTop: 50,
     fontSize: 30,
     fontWeight: 'bold',
     color: '#121515'
+  },
+  inputsContainer: {
+    width: '100%',
+    alignItems: 'flex-start',
+    marginTop: 10
+  },
+  inputLabel: {},
+  loginInput: {
+    width: '100%',
+    marginTop: 5
+  },
+  loginBtn: {
+    width: '100%',
+    marginTop: 10
   }
 })
 
