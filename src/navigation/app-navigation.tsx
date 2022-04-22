@@ -1,44 +1,47 @@
 import React, { useEffect } from 'react'
 import { StatusBar } from 'react-native'
 
-import { AppModule, dispatch, RXStore, useSelector } from '@common'
-import { hideLoading, PortalHost, ProgressDialog, showLoading, SnackBar } from '@components'
+// import { hideLoading, PortalHost, ProgressDialog, showLoading } from '@components'
 // import { ImageTransition } from '@library/components/light-box/image-transition';
 import { NavigationContainer } from '@react-navigation/native'
-import { onLoadApp } from '@store/app-redux/reducer'
-import { MyAppTheme } from '@theme'
 
 import { navigationRef } from './navigation-service'
 import { RootNavigation } from './root-navigator'
+import { onLoadApp } from '@src/store/app-reducer'
+import { MyAppTheme } from '@src/themes'
+import { useSelector } from '@src/hooks'
+import { dispatch, RXStore } from '@src/common/redux'
 
 export const AppContainer = () => {
   // state
-  const { token, loadingApp, showDialog, theme } = useSelector(x => x.app)
+  const { token, loadingApp, theme } = useSelector(x => x.app)
 
   // effect
   useEffect(() => {
     dispatch(onLoadApp())
   }, [])
 
-  useEffect(() => {
-    if (showDialog) {
-      showLoading()
-    } else {
-      hideLoading()
-    }
-  }, [showDialog])
+  // TODO: show/hide loading dialog
+  // useEffect(() => {
+  //   if (showDialog) {
+  //     showLoading()
+  //   } else {
+  //     hideLoading()
+  //   }
+  // }, [showDialog])
 
-  useEffect(() => {
-    if (theme === 'dark') {
-      AppModule.setIQKeyboardOption({
-        keyboardAppearance: 'dark'
-      })
-    } else {
-      AppModule.setIQKeyboardOption({
-        keyboardAppearance: 'light'
-      })
-    }
-  }, [theme])
+  // TODO: apply theme
+  // useEffect(() => {
+  //   if (theme === 'dark') {
+  //     AppModule.setIQKeyboardOption({
+  //       keyboardAppearance: 'dark'
+  //     })
+  //   } else {
+  //     AppModule.setIQKeyboardOption({
+  //       keyboardAppearance: 'light'
+  //     })
+  //   }
+  // }, [theme])
 
   // render
   return (
@@ -47,10 +50,10 @@ export const AppContainer = () => {
         <StatusBar translucent backgroundColor={'transparent'} />
         {!loadingApp && (
           <>
-            <PortalHost name={'AppModal'} />
+            {/* <PortalHost name={'AppModal'} /> */}
             <RootNavigation token={token} />
-            <ProgressDialog />
-            <SnackBar />
+            {/* <ProgressDialog /> */}
+            {/* <SnackBar /> */}
             {/* <ImageTransition /> */}
           </>
         )}

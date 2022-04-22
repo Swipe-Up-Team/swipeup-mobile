@@ -10,7 +10,7 @@ export interface AppState {
   loadingApp: boolean
   loading: number
   showDialog: boolean
-  theme: string
+  theme: 'default' | 'dark'
 }
 
 const initialState: AppState = {
@@ -81,3 +81,14 @@ const app = createSlice({
 
 const appReducer = app.reducer
 export default appReducer
+export const {
+  onSetInternet,
+  onSetToken,
+  onSetAppProfile,
+  onSetAppTheme,
+  onLoadApp,
+  onLoadAppEnd,
+  onStartProcess,
+  onEndProcess,
+  onLogout
+} = app.actions

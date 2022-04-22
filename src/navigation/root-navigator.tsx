@@ -1,23 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from 'react'
 
-import BootSplash from 'react-native-bootsplash';
+import BootSplash from 'react-native-bootsplash'
 
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack'
 
-import { MainScreen } from './authen/index';
-import { APP_SCREEN, RootStackParamList } from './screen-types';
-import { UnAuthentication } from './un-authen/index';
+import { MainScreen } from './authen'
+import { APP_SCREEN, RootStackParamList } from './screen-types'
+import { UnAuthentication } from './un-authen'
 
-const RootStack = createStackNavigator<RootStackParamList>();
+const RootStack = createStackNavigator<RootStackParamList>()
 
 export const RootNavigation = ({ token }: { token?: string }) => {
   // effect
   useEffect(() => {
     const id = setTimeout(() => {
-      BootSplash.hide({ fade: true });
-    }, 1000);
-    return () => clearTimeout(id);
-  }, []);
+      BootSplash.hide({ fade: true })
+    }, 1000)
+    return () => clearTimeout(id)
+  }, [])
 
   // render
   return (
@@ -36,5 +36,5 @@ export const RootNavigation = ({ token }: { token?: string }) => {
         />
       )}
     </RootStack.Navigator>
-  );
-};
+  )
+}
