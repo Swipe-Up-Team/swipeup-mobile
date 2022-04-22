@@ -1,29 +1,11 @@
-// {
-//   "baseUrl": ".",
-//   "paths": {
-//     "@src/*": ["src/*"],
-//     "@assets/*": ["assets/*"]
-//   },
-//   "extends": "expo/tsconfig.base",
-//   "compilerOptions": {
-//     "strict": true
-//   }
-// }
 {
-  "compilerOptions": {
-    "allowJs": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "jsx": "react-native",
-    "lib": ["es2017"],
-    "moduleResolution": "node",
-    "noEmit": true,
-    "strict": true,
-    "target": "esnext"
+  "baseUrl": ".",
+  "paths": {
+    "@src/*": ["src/*"],
+    "@assets/*": ["assets/*"]
   },
-  "exclude": [
-    "node_modules",
-    "babel.config.js",
-  ]
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true
+  }
 }
