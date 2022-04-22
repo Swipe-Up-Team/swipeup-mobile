@@ -7,7 +7,7 @@ import { NavigationContainer } from '@react-navigation/native'
 
 import { navigationRef } from './navigation-service'
 import { RootNavigation } from './root-navigator'
-import { onLoadApp } from '@src/store/app-reducer'
+import { onLoadApp, onLoadAppEnd } from '@src/store/app-reducer'
 import { MyAppTheme } from '@src/themes'
 import { useSelector } from '@src/hooks'
 import { dispatch, RXStore } from '@src/common/redux'
@@ -19,6 +19,7 @@ export const AppContainer = () => {
   // effect
   useEffect(() => {
     dispatch(onLoadApp())
+    dispatch(onLoadAppEnd())
   }, [])
 
   // TODO: show/hide loading dialog

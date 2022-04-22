@@ -7,7 +7,9 @@ interface DismissKeyboardHOCProps {
 const DismissKeyboardHOC = (Comp: typeof View) => {
   return ({ children, ...props }: DismissKeyboardHOCProps) => (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <Comp {...props}>{children}</Comp>
+      <Comp style={{ flex: 1 }} {...props}>
+        {children}
+      </Comp>
     </TouchableWithoutFeedback>
   )
 }

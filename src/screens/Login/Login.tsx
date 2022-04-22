@@ -16,7 +16,7 @@ export const LoginScreen = () => {
         <View style={styles.bannerContainer}>
           <LottieView
             style={styles.banner}
-            source={require('../../../assets/lottie/login-banner.json')}
+            source={require('@assets/lottie/login-banner.json')}
             autoPlay
             loop
           />
@@ -55,7 +55,7 @@ export const LoginScreen = () => {
           </View>
 
           <View>
-            <GoogleSignInButton />
+            <GoogleSignInButton onPress={() => {}} />
           </View>
 
           <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>

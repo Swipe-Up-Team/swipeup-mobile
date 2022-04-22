@@ -1,6 +1,4 @@
-import React, { useEffect } from 'react'
-
-import BootSplash from 'react-native-bootsplash'
+import React from 'react'
 
 import { createStackNavigator } from '@react-navigation/stack'
 
@@ -11,14 +9,6 @@ import { UnAuthentication } from './un-authen'
 const RootStack = createStackNavigator<RootStackParamList>()
 
 export const RootNavigation = ({ token }: { token?: string }) => {
-  // effect
-  useEffect(() => {
-    const id = setTimeout(() => {
-      BootSplash.hide({ fade: true })
-    }, 1000)
-    return () => clearTimeout(id)
-  }, [])
-
   // render
   return (
     <RootStack.Navigator screenOptions={{ headerShown: false }}>

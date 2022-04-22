@@ -1,9 +1,9 @@
 import { View, Text, Button, Pressable, StyleSheet } from 'react-native'
 import React from 'react'
 
-export default function GoogleSignInButton() {
+export default function GoogleSignInButton({ onPress }: { onPress: () => void }) {
   return (
-    <Pressable style={styles.btnContainer}>
+    <Pressable style={styles.btnContainer} onPress={onPress}>
       {/* TODO: missing Google's logo */}
       <Text style={styles.btnText}>Sign in with Google</Text>
     </Pressable>
