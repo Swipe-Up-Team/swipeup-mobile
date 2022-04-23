@@ -7,6 +7,6 @@ export const STATUS_TIME_OUT = 'ECONNABORTED'
 export const CODE_TIME_OUT = 408
 
 export const API_ENDPOINT = {
-  LOGIN: '',
+  LOGIN: 'login',
   REFRESH_TOKEN: ''
 }

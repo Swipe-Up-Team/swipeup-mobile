@@ -1,3 +1,4 @@
+import { userApi } from '@src/api/user-api'
 import { authentication } from '@src/config/firebase-config'
 import { 
   signInWithEmailAndPassword, 
@@ -12,7 +13,6 @@ export const firebaseService = {
     signInWithEmailAndPassword(authentication, username, password)
       .then(async (res) => {
         const token = await res.user.getIdToken()
-        console.log(token)
         return token
       })
       .catch(error => {
@@ -27,7 +27,7 @@ export const firebaseService = {
     signInWithCredential(auth, credential)
       .then(async (res) => {
         const token = await res.user.getIdToken()
-        console.log(token)
+        userApi.logInToDatabase(token)
         return token
       })
       .catch(error => {

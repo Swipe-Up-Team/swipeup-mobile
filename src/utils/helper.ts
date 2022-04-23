@@ -10,7 +10,7 @@ import {
 } from '@src/constants'
 import { ParamsNetwork, ResponseBase } from '@src/models'
 import { onLogout } from '@src/store/app-reducer'
-import { AxiosError, AxiosRequestConfig, AxiosResponse, Method } from 'axios'
+import { AxiosError, AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse, Method } from 'axios'
 
 const responseDefault: ResponseBase<Record<string, unknown>> = {
   code: -500,
@@ -80,6 +80,7 @@ export const handleParameter = <T extends ParamsNetwork>(
 ): AxiosRequestConfig => {
   const { url, body, path, params, query } = props
   const resQuery = handleQuery(url, query)
+  
   return {
     ...props,
     method,

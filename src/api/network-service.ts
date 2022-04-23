@@ -54,18 +54,19 @@ async function refreshToken(originalRequest: any) {
 }
 
 // base
-function Request<T = unknown>(config: AxiosRequestConfig, isCheckOut = true) {
+function Request<T = unknown>(config: AxiosRequestConfig, isCheckOut = true, token?: string) {
   return new Promise<ResponseBase<T> | null>(resp => {
-    const { token }: AppState = getState('app')
+    // const { token }: AppState = getState('app')
     const defaultConfig: AxiosRequestConfig = {
-      // TODO; mising .env
-      baseURL: 'ENVConfig.API_URL',
+      //TODO: fix this
+      baseURL: 'http://34.142.206.170:3040/',
       timeout: TIME_OUT,
       headers: {
         'Content-Type': 'application/json',
         [tokenKeyHeader]: token ? `Bearer ${token}` : ''
       }
     }
+    console.log({defaultConfig})
     AxiosInstance.request(StyleSheet.flatten([defaultConfig, config]))
       .then((res: AxiosResponse<T>) => {
         const result = handleResponseAxios(res)
@@ -87,8 +88,8 @@ function Request<T = unknown>(config: AxiosRequestConfig, isCheckOut = true) {
 }
 
 // get
-async function Get<T>(params: ParamsNetwork) {
-  return Request<T>(handleParameter(params, 'GET'))
+async function Get<T>(params: ParamsNetwork, token?: string) {
+  return Request<T>(handleParameter(params, 'GET'), true, token)
 }
 
 // post

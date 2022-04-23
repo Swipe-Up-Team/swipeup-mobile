@@ -25,10 +25,10 @@ export const LoginScreen = () => {
       const { id_token } = response.params
       firebaseService.logInWithGoogle(id_token)
     } else {
-      console.log('error', response?.type)
+      console.log('error', response)
     }
   }
- 
+
   useEffect(() => {
     loginWithGoogle()
   }, [response])
