@@ -13,6 +13,7 @@ export const firebaseService = {
     signInWithEmailAndPassword(authentication, username, password)
       .then(async (res) => {
         const token = await res.user.getIdToken()
+        userApi.logInToDatabase(token)
         return token
       })
       .catch(error => {

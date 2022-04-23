@@ -87,6 +87,7 @@ function Request<T = unknown>(config: AxiosRequestConfig, isCheckOut = true, tok
   })
 }
 
+//TODO: fix this
 // get
 async function Get<T>(params: ParamsNetwork, token?: string) {
   return Request<T>(handleParameter(params, 'GET'), true, token)

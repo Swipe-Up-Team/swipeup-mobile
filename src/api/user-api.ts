@@ -1,6 +1,6 @@
 import { API_ENDPOINT } from '@src/constants';
 import { ParamsNetwork } from '@src/models';
-import { NetworkService } from './network-service';
+import { NetworkService } from '../services/network-service';
 
 interface ParamsNetworkWithFirebase extends ParamsNetwork {
   token: string;
