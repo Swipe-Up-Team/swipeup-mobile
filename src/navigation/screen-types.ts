@@ -3,7 +3,6 @@ export enum APP_SCREEN {
   SPLASH = 'SPLASH',
   LOGIN = 'LOGIN',
   REGISTER = 'REGISTER',
-
   AUTHORIZE = 'AUTHORIZE',
   HOME = 'HOME'
 }
@@ -13,9 +12,11 @@ export type UnAuthorizeParamsList = {
   [APP_SCREEN.REGISTER]: undefined
   [APP_SCREEN.SPLASH]: undefined
 }
+
 export type AuthorizeParamsList = {
   [APP_SCREEN.HOME]: undefined
 }
+
 export type RootStackParamList = {
   [APP_SCREEN.UN_AUTHORIZE]: undefined
   [APP_SCREEN.AUTHORIZE]: undefined

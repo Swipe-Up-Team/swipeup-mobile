@@ -1,14 +1,37 @@
 import { Button, Input } from '@ui-kitten/components'
 import LottieView from 'lottie-react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Pressable, SafeAreaView, Text, View } from 'react-native'
 import { StyledDivider } from '@components/styled'
 import { DismissKeyboardView } from '@components/HOCs'
 import GoogleSignInButton from './components/google-sign-in-button'
 import styles from './styles'
+import { firebaseService } from '@src/services/firebase-services'
+import * as Google from 'expo-auth-session/providers/google'
+import { googleConfig } from '@src/config/firebase-config'
 
 export const LoginScreen = () => {
-  const [value, setValue] = React.useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  const [request, response, promptAsync] = Google.useIdTokenAuthRequest(googleConfig)
+
+  const loginWithEmailAndPassword = () => {
+    firebaseService.logInWithEmailAndPassword(username, password)
+  }
+
+  const loginWithGoogle = () => {
+    if (response?.type === 'success') {
+      const { id_token } = response.params
+      firebaseService.logInWithGoogle(id_token)
+    } else {
+      console.log('error', response?.type)
+    }
+  }
+ 
+  useEffect(() => {
+    loginWithGoogle()
+  }, [response])
 
   return (
     <DismissKeyboardView>
@@ -28,9 +51,9 @@ export const LoginScreen = () => {
             <Text style={styles.inputLabel}>Your email</Text>
             <Input
               style={styles.loginInput}
-              value={value}
+              value={username}
               size="large"
-              onChangeText={nextValue => setValue(nextValue)}
+              onChangeText={nextValue => setUsername(nextValue)}
               blurOnSubmit
             />
           </View>
@@ -38,14 +61,14 @@ export const LoginScreen = () => {
             <Text style={styles.inputLabel}>Password</Text>
             <Input
               style={styles.loginInput}
-              value={value}
+              value={password}
               size="large"
-              onChangeText={nextValue => setValue(nextValue)}
+              onChangeText={nextValue => setPassword(nextValue)}
               blurOnSubmit
             />
           </View>
           <View>
-            <Button size="large" style={styles.loginBtn}>
+            <Button size="large" style={styles.loginBtn} onPress={loginWithEmailAndPassword}>
               Sign In
             </Button>
           </View>
@@ -55,7 +78,7 @@ export const LoginScreen = () => {
           </View>
 
           <View>
-            <GoogleSignInButton onPress={() => {}} />
+            <GoogleSignInButton onPress={() => promptAsync({ showInRecents: true })} />
           </View>
 
           <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>

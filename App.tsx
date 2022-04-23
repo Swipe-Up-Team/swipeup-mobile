@@ -6,6 +6,10 @@ import { ApplicationProvider } from '@ui-kitten/components'
 import React, { Suspense } from 'react'
 import 'react-native-gesture-handler'
 import { Provider } from 'react-redux'
+import { StatusBar } from 'expo-status-bar'
+import * as WebBrowser from 'expo-web-browser'
+
+WebBrowser.maybeCompleteAuthSession()
 
 export default function App() {
   return (
