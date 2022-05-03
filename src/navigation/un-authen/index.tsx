@@ -6,7 +6,7 @@ import React, { useEffect } from 'react'
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
 
 import { APP_SCREEN } from '../screen-types'
-import { LoginScreen } from '@src/screens/Login'
+import { LoginScreen } from '@src/screens/login'
 
 const Stack = createStackNavigator()
 

@@ -1,3 +1,4 @@
+import { API_URL } from '@src/config'
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import queryString from 'query-string'
 import { ParamsNetwork, ResponseBase } from '@src/models'
@@ -11,7 +12,7 @@ const tokenKeyHeader = 'authorization'
 let refreshTokenRequest: Promise<string | null> | null = null
 
 const AxiosInstance = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
+  baseURL: 'http://34.142.206.170:3040/',
   timeout: TIME_OUT,
   headers: {
     'Content-Type': 'application/json'
@@ -54,7 +55,7 @@ async function refreshToken(originalRequest: any) {
 }
 
 // base
-function Request<T = unknown>(config: AxiosRequestConfig, isCheckOut = true, token?: string) {
+function Request<T = unknown>(config: AxiosRequestConfig, isCheckOut = true) {
   return new Promise<ResponseBase<T> | null>(resp => {
     // const { token }: AppState = getState('app')
     const defaultConfig: AxiosRequestConfig = {
@@ -66,7 +67,7 @@ function Request<T = unknown>(config: AxiosRequestConfig, isCheckOut = true, tok
         [tokenKeyHeader]: token ? `Bearer ${token}` : ''
       }
     }
-    console.log({defaultConfig})
+    console.log({ defaultConfig })
     AxiosInstance.request(StyleSheet.flatten([defaultConfig, config]))
       .then((res: AxiosResponse<T>) => {
         const result = handleResponseAxios(res)

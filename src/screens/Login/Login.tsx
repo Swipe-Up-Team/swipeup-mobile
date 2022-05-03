@@ -1,14 +1,19 @@
-import { Button, Input } from '@ui-kitten/components'
+/* eslint-disable @typescript-eslint/naming-convention */
+import { Button, Input, Layout, Text } from '@ui-kitten/components'
 import LottieView from 'lottie-react-native'
 import React, { useEffect, useState } from 'react'
-import { Pressable, SafeAreaView, Text, View } from 'react-native'
+import { Pressable, View } from 'react-native'
+import * as Google from 'expo-auth-session/providers/google'
+import Constants from 'expo-constants'
+
 import { StyledDivider } from '@components/styled'
 import { DismissKeyboardView } from '@components/HOCs'
-import GoogleSignInButton from './components/google-sign-in-button'
+import { GoogleSignInButton } from './components'
 import styles from './styles'
 import { firebaseService } from '@src/services/firebase-services'
-import * as Google from 'expo-auth-session/providers/google'
 import { googleConfig } from '@src/config/firebase-config'
+import EmailIcon from '@assets/icon/email'
+import LockIcon from '@assets/icon/lock'
 
 export const LoginScreen = () => {
   const [username, setUsername] = useState('')
@@ -31,11 +36,13 @@ export const LoginScreen = () => {
 
   useEffect(() => {
     loginWithGoogle()
+
+    console.log('Constants.manifest?.releaseChannel: ', Constants.manifest?.releaseChannel)
   }, [response])
 
   return (
     <DismissKeyboardView>
-      <SafeAreaView style={styles.container}>
+      <Layout style={styles.container}>
         <View style={styles.bannerContainer}>
           <LottieView
             style={styles.banner}
@@ -48,47 +55,50 @@ export const LoginScreen = () => {
         <View style={styles.loginSection}>
           <Text style={styles.loginText}>Login</Text>
           <View style={styles.inputsContainer}>
-            <Text style={styles.inputLabel}>Your email</Text>
             <Input
+              label="Your email"
               style={styles.loginInput}
               value={username}
               size="large"
+              accessoryLeft={<EmailIcon />}
               onChangeText={nextValue => setUsername(nextValue)}
               blurOnSubmit
             />
           </View>
           <View style={styles.inputsContainer}>
-            <Text style={styles.inputLabel}>Password</Text>
             <Input
+              label="Password"
               style={styles.loginInput}
               value={password}
               size="large"
+              accessoryLeft={<LockIcon />}
               onChangeText={nextValue => setPassword(nextValue)}
               blurOnSubmit
             />
           </View>
+
           <View>
             <Button size="large" style={styles.loginBtn} onPress={loginWithEmailAndPassword}>
               Sign In
             </Button>
           </View>
 
-          <View style={{ marginVertical: 10 }}>
-            <StyledDivider />
+          <View style={styles.dividerContainer}>
+            <StyledDivider text="OR" />
           </View>
 
           <View>
             <GoogleSignInButton onPress={() => promptAsync({ showInRecents: true })} />
           </View>
 
-          <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>
-            <Text>Don't have an account?</Text>
+          <View style={styles.footer}>
+            <Text appearance="hint">Don't have an account?</Text>
             <Pressable>
-              <Text style={{ color: '#5243AA', fontWeight: '500' }}> Sign Up</Text>
+              <Text status="primary"> Sign Up</Text>
             </Pressable>
           </View>
         </View>
-      </SafeAreaView>
+      </Layout>
     </DismissKeyboardView>
   )
 }

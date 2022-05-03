@@ -1,16 +1,16 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { initializeApp } from 'firebase/app'
+import { getAuth } from 'firebase/auth'
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDXd1fFnDjSpQj83a8KrzgjCaWLqWpZBXI",
-  authDomain: "swipeup-be.firebaseapp.com",
-  projectId: "swipeup-be",
-  storageBucket: "swipeup-be.appspot.com",
-  messagingSenderId: "98158434111",
-  appId: "1:98158434111:web:f05c3310f5beaeab0e258a",
-  measurementId: "G-X0JK3SXC5P"
-};
+  apiKey: 'AIzaSyDXd1fFnDjSpQj83a8KrzgjCaWLqWpZBXI',
+  authDomain: 'swipeup-be.firebaseapp.com',
+  projectId: 'swipeup-be',
+  storageBucket: 'swipeup-be.appspot.com',
+  messagingSenderId: '98158434111',
+  appId: '1:98158434111:web:f05c3310f5beaeab0e258a',
+  measurementId: 'G-X0JK3SXC5P'
+}
 
 export const googleConfig = {
   expoClientId: '930850910016-5rb4npm0s0gq311vch2po94v3t0cnh85.apps.googleusercontent.com',
@@ -20,5 +20,5 @@ export const googleConfig = {
 }
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-export const authentication = getAuth(app);
+const app = initializeApp(firebaseConfig)
+export const authentication = getAuth(app)

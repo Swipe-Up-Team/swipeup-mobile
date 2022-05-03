@@ -1,26 +1,12 @@
-import { View, Text, Button, Pressable, StyleSheet } from 'react-native'
-import React, { useEffect } from 'react'
+import GoogleIcon from '@assets/icon/google'
+import React from 'react'
 
-export default function GoogleSignInButton({ onPress }: { onPress: () => void }) {
+import { Button } from '@ui-kitten/components'
+
+export function GoogleSignInButton({ onPress }: { onPress: () => void }) {
   return (
-    <Pressable style={styles.btnContainer} onPress={onPress}>
-      {/* TODO: missing Google's logo */}
-      <Text style={styles.btnText}>Sign in with Google</Text>
-    </Pressable>
+    <Button status="basic" accessoryLeft={<GoogleIcon />} onPress={onPress} size="large">
+      Sign in with Google
+    </Button>
   )
 }
-
-const styles = StyleSheet.create({
-  btnContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#F1F5F6',
-    paddingVertical: 18,
-    borderRadius: 4
-  },
-  btnText: {
-    color: '#3C4C69',
-    fontSize: 16,
-    fontWeight: '500'
-  }
-})

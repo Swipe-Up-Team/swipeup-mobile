@@ -5,12 +5,12 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     flex: 1,
-    alignItems: 'center',
-    marginTop: 60
+    alignItems: 'center'
   },
   bannerContainer: {
     width: '100%',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginTop: 60
   },
   banner: {
     width: 250,
@@ -38,8 +38,12 @@ const styles = StyleSheet.create({
   },
   loginBtn: {
     width: '100%',
-    marginTop: 10
-  }
+    marginTop: 20
+  },
+  dividerContainer: {
+    marginVertical: 10
+  },
+  footer: { flexDirection: 'row', justifyContent: 'center', marginTop: 10 }
 })
 
 export default styles

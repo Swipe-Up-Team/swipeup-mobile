@@ -6,6 +6,7 @@
     "project": ["./tsconfig.json"]
   },
   "rules": {
-    "@typescript-eslint/naming-convention": []
+    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/rules-of-hooks": "error"
   }
 }

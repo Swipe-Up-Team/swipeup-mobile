@@ -1,19 +1,23 @@
 import { userApi } from '@src/api/user-api'
 import { authentication } from '@src/config/firebase-config'
-import { 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword, 
-  GoogleAuthProvider, 
+import { onSetToken } from '@src/store/app-reducer'
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
   signInWithCredential,
-  getAuth,
+  getAuth
 } from 'firebase/auth'
 
 export const firebaseService = {
   logInWithEmailAndPassword: (username: string, password: string) => {
     signInWithEmailAndPassword(authentication, username, password)
-      .then(async (res) => {
+      .then(async res => {
         const token = await res.user.getIdToken()
-        userApi.logInToDatabase(token)
+
+        // TODO: split code if du quan
+        onSetToken(token)
+        userApi.logInToDatabase()
         return token
       })
       .catch(error => {
@@ -26,7 +30,7 @@ export const firebaseService = {
     const auth = getAuth()
     const credential = GoogleAuthProvider.credential(id_token)
     signInWithCredential(auth, credential)
-      .then(async (res) => {
+      .then(async res => {
         const token = await res.user.getIdToken()
         userApi.logInToDatabase(token)
         return token
@@ -39,7 +43,7 @@ export const firebaseService = {
 
   createUserWithEmailAndPassword: (username: string, password: string) => {
     createUserWithEmailAndPassword(authentication, username, password)
-      .then(async (res) => {
+      .then(async res => {
         //TODO: IMPLEMENT
         // const token = await res.user.getIdToken()
         // console.log(token)
