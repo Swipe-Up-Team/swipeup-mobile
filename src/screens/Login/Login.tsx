@@ -46,7 +46,6 @@ export const LoginScreen = () => {
             loop
           />
         </View>
-
         <LoginForm onSubmit={loginWithEmailAndPassword} />
 
         <View style={styles.dividerContainer}>

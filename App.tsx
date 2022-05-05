@@ -23,7 +23,6 @@ export default function App() {
       >
         <Suspense fallback={null}>
           <AppContainer />
-          {/* <LoginScreen /> */}
         </Suspense>
       </ApplicationProvider>
     </Provider>
