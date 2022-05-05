@@ -11,7 +11,7 @@ export function ControlledInput(props: ControlledInputProps) {
   const { label, status, inputName, defaultValue = '', ...rest } = props
 
   const {
-    field: { onChange, onBlur, value },
+    field: { onChange, onBlur, value, ref },
     fieldState: { invalid, error }
   } = useController({
     name: inputName,
@@ -27,16 +27,15 @@ export function ControlledInput(props: ControlledInputProps) {
   }, [invalid, status])
 
   return (
-    <>
-      <Input
-        label={label}
-        onBlur={onBlur}
-        onChangeText={onChange}
-        value={value}
-        status={renderStatus}
-        {...rest}
-      />
-      {/* <Text>{error?.message + '/' + error?.type}</Text> */}
-    </>
+    <Input
+      ref={ref}
+      label={label}
+      onBlur={onBlur}
+      onChangeText={onChange}
+      value={value}
+      status={renderStatus}
+      caption={error ? error.message : undefined}
+      {...rest}
+    />
   )
 }

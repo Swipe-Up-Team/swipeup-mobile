@@ -20,8 +20,8 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
   const validate = useMemo<yup.SchemaOf<LoginFormValues>>(
     () =>
       yup.object().shape({
-        username: yup.string().required('Username is required'),
-        password: yup.string().required('Password is required')
+        email: yup.string().email().max(255).required('Email is required').label('Email'),
+        password: yup.string().min(8).max(255).required('Password is required').label('Password')
       }),
     []
   )
@@ -44,6 +44,10 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
     </TouchableWithoutFeedback>
   )
 
+  const handleEmailSubmitPress = () => {
+    formMethod.setFocus('password')
+  }
+
   return (
     <FormProvider {...formMethod}>
       <View style={styles.loginSection}>
@@ -51,10 +55,14 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
         <View style={styles.inputsContainer}>
           <ControlledInput
             label="Your email"
-            inputName="username"
+            inputName="email"
             size="large"
             accessoryLeft={<EmailIcon />}
             style={styles.loginInput}
+            autoCorrect={false}
+            keyboardType="email-address"
+            returnKeyType="next"
+            onSubmitEditing={handleEmailSubmitPress}
           />
         </View>
         <View style={styles.inputsContainer}>
@@ -66,6 +74,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
             style={styles.loginInput}
             accessoryRight={renderEyeIcon}
             secureTextEntry={secureTextEntry}
+            onSubmitEditing={onSubmitKey}
           />
         </View>
 
