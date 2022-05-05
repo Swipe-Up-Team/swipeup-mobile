@@ -1,4 +1,5 @@
 import { userApi } from '@src/api/user-api'
+import { dispatch } from '@src/common/redux'
 import { authentication } from '@src/config/firebase-config'
 import { onSetToken } from '@src/store/app-reducer'
 import {
@@ -16,7 +17,7 @@ export const firebaseService = {
         const token = await res.user.getIdToken()
 
         // TODO: split code if du quan
-        onSetToken(token)
+        dispatch(onSetToken(token))
         userApi.logInToDatabase()
         return token
       })

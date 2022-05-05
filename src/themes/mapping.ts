@@ -14,7 +14,7 @@ export const customMapping: CustomSchemaType = {
       appearances: {
         filled: {
           mapping: {
-            backgroundColor: '#c4c4c4'
+            backgroundColor: 'color-basic-400'
           },
           variantGroups: {}
         }
@@ -59,22 +59,28 @@ export const customMapping: CustomSchemaType = {
           variantGroups: {
             status: {
               basic: {
-                labelColor: 'color-basic-800',
-                backgroundColor: 'background-basic-color-2',
-                borderColor: 'background-basic-color-2',
-
-                state: {
-                  focused: {
-                    borderColor: 'background-basic-color-2',
-                    backgroundColor: 'background-basic-color-2'
-                  }
-                }
+                labelColor: 'text-basic-color',
+                borderColor: 'background-basic-color-2'
+              },
+              primary: {
+                labelColor: 'text-basic-color'
+              },
+              success: {
+                labelColor: 'text-basic-color'
+              },
+              info: {
+                labelColor: 'text-basic-color'
+              },
+              warning: {
+                labelColor: 'text-basic-color'
+              },
+              danger: {
+                labelColor: 'text-basic-color'
               }
             },
             size: {
               large: {
-                borderRadius: 6,
-                borderWidth: 0
+                borderRadius: 6
               }
             }
           }

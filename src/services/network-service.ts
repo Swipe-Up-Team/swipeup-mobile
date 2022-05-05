@@ -1,4 +1,3 @@
-import { API_URL } from '@src/config'
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import queryString from 'query-string'
 import { ParamsNetwork, ResponseBase } from '@src/models'
@@ -57,7 +56,7 @@ async function refreshToken(originalRequest: any) {
 // base
 function Request<T = unknown>(config: AxiosRequestConfig, isCheckOut = true) {
   return new Promise<ResponseBase<T> | null>(resp => {
-    // const { token }: AppState = getState('app')
+    const { token }: AppState = getState('app')
     const defaultConfig: AxiosRequestConfig = {
       //TODO: fix this
       baseURL: 'http://34.142.206.170:3040/',
@@ -67,7 +66,6 @@ function Request<T = unknown>(config: AxiosRequestConfig, isCheckOut = true) {
         [tokenKeyHeader]: token ? `Bearer ${token}` : ''
       }
     }
-    console.log({ defaultConfig })
     AxiosInstance.request(StyleSheet.flatten([defaultConfig, config]))
       .then((res: AxiosResponse<T>) => {
         const result = handleResponseAxios(res)
@@ -90,8 +88,8 @@ function Request<T = unknown>(config: AxiosRequestConfig, isCheckOut = true) {
 
 //TODO: fix this
 // get
-async function Get<T>(params: ParamsNetwork, token?: string) {
-  return Request<T>(handleParameter(params, 'GET'), true, token)
+async function Get<T>(params: ParamsNetwork) {
+  return Request<T>(handleParameter(params, 'GET'))
 }
 
 // post

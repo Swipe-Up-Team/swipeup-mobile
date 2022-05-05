@@ -1,27 +1,24 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Button, Input, Layout, Text } from '@ui-kitten/components'
-import LottieView from 'lottie-react-native'
-import React, { useEffect, useState } from 'react'
-import { Pressable, View } from 'react-native'
+import { Layout, Text } from '@ui-kitten/components'
 import * as Google from 'expo-auth-session/providers/google'
-import Constants from 'expo-constants'
+import LottieView from 'lottie-react-native'
+import React, { useEffect } from 'react'
+import { Pressable, View } from 'react-native'
 
-import { StyledDivider } from '@components/styled'
 import { DismissKeyboardView } from '@components/HOCs'
-import { GoogleSignInButton } from './components'
-import styles from './styles'
-import { firebaseService } from '@src/services/firebase-services'
+import { StyledDivider } from '@components/styled'
 import { googleConfig } from '@src/config/firebase-config'
-import EmailIcon from '@assets/icon/email'
-import LockIcon from '@assets/icon/lock'
+import { firebaseService } from '@src/services/firebase-services'
+import { GoogleSignInButton, LoginForm } from './components'
+import { LoginFormValues } from './models'
+import styles from './styles'
 
 export const LoginScreen = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest(googleConfig)
 
-  const loginWithEmailAndPassword = () => {
+  const loginWithEmailAndPassword = (data: LoginFormValues) => {
+    const { username, password } = data
     firebaseService.logInWithEmailAndPassword(username, password)
   }
 
@@ -36,8 +33,6 @@ export const LoginScreen = () => {
 
   useEffect(() => {
     loginWithGoogle()
-
-    console.log('Constants.manifest?.releaseChannel: ', Constants.manifest?.releaseChannel)
   }, [response])
 
   return (
@@ -52,51 +47,21 @@ export const LoginScreen = () => {
           />
         </View>
 
-        <View style={styles.loginSection}>
-          <Text style={styles.loginText}>Login</Text>
-          <View style={styles.inputsContainer}>
-            <Input
-              label="Your email"
-              style={styles.loginInput}
-              value={username}
-              size="large"
-              accessoryLeft={<EmailIcon />}
-              onChangeText={nextValue => setUsername(nextValue)}
-              blurOnSubmit
-            />
-          </View>
-          <View style={styles.inputsContainer}>
-            <Input
-              label="Password"
-              style={styles.loginInput}
-              value={password}
-              size="large"
-              accessoryLeft={<LockIcon />}
-              onChangeText={nextValue => setPassword(nextValue)}
-              blurOnSubmit
-            />
-          </View>
+        <LoginForm onSubmit={loginWithEmailAndPassword} />
 
-          <View>
-            <Button size="large" style={styles.loginBtn} onPress={loginWithEmailAndPassword}>
-              Sign In
-            </Button>
-          </View>
+        <View style={styles.dividerContainer}>
+          <StyledDivider text="OR" />
+        </View>
 
-          <View style={styles.dividerContainer}>
-            <StyledDivider text="OR" />
-          </View>
+        <View style={styles.googleLoginContainer}>
+          <GoogleSignInButton onPress={() => promptAsync({ showInRecents: true })} />
+        </View>
 
-          <View>
-            <GoogleSignInButton onPress={() => promptAsync({ showInRecents: true })} />
-          </View>
-
-          <View style={styles.footer}>
-            <Text appearance="hint">Don't have an account?</Text>
-            <Pressable>
-              <Text status="primary"> Sign Up</Text>
-            </Pressable>
-          </View>
+        <View style={styles.footer}>
+          <Text appearance="hint">Don't have an account?</Text>
+          <Pressable>
+            <Text status="primary"> Sign Up</Text>
+          </Pressable>
         </View>
       </Layout>
     </DismissKeyboardView>

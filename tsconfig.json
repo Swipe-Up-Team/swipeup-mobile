@@ -13,6 +13,8 @@
       "@navigation/*": ["src/navigation/*"],
       "@store/*": ["src/store/*"],
       "@assets/*": ["assets/*"]
-    }
+    },
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   }
 }

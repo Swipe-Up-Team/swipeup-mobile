@@ -16,33 +16,11 @@ const styles = StyleSheet.create({
     width: 250,
     height: 250
   },
-  loginSection: {
-    width: '100%',
+  dividerContainer: {
+    marginVertical: 10,
     paddingHorizontal: 30
   },
-  loginText: {
-    marginTop: 50,
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: '#121515'
-  },
-  inputsContainer: {
-    width: '100%',
-    alignItems: 'flex-start',
-    marginTop: 10
-  },
-  inputLabel: {},
-  loginInput: {
-    width: '100%',
-    marginTop: 5
-  },
-  loginBtn: {
-    width: '100%',
-    marginTop: 20
-  },
-  dividerContainer: {
-    marginVertical: 10
-  },
+  googleLoginContainer: { paddingHorizontal: 30, width: '100%' },
   footer: { flexDirection: 'row', justifyContent: 'center', marginTop: 10 }
 })
 
