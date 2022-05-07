@@ -18,8 +18,8 @@ export const LoginScreen = () => {
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest(googleConfig)
 
   const loginWithEmailAndPassword = (data: LoginFormValues) => {
-    const { username, password } = data
-    firebaseService.logInWithEmailAndPassword(username, password)
+    const { email, password } = data
+    firebaseService.logInWithEmailAndPassword(email, password)
   }
 
   const loginWithGoogle = () => {

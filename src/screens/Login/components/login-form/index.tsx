@@ -21,7 +21,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
     () =>
       yup.object().shape({
         email: yup.string().email().max(255).required('Email is required').label('Email'),
-        password: yup.string().min(8).max(255).required('Password is required').label('Password')
+        password: yup.string().min(6).max(255).required('Password is required').label('Password')
       }),
     []
   )
