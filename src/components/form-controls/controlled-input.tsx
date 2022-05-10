@@ -8,7 +8,7 @@ interface ControlledInputProps extends InputProps {
 }
 
 export function ControlledInput(props: ControlledInputProps) {
-  const { label, status, inputName, defaultValue = '', ...rest } = props
+  const { label, placeholder, status, inputName, defaultValue = '', ...rest } = props
 
   const {
     field: { onChange, onBlur, value, ref },
@@ -30,6 +30,7 @@ export function ControlledInput(props: ControlledInputProps) {
     <Input
       ref={ref}
       label={label}
+      placeholder={placeholder}
       onBlur={onBlur}
       onChangeText={onChange}
       value={value}

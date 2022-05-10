@@ -5,7 +5,6 @@ import * as Google from 'expo-auth-session/providers/google'
 import LottieView from 'lottie-react-native'
 import React, { useEffect } from 'react'
 import { Pressable, View } from 'react-native'
-
 import { DismissKeyboardView } from '@components/HOCs'
 import { StyledDivider } from '@components/styled'
 import { googleConfig } from '@src/config/firebase-config'
@@ -13,6 +12,8 @@ import { firebaseService } from '@src/services/firebase-services'
 import { GoogleSignInButton, LoginForm } from './components'
 import { LoginFormValues } from './models'
 import styles from './styles'
+import { navigate } from '@src/navigation/navigation-service'
+import { APP_SCREEN } from '@src/navigation/screen-types'
 
 export const LoginScreen = () => {
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest(googleConfig)
@@ -29,6 +30,10 @@ export const LoginScreen = () => {
     } else {
       console.log('error', response)
     }
+  }
+
+  const navigateToSignupScreen = () => {
+    navigate(APP_SCREEN.SIGNUP)
   }
 
   useEffect(() => {
@@ -58,7 +63,7 @@ export const LoginScreen = () => {
 
         <View style={styles.footer}>
           <Text appearance="hint">Don't have an account?</Text>
-          <Pressable>
+          <Pressable onPress={navigateToSignupScreen}>
             <Text status="primary"> Sign Up</Text>
           </Pressable>
         </View>

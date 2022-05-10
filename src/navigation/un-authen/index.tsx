@@ -7,6 +7,7 @@ import { createStackNavigator, TransitionPresets } from '@react-navigation/stack
 
 import { APP_SCREEN } from '../screen-types'
 import { LoginScreen } from '@src/screens/login'
+import { SignupScreen } from '@src/screens/signup'
 
 const Stack = createStackNavigator()
 
@@ -21,11 +22,7 @@ export const UnAuthentication = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: true }}>
       <Stack.Screen name={APP_SCREEN.LOGIN} component={LoginScreen} />
-      {/* <Stack.Screen
-        name={APP_SCREEN.REGISTER}
-        component={Register}
-        options={{ ...TransitionPresets.SlideFromRightIOS }}
-      /> */}
+      <Stack.Screen name={APP_SCREEN.SIGNUP} component={SignupScreen} />
     </Stack.Navigator>
   )
 }

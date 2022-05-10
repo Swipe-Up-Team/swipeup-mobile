@@ -8,25 +8,31 @@ import EmailIcon from '@assets/icon/email'
 import LockIcon from '@assets/icon/lock'
 import { ControlledInput } from '@src/components/form-controls'
 import styles from './styles'
-import { LoginFormValues } from '../../models'
+import { SignupFormValues } from '../../models'
 
-interface LoginFormProps {
-  onSubmit: (data: LoginFormValues) => void
+interface SignupFormProps {
+  onSubmit: (data: SignupFormValues) => void
 }
 
-export function LoginForm({ onSubmit }: LoginFormProps) {
+export function SignupForm({onSubmit}: SignupFormProps) {
   const [secureTextEntry, setSecureTextEntry] = useState(true)
 
-  const validate = useMemo<yup.SchemaOf<LoginFormValues>>(
+  const validate = useMemo<yup.SchemaOf<SignupFormValues>>(
     () =>
       yup.object().shape({
         email: yup.string().email().max(255).required('Email is required').label('Email'),
-        password: yup.string().min(6).max(255).required('Password is required').label('Password')
+        password: yup.string().min(6).max(255).required('Password is required').label('Password'),
+        confirmPassword: yup
+          .string()
+          .min(6)
+          .max(255)
+          .required('Password is required')
+          .label('Password')
       }),
     []
   )
 
-  const formMethod = useForm<LoginFormValues>({
+  const formMethod = useForm<SignupFormValues>({
     resolver: yupResolver(validate)
   })
 
@@ -48,14 +54,18 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
     formMethod.setFocus('password')
   }
 
+  const handlePasswordSubmitPress = () => {
+    formMethod.setFocus('confirmPassword')
+  }
+
   return (
     <FormProvider {...formMethod}>
       <View style={styles.loginSection}>
-        <Text style={styles.loginText}>Login</Text>
+        <Text style={styles.loginText}>Signup</Text>
         <View style={styles.inputsContainer}>
           <ControlledInput
             label="Email"
-            placeholder='mymail@domain.abc'
+            placeholder="mymail@domain.abc"
             inputName="email"
             size="large"
             accessoryLeft={<EmailIcon />}
@@ -69,20 +79,31 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
         <View style={styles.inputsContainer}>
           <ControlledInput
             label="Password"
-            placeholder='••••••••••'
+            placeholder="••••••••••"
             inputName="password"
             size="large"
             accessoryLeft={<LockIcon />}
             style={styles.loginInput}
             accessoryRight={renderEyeIcon}
-            secureTextEntry={secureTextEntry}
+            onSubmitEditing={handlePasswordSubmitPress}
+          />
+        </View>
+        <View style={styles.inputsContainer}>
+          <ControlledInput
+            label="Confirm Password"
+            placeholder="••••••••••"
+            inputName="confirmPassword"
+            size="large"
+            accessoryLeft={<LockIcon />}
+            style={styles.loginInput}
+            accessoryRight={renderEyeIcon}
             onSubmitEditing={onSubmitKey}
           />
         </View>
 
         <View>
           <Button size="large" style={styles.loginBtn} onPress={onSubmitKey}>
-            Sign In
+            Sign Up
           </Button>
         </View>
       </View>
