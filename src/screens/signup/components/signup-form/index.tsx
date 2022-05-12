@@ -1,6 +1,6 @@
-import { Button, Icon, IconProps } from '@ui-kitten/components'
+import { Button } from '@ui-kitten/components'
 import React, { useCallback, useMemo, useState } from 'react'
-import { Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -9,12 +9,13 @@ import LockIcon from '@assets/icon/lock'
 import { ControlledInput } from '@src/components/form-controls'
 import styles from './styles'
 import { SignupFormValues } from '../../models'
+import EyeIcon from '@src/components/form-controls/password-input'
 
 interface SignupFormProps {
   onSubmit: (data: SignupFormValues) => void
 }
 
-export function SignupForm({onSubmit}: SignupFormProps) {
+export function SignupForm({ onSubmit }: SignupFormProps) {
   const [securePassEntry, setSecurePassEntry] = useState(true)
   const [secureConfirmPassEntry, setsecureConfirmPassEntryy] = useState(true)
 
@@ -42,32 +43,20 @@ export function SignupForm({onSubmit}: SignupFormProps) {
     formMethod.handleSubmit(onSubmit)()
   }, [formMethod, onSubmit])
 
-  const renderIconPass = (props: IconProps) => (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        setSecurePassEntry(!securePassEntry)
-      }}
-    >
-      <Icon {...props} name={securePassEntry ? 'eye-off' : 'eye'} />
-    </TouchableWithoutFeedback>
-  )
-
-  const renderIconPassConfim = (props: IconProps) => (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        setsecureConfirmPassEntryy(!secureConfirmPassEntry)
-      }}
-    >
-      <Icon {...props} name={secureConfirmPassEntry ? 'eye-off' : 'eye'} />
-    </TouchableWithoutFeedback>
-  )
-
   const handleEmailSubmitPress = () => {
     formMethod.setFocus('password')
   }
 
   const handlePasswordSubmitPress = () => {
     formMethod.setFocus('confirmPassword')
+  }
+
+  const changeSecurePass = () => {
+    setSecurePassEntry(!securePassEntry)
+  }
+
+  const changeSecureConfirmPass = () => {
+    setsecureConfirmPassEntryy(!secureConfirmPassEntry)
   }
 
   return (
@@ -97,7 +86,7 @@ export function SignupForm({onSubmit}: SignupFormProps) {
             accessoryLeft={<LockIcon />}
             style={styles.loginInput}
             secureTextEntry={securePassEntry}
-            accessoryRight={renderIconPass}
+            accessoryRight={<EyeIcon isSecure={securePassEntry} onChange={changeSecurePass} />}
             onSubmitEditing={handlePasswordSubmitPress}
           />
         </View>
@@ -110,7 +99,9 @@ export function SignupForm({onSubmit}: SignupFormProps) {
             accessoryLeft={<LockIcon />}
             style={styles.loginInput}
             secureTextEntry={secureConfirmPassEntry}
-            accessoryRight={renderIconPassConfim}
+            accessoryRight={
+              <EyeIcon isSecure={secureConfirmPassEntry} onChange={changeSecureConfirmPass} />
+            }
             onSubmitEditing={onSubmitKey}
           />
         </View>

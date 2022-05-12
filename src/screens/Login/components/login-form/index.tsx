@@ -1,6 +1,6 @@
-import { Button, Icon, IconProps } from '@ui-kitten/components'
+import { Button } from '@ui-kitten/components'
 import React, { useCallback, useMemo, useState } from 'react'
-import { Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -9,13 +9,14 @@ import LockIcon from '@assets/icon/lock'
 import { ControlledInput } from '@src/components/form-controls'
 import styles from './styles'
 import { LoginFormValues } from '../../models'
+import EyeIcon from '@src/components/form-controls/password-input'
 
 interface LoginFormProps {
   onSubmit: (data: LoginFormValues) => void
 }
 
 export function LoginForm({ onSubmit }: LoginFormProps) {
-  const [secureTextEntry, setSecureTextEntry] = useState(true)
+  const [secureText, setSecureText] = useState(true)
 
   const validate = useMemo<yup.SchemaOf<LoginFormValues>>(
     () =>
@@ -34,18 +35,12 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
     formMethod.handleSubmit(onSubmit)()
   }, [formMethod, onSubmit])
 
-  const renderEyeIcon = (props: IconProps) => (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        setSecureTextEntry(!secureTextEntry)
-      }}
-    >
-      <Icon {...props} name={secureTextEntry ? 'eye-off' : 'eye'} />
-    </TouchableWithoutFeedback>
-  )
-
   const handleEmailSubmitPress = () => {
     formMethod.setFocus('password')
+  }
+
+  const changeSecureText = () => {
+    setSecureText(!secureText)
   }
 
   return (
@@ -55,7 +50,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
         <View style={styles.inputsContainer}>
           <ControlledInput
             label="Email"
-            placeholder='mymail@domain.abc'
+            placeholder="mymail@domain.abc"
             inputName="email"
             size="large"
             accessoryLeft={<EmailIcon />}
@@ -69,13 +64,13 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
         <View style={styles.inputsContainer}>
           <ControlledInput
             label="Password"
-            placeholder='••••••••••'
+            placeholder="••••••••••"
             inputName="password"
             size="large"
             accessoryLeft={<LockIcon />}
             style={styles.loginInput}
-            accessoryRight={renderEyeIcon}
-            secureTextEntry={secureTextEntry}
+            accessoryRight={<EyeIcon isSecure={secureText} onChange={changeSecureText} />}
+            secureTextEntry={secureText}
             onSubmitEditing={onSubmitKey}
           />
         </View>
