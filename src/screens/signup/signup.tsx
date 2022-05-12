@@ -11,6 +11,8 @@ import { SignupFormValues } from './models'
 export const SignupScreen = () => {
   const signupWithEmailAndPassword = (data: SignupFormValues) => {
     //TODO: implement this when BE is ready
+    const { email, password } = data
+    console.log('signup with email and password', email, password)
   }
 
   const navigateToLoginScreen = () => {

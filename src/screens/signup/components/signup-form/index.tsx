@@ -15,19 +15,21 @@ interface SignupFormProps {
 }
 
 export function SignupForm({onSubmit}: SignupFormProps) {
-  const [secureTextEntry, setSecureTextEntry] = useState(true)
+  const [securePassEntry, setSecurePassEntry] = useState(true)
+  const [secureConfirmPassEntry, setsecureConfirmPassEntryy] = useState(true)
 
   const validate = useMemo<yup.SchemaOf<SignupFormValues>>(
     () =>
       yup.object().shape({
-        email: yup.string().email().max(255).required('Email is required').label('Email'),
-        password: yup.string().min(6).max(255).required('Password is required').label('Password'),
+        email: yup.string().email().required('Email is required').max(255).label('Email'),
+        password: yup.string().required('Password is required').min(6).max(255).label('Password'),
         confirmPassword: yup
           .string()
+          .required('Confirm password not match')
           .min(6)
           .max(255)
-          .required('Password is required')
-          .label('Password')
+          .label('Confirm Password')
+          .oneOf([yup.ref('password'), null], 'Confirm password not match')
       }),
     []
   )
@@ -40,13 +42,23 @@ export function SignupForm({onSubmit}: SignupFormProps) {
     formMethod.handleSubmit(onSubmit)()
   }, [formMethod, onSubmit])
 
-  const renderEyeIcon = (props: IconProps) => (
+  const renderIconPass = (props: IconProps) => (
     <TouchableWithoutFeedback
       onPress={() => {
-        setSecureTextEntry(!secureTextEntry)
+        setSecurePassEntry(!securePassEntry)
       }}
     >
-      <Icon {...props} name={secureTextEntry ? 'eye-off' : 'eye'} />
+      <Icon {...props} name={securePassEntry ? 'eye-off' : 'eye'} />
+    </TouchableWithoutFeedback>
+  )
+
+  const renderIconPassConfim = (props: IconProps) => (
+    <TouchableWithoutFeedback
+      onPress={() => {
+        setsecureConfirmPassEntryy(!secureConfirmPassEntry)
+      }}
+    >
+      <Icon {...props} name={secureConfirmPassEntry ? 'eye-off' : 'eye'} />
     </TouchableWithoutFeedback>
   )
 
@@ -84,7 +96,8 @@ export function SignupForm({onSubmit}: SignupFormProps) {
             size="large"
             accessoryLeft={<LockIcon />}
             style={styles.loginInput}
-            accessoryRight={renderEyeIcon}
+            secureTextEntry={securePassEntry}
+            accessoryRight={renderIconPass}
             onSubmitEditing={handlePasswordSubmitPress}
           />
         </View>
@@ -96,7 +109,8 @@ export function SignupForm({onSubmit}: SignupFormProps) {
             size="large"
             accessoryLeft={<LockIcon />}
             style={styles.loginInput}
-            accessoryRight={renderEyeIcon}
+            secureTextEntry={secureConfirmPassEntry}
+            accessoryRight={renderIconPassConfim}
             onSubmitEditing={onSubmitKey}
           />
         </View>
