@@ -9,12 +9,13 @@ import { navigationRef } from './navigation-service'
 import { RootNavigation } from './root-navigator'
 import { onLoadApp, onLoadAppEnd } from '@src/store/app-reducer'
 import { MyAppTheme } from '@src/themes'
-import { useSelector } from '@src/hooks'
+import { useSelector } from '@src/common/hooks'
 import { dispatch, RXStore } from '@src/common/redux'
+import { hideLoading, ProgressDialog, showLoading } from '@src/components/progress-dialog'
 
 export const AppContainer = () => {
   // state
-  const { token, loadingApp, theme } = useSelector(x => x.app)
+  const { token, loadingApp, showDialog, theme } = useSelector(x => x.app)
 
   // effect
   useEffect(() => {
@@ -22,14 +23,17 @@ export const AppContainer = () => {
     dispatch(onLoadAppEnd())
   }, [])
 
-  // TODO: show/hide loading dialog
-  // useEffect(() => {
-  //   if (showDialog) {
-  //     showLoading()
-  //   } else {
-  //     hideLoading()
-  //   }
-  // }, [showDialog])
+  useEffect(() => {
+    console.log({ token })
+  }, [token])
+
+  useEffect(() => {
+    if (showDialog) {
+      showLoading()
+    } else {
+      hideLoading()
+    }
+  }, [showDialog])
 
   // TODO: apply theme
   // useEffect(() => {
@@ -53,7 +57,7 @@ export const AppContainer = () => {
           <>
             {/* <PortalHost name={'AppModal'} /> */}
             <RootNavigation token={token} />
-            {/* <ProgressDialog /> */}
+            <ProgressDialog />
             {/* <SnackBar /> */}
             {/* <ImageTransition /> */}
           </>

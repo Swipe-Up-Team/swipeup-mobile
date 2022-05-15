@@ -14,13 +14,18 @@ import { LoginFormValues } from './models'
 import styles from './styles'
 import { navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN } from '@src/navigation/screen-types'
+import { onEndProcess, onStartProcess } from '@src/store/app-reducer'
+import { dispatch } from '@src/common'
 
 export const LoginScreen = () => {
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest(googleConfig)
 
-  const loginWithEmailAndPassword = (data: LoginFormValues) => {
+  const loginWithEmailAndPassword = async (data: LoginFormValues) => {
+    dispatch(onStartProcess())
     const { email, password } = data
-    firebaseService.logInWithEmailAndPassword(email, password)
+    console.log('🚀 ~ file: login.tsx ~ line 23 ~ loginWithEmailAndPassword ~ data', data)
+    await firebaseService.logInWithEmailAndPassword(email, password)
+    dispatch(onEndProcess())
   }
 
   const loginWithGoogle = () => {
