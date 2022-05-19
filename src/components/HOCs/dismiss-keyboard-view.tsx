@@ -26,7 +26,7 @@ const DismissKeyboardHOC = (Comp: typeof View) => {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <ScrollView>
+      <ScrollView nestedScrollEnabled={true}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <Comp style={{ flex: 1 }} {...props}>
             {children}
