@@ -5,10 +5,11 @@ export enum APP_SCREEN {
   SIGNUP = 'SIGNUP',
   AUTHORIZE = 'AUTHORIZE',
   HOME = 'HOME',
+  SEARCH = 'SEARCH',
   NOTIFICATIONS = 'NOTIFICATIONS',
   MENU = 'MENU',
   CHAT = 'CHAT',
-  CHAT_ROOM = 'CHAT_ROOM',
+  CHAT_ROOM = 'CHAT_ROOM'
 }
 
 export type UnAuthorizeParamsList = {

@@ -3,14 +3,7 @@ import Svg, { Path, SvgProps } from 'react-native-svg'
 
 export function GoogleIcon(props: SvgProps) {
   return (
-    <Svg
-      width={24}
-      height={24}
-      viewBox="0 0 24 24"
-      fill="none"
-      // xmlns="http://www.w3.org/2000/svg"
-      {...props}
-    >
+    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" {...props}>
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
