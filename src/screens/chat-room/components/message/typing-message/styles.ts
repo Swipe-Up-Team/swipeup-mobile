@@ -11,9 +11,15 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 6,
   },
+  messageContainer: {
+    alignSelf: 'flex-end',
+    paddingHorizontal: 10,
+    backgroundColor: '#f4f5f7',
+    borderRadius: 6,
+  },
   lottieView: {
-    width: 60,
-    height: 60,
+    width: 40,
+    height: 40,
   },
 })
 
