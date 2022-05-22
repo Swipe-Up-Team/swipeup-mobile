@@ -27,6 +27,7 @@ export const MainScreen = () => {
     <>
       <Main.Navigator
         screenOptions={{
+          headerShown: false,
           tabBarShowLabel: false,
           tabBarHideOnKeyboard: true,
           tabBarStyle: { ...styles.rootContainer }
