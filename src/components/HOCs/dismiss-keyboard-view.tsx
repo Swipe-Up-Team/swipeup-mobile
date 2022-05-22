@@ -16,7 +16,7 @@ interface DismissKeyboardHOCProps {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: '100%'
+    height: '100%',
   }
 })
 
@@ -26,7 +26,7 @@ const DismissKeyboardHOC = (Comp: typeof View) => {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <ScrollView>
+      <ScrollView nestedScrollEnabled={true}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <Comp style={{ flex: 1 }} {...props}>
             {children}

@@ -1,4 +1,4 @@
-import GoogleIcon from '@assets/icon/google'
+import { GoogleIcon } from '@src/components/icons'
 import React from 'react'
 
 import { Button } from '@ui-kitten/components'

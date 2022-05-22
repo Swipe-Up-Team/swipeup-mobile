@@ -9,6 +9,10 @@ import { APP_SCREEN } from '../screen-types'
 import { LoginScreen } from '@src/screens/login'
 import { SignupScreen } from '@src/screens/signup'
 
+// temp screen for building ui
+import { ChatScreen } from '@src/screens/chat'
+import { ChatRoomScreen } from '@src/screens/chat-room'
+
 const Stack = createStackNavigator()
 
 export const UnAuthentication = () => {
@@ -21,6 +25,7 @@ export const UnAuthentication = () => {
   // render
   return (
     <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: true }}>
+      {/* <Stack.Screen name={APP_SCREEN.CHAT_ROOM} component={ChatRoomScreen} /> */}
       <Stack.Screen name={APP_SCREEN.LOGIN} component={LoginScreen} />
       <Stack.Screen name={APP_SCREEN.SIGNUP} component={SignupScreen} />
     </Stack.Navigator>

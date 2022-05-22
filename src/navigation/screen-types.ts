@@ -4,9 +4,11 @@ export enum APP_SCREEN {
   LOGIN = 'LOGIN',
   SIGNUP = 'SIGNUP',
   AUTHORIZE = 'AUTHORIZE',
-  HOME = 'Home',
-  NOTIFICATIONS = 'Notifications',
-  MENU = 'Menu'
+  HOME = 'HOME',
+  NOTIFICATIONS = 'NOTIFICATIONS',
+  MENU = 'MENU',
+  CHAT = 'CHAT',
+  CHAT_ROOM = 'CHAT_ROOM',
 }
 
 export type UnAuthorizeParamsList = {
@@ -17,6 +19,8 @@ export type UnAuthorizeParamsList = {
 
 export type AuthorizeParamsList = {
   [APP_SCREEN.HOME]: undefined
+  [APP_SCREEN.CHAT]: undefined
+  [APP_SCREEN.CHAT_ROOM]: undefined
 }
 
 export type RootStackParamList = {

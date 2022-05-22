@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Svg, { Path, SvgProps } from 'react-native-svg'
 
-function GoogleIcon(props: SvgProps) {
+export function GoogleIcon(props: SvgProps) {
   return (
     <Svg
       width={24}
@@ -38,5 +38,3 @@ function GoogleIcon(props: SvgProps) {
     </Svg>
   )
 }
-
-export default GoogleIcon
