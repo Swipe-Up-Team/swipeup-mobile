@@ -1,4 +1,4 @@
-import SearchIcon from '@assets/icon/search'
+import {SearchIcon} from '@components/icons'
 import { DismissKeyboardView } from '@src/components/HOCs'
 import { Icon, Input, Layout, TabView, Tab } from '@ui-kitten/components'
 import React, { useEffect, useRef, useState } from 'react'

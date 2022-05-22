@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { MainScreen } from './authen'
 import { APP_SCREEN, RootStackParamList } from './screen-types'
 import { UnAuthentication } from './un-authen'
+import { ChatRoomScreen } from '@src/screens/chat-room'
 
 const RootStack = createStackNavigator<RootStackParamList>()
 
@@ -19,11 +20,14 @@ export const RootNavigation = ({ token }: { token?: string }) => {
           component={UnAuthentication}
         />
       ) : (
-        <RootStack.Screen
-          options={{ gestureEnabled: false }}
-          name={APP_SCREEN.AUTHORIZE}
-          component={MainScreen}
-        />
+        <>
+          <RootStack.Screen
+            options={{ gestureEnabled: false }}
+            name={APP_SCREEN.AUTHORIZE}
+            component={MainScreen}
+          />
+          <RootStack.Screen name={APP_SCREEN.CHAT_ROOM} component={ChatRoomScreen} />
+        </>
       )}
     </RootStack.Navigator>
   )
