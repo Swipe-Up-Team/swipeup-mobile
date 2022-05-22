@@ -10,7 +10,7 @@ const ChatAvatar = () => {
         style={styles.avatar}
         size="giant"
         shape="rounded"
-        source={require('@assets/avatar.jpg')}
+        source={require('@assets/image/img-avatar.jpg')}
       />
       <View style={styles.circleStatus} />
     </View>

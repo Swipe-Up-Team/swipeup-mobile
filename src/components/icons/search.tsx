@@ -1,7 +1,7 @@
 import { Icon, IconProps } from '@ui-kitten/components'
 import * as React from 'react'
 
-const SearchIcon = (props: IconProps) => {
+export const SearchIcon = (props: IconProps) => {
   const iconRef: any = React.useRef();
 
   React.useEffect(() => {
@@ -17,5 +17,3 @@ const SearchIcon = (props: IconProps) => {
       name='search-outline' />
   )
 }
-
-export default SearchIcon

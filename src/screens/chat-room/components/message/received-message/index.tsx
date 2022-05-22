@@ -9,7 +9,7 @@ const ReceivedMessage = () => {
         style={styles.avatar}
         size="medium"
         borderRadius={4}
-        source={require('@assets/avatar.jpg')}
+        source={require('@assets/image/img-avatar.jpg')}
       />
       <View style={styles.mainContainer}>
         <Text style={styles.timeText}>12:35</Text>

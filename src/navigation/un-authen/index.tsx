@@ -25,7 +25,7 @@ export const UnAuthentication = () => {
   // render
   return (
     <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: true }}>
-      {/* <Stack.Screen name={APP_SCREEN.CHAT_ROOM} component={ChatScreen} /> */}
+      {/* <Stack.Screen name={APP_SCREEN.CHAT_ROOM} component={ChatRoomScreen} /> */}
       <Stack.Screen name={APP_SCREEN.LOGIN} component={LoginScreen} />
       <Stack.Screen name={APP_SCREEN.SIGNUP} component={SignupScreen} />
     </Stack.Navigator>

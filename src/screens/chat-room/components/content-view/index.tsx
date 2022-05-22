@@ -27,7 +27,7 @@ export const ContentView = () => {
           <SentMessage />
           <SentMessage />
           <SentMessage />
-          {/* <TypingMessage /> */}
+          <TypingMessage />
         </View>
         <View
           style={styles.messageInputContainer}

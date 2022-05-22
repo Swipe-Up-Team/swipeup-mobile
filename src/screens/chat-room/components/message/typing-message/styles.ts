@@ -11,12 +11,9 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 6,
   },
-  bannerContainer: {
-    alignItems: 'center',
-    flex: 1
-  },
-  banner: {
-    height: '100%'
+  lottieView: {
+    width: 60,
+    height: 60,
   },
 })
 

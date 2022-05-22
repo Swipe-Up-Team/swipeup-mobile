@@ -10,16 +10,14 @@ const TypingMessage = () => {
         style={styles.avatar}
         size="medium"
         borderRadius={4}
-        source={require('@assets/avatar.jpg')}
+        source={require('@assets/image/img-avatar.jpg')}
       />
-      <View style={styles.bannerContainer}>
-        <LottieView
-          style={styles.banner}
+      <LottieView
+          style={styles.lottieView}
           source={require('@assets/lottie/typing-message.json')}
           autoPlay
           loop
         />
-      </View>
     </View>
   )
 }
