@@ -18,6 +18,7 @@ import { Home } from '@src/screens/home'
 import { useTheme } from '@ui-kitten/components'
 import React, { useRef } from 'react'
 import { Animated, Dimensions, StyleSheet, View } from 'react-native'
+import { ChatScreen } from '@src/screens/chat'
 
 function getWidth() {
   let width = Dimensions.get('window').width
@@ -37,6 +38,7 @@ export const MainScreen = () => {
     <>
       <Main.Navigator
         screenOptions={{
+          headerShown: false,
           tabBarShowLabel: false,
           tabBarHideOnKeyboard: true,
           tabBarStyle: { ...styles.rootContainer }
@@ -87,7 +89,7 @@ export const MainScreen = () => {
         />
         <Main.Screen
           name={APP_SCREEN.CHAT}
-          component={Home}
+          component={ChatScreen}
           options={{
             tabBarIcon: ({ focused }) => (
               <View style={styles.tabBarItemContainer}>

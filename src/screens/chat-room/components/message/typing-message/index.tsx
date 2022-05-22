@@ -12,12 +12,14 @@ const TypingMessage = () => {
         borderRadius={4}
         source={require('@assets/image/img-avatar.jpg')}
       />
-      <LottieView
+      <View style={styles.messageContainer}>
+        <LottieView
           style={styles.lottieView}
           source={require('@assets/lottie/typing-message.json')}
           autoPlay
           loop
         />
+      </View>
     </View>
   )
 }
