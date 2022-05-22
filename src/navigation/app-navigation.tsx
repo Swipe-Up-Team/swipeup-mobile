@@ -4,6 +4,7 @@ import { StatusBar } from 'react-native'
 // import { hideLoading, PortalHost, ProgressDialog, showLoading } from '@components'
 // import { ImageTransition } from '@library/components/light-box/image-transition';
 import { NavigationContainer } from '@react-navigation/native'
+import Toast from 'react-native-toast-message'
 
 import { navigationRef } from './navigation-service'
 import { RootNavigation } from './root-navigator'
@@ -58,7 +59,7 @@ export const AppContainer = () => {
             {/* <PortalHost name={'AppModal'} /> */}
             <RootNavigation token={token} />
             <ProgressDialog />
-            {/* <SnackBar /> */}
+            <Toast position="bottom" bottomOffset={80} />
             {/* <ImageTransition /> */}
           </>
         )}
