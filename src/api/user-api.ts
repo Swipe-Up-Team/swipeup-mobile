@@ -3,12 +3,12 @@ import { ParamsNetwork } from '@src/models'
 import { NetworkService } from '../services/network-service'
 
 export const userApi = {
-  logInToDatabase: () => {
+  logInToDatabase: async () => {
     const paramsNetwork: ParamsNetwork = {
       url: API_ENDPOINT.LOGIN
     }
 
-    NetworkService.Get(paramsNetwork)
+    await NetworkService.Get(paramsNetwork)
       .then((res: any) => {
         console.log(res)
       })

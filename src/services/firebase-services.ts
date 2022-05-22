@@ -11,10 +11,11 @@ import {
 } from 'firebase/auth'
 
 export const firebaseService = {
-  logInWithEmailAndPassword: (username: string, password: string) => {
-    signInWithEmailAndPassword(authentication, username, password)
+  logInWithEmailAndPassword: async (email: string, password: string) =>
+    signInWithEmailAndPassword(authentication, email, password)
       .then(async res => {
         const token = await res.user.getIdToken()
+        console.log('🚀 ~ file: firebase-services.ts ~ line 18 ~ token', token)
 
         // TODO: split code if du quan
         dispatch(onSetToken(token))
@@ -24,8 +25,7 @@ export const firebaseService = {
       .catch(error => {
         //TODO: HANDLE LOGIN FAILED HERE
         console.log(error)
-      })
-  },
+      }),
 
   logInWithGoogle: async (id_token: string) => {
     const auth = getAuth()
@@ -33,7 +33,7 @@ export const firebaseService = {
     signInWithCredential(auth, credential)
       .then(async res => {
         const token = await res.user.getIdToken()
-        userApi.logInToDatabase(token)
+        userApi.logInToDatabase()
         return token
       })
       .catch(error => {

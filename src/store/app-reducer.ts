@@ -32,7 +32,7 @@ const app = createSlice({
     onSetInternet: (state, { payload }: PayloadAction<boolean>) => {
       state.internetState = payload
     },
-    onSetToken: (state, { payload }: PayloadAction<string>) => {
+    onSetToken: (state, { payload }: PayloadAction<string | undefined>) => {
       state.token = payload
     },
     onSetAppProfile: (state, { payload }: PayloadAction<unknown>) => {

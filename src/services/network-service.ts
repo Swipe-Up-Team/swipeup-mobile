@@ -32,7 +32,8 @@ AxiosInstance.interceptors.response.use(
       originalRequest._retry = true
       refreshTokenRequest = refreshTokenRequest
         ? refreshTokenRequest
-        : refreshToken(originalRequest)
+        : // eslint-disable-next-line @typescript-eslint/no-use-before-define
+          refreshToken(originalRequest)
       const newToken = await refreshTokenRequest
       refreshTokenRequest = null
       if (newToken === null) {

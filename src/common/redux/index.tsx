@@ -5,7 +5,7 @@ import isEqual from 'react-fast-compare'
 import { useDispatch } from 'react-redux'
 
 import { RootState } from '@store/all-reducers'
-import { useSelector } from '@src/hooks'
+import { useSelector } from '@src/common/hooks'
 
 type ActionBase<T = any> = {
   type: string
