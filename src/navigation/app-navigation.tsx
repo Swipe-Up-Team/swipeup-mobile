@@ -8,7 +8,7 @@ import Toast from 'react-native-toast-message'
 
 import { navigationRef } from './navigation-service'
 import { RootNavigation } from './root-navigator'
-import { onLoadApp, onLoadAppEnd } from '@src/store/app-reducer'
+import { onLoadApp, onLoadAppEnd } from '@src/store/reducers/app-reducer'
 import { MyAppTheme } from '@src/themes'
 import { useSelector } from '@src/common/hooks'
 import { dispatch, RXStore } from '@src/common/redux'

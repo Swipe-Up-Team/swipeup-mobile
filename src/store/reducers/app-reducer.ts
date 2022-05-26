@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { SLICE_NAME } from '../constants/enums'
-import { ThemeType } from '../themes'
+import { SLICE_NAME } from '../../constants/enums'
+import { ThemeType } from '../../themes'
 
 export interface AppState {
   internetState: boolean

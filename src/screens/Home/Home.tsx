@@ -1,6 +1,6 @@
 import { View, Text, Pressable } from 'react-native'
 import React from 'react'
-import { onSetToken } from '@src/store/app-reducer'
+import { onSetToken } from '@src/store/reducers/app-reducer'
 import { dispatch } from '@src/common'
 import Toast from 'react-native-toast-message'
 

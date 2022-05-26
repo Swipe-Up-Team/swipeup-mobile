@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import queryString from 'query-string'
 import { ParamsNetwork, ResponseBase } from '@src/models'
-import { AppState, onSetToken } from '@src/store/app-reducer'
+import { AppState, onSetToken } from '@src/store/reducers/app-reducer'
 import { dispatch, getState } from '@src/common/redux'
 import { handleErrorAxios, handleParameter, handleResponseAxios, onPushLogout } from '@utils/helper'
 import { API_ENDPOINT, RESULT_CODE_PUSH_OUT, TIME_OUT } from '@src/constants'

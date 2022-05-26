@@ -14,7 +14,7 @@ import { LoginFormValues } from './models'
 import styles from './styles'
 import { navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN } from '@src/navigation/screen-types'
-import { onEndProcess, onStartProcess } from '@src/store/app-reducer'
+import { onEndProcess, onStartProcess } from '@src/store/reducers/app-reducer'
 import { dispatch } from '@src/common'
 
 export const LoginScreen = () => {
