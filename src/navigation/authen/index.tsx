@@ -2,7 +2,18 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { APP_SCREEN } from '@navigation/screen-types'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { HomeIcon, MessageIcon, SearchIcon, BellIcon, UserIcon } from '@src/components/icons'
+import {
+  HomeIcon,
+  MessageIcon,
+  SearchIcon,
+  BellIcon,
+  UserIcon,
+  HomeFillIcon,
+  SearchFillIcon,
+  MessageFillIcon,
+  BellFillIcon,
+  UserFillIcon
+} from '@src/components/icons'
 import { Home } from '@src/screens/home'
 import { useTheme } from '@ui-kitten/components'
 import React, { useRef } from 'react'
@@ -40,7 +51,11 @@ export const MainScreen = () => {
             headerShown: false,
             tabBarIcon: ({ focused }) => (
               <View style={styles.tabBarItemContainer}>
-                <HomeIcon stroke={focused ? PRIMARY_COLOR : GRAY_COLOR} width={24} height={24} />
+                {focused ? (
+                  <HomeFillIcon fill={PRIMARY_COLOR} width={24} height={24} />
+                ) : (
+                  <HomeIcon stroke={GRAY_COLOR} width={24} height={24} />
+                )}
               </View>
             )
           }}
@@ -78,7 +93,11 @@ export const MainScreen = () => {
           options={{
             tabBarIcon: ({ focused }) => (
               <View style={styles.tabBarItemContainer}>
-                <MessageIcon stroke={focused ? PRIMARY_COLOR : GRAY_COLOR} width={24} height={24} />
+                {focused ? (
+                  <MessageFillIcon fill={PRIMARY_COLOR} width={24} height={24} />
+                ) : (
+                  <MessageIcon stroke={GRAY_COLOR} width={24} height={24} />
+                )}
               </View>
             )
           }}
@@ -97,7 +116,11 @@ export const MainScreen = () => {
           options={{
             tabBarIcon: ({ focused }) => (
               <View style={styles.tabBarItemContainer}>
-                <BellIcon stroke={focused ? PRIMARY_COLOR : GRAY_COLOR} width={24} height={24} />
+                {focused ? (
+                  <BellFillIcon fill={PRIMARY_COLOR} width={24} height={24} />
+                ) : (
+                  <BellIcon stroke={GRAY_COLOR} width={24} height={24} />
+                )}
               </View>
             )
           }}
@@ -115,9 +138,7 @@ export const MainScreen = () => {
           component={Home}
           options={{
             tabBarIcon: ({ focused }) => (
-              <View style={styles.tabBarItemContainer}>
-                <UserIcon stroke={focused ? PRIMARY_COLOR : GRAY_COLOR} width={24} height={24} />
-              </View>
+              <UserIcon stroke={focused ? PRIMARY_COLOR : GRAY_COLOR} width={24} height={24} />
             )
           }}
           listeners={() => ({

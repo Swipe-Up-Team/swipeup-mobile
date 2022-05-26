@@ -8,5 +8,12 @@ export const MessageIcon = (props: SvgProps) => (
       stroke={props.stroke}
       strokeWidth={2}
     />
+    <Path
+      d="M15 11H9M12 15H9"
+      stroke={props.stroke}
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </Svg>
 )
