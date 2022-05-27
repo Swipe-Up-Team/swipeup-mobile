@@ -3,22 +3,21 @@
 import { APP_SCREEN } from '@navigation/screen-types'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import {
+  BellFillIcon,
+  BellIcon,
+  HomeFillIcon,
   HomeIcon,
+  MessageFillIcon,
   MessageIcon,
   SearchIcon,
-  BellIcon,
-  UserIcon,
-  HomeFillIcon,
-  SearchFillIcon,
-  MessageFillIcon,
-  BellFillIcon,
-  UserFillIcon
+  UserIcon
 } from '@src/components/icons'
+import { ChatScreen } from '@src/screens/chat'
 import { Home } from '@src/screens/home'
 import { useTheme } from '@ui-kitten/components'
 import React, { useRef } from 'react'
-import { Animated, Dimensions, StyleSheet, View } from 'react-native'
-import { ChatScreen } from '@src/screens/chat'
+import { Animated, Dimensions, View } from 'react-native'
+import styles from './styles'
 
 function getWidth() {
   let width = Dimensions.get('window').width
@@ -41,7 +40,7 @@ export const MainScreen = () => {
           headerShown: false,
           tabBarShowLabel: false,
           tabBarHideOnKeyboard: true,
-          tabBarStyle: { ...styles.rootContainer }
+          tabBarStyle: styles.rootContainer
         }}
       >
         <Main.Screen
@@ -138,7 +137,9 @@ export const MainScreen = () => {
           component={Home}
           options={{
             tabBarIcon: ({ focused }) => (
-              <UserIcon stroke={focused ? PRIMARY_COLOR : GRAY_COLOR} width={24} height={24} />
+              <View style={styles.tabBarItemContainer}>
+                <UserIcon stroke={focused ? PRIMARY_COLOR : GRAY_COLOR} width={24} height={24} />
+              </View>
             )
           }}
           listeners={() => ({
@@ -158,7 +159,7 @@ export const MainScreen = () => {
           height: 2,
           backgroundColor: PRIMARY_COLOR,
           position: 'absolute',
-          bottom: 60,
+          bottom: 58,
           zIndex: 999,
           left: 10,
           borderRadius: 20,
@@ -168,22 +169,3 @@ export const MainScreen = () => {
     </>
   )
 }
-
-const styles = StyleSheet.create({
-  rootContainer: {
-    backgroundColor: '#fff',
-    height: 60
-  },
-  tabBarItemContainer: {
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  tabBarImage: {
-    width: 25,
-    height: 25
-  },
-  tabBarText: {
-    fontSize: 12,
-    fontWeight: '500'
-  }
-})
