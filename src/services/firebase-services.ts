@@ -1,7 +1,7 @@
 import { userApi } from '@src/api/user-api'
 import { dispatch } from '@src/common/redux'
 import { authentication } from '@src/config/firebase-config'
-import { onSetToken } from '@src/store/app-reducer'
+import { onSetToken } from '@src/store/reducers/app-reducer'
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,

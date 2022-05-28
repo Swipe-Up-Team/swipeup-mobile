@@ -2,8 +2,11 @@ import { PostCard, StyledDivider } from '@src/components'
 import { Post } from '@src/models'
 import { Spinner } from '@ui-kitten/components'
 import React, { useState } from 'react'
-import { FlatList, View } from 'react-native'
+import { FlatList, View, Text, Pressable } from 'react-native'
 import styles from './styles'
+import { onSetToken } from '@src/store/reducers/app-reducer'
+import { dispatch } from '@src/common'
+import Toast from 'react-native-toast-message'
 
 export function Home() {
   const [loading, setLoading] = useState(true)

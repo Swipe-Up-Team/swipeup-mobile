@@ -2,7 +2,7 @@
 import { Alert, Platform } from 'react-native'
 
 import { R } from '@src/constants'
-import { onLogout } from '@src/store/app-reducer'
+import { onLogout } from '@src/store/reducers/app-reducer'
 // import { remove } from '@src/utils'
 
 import { dispatch } from '../redux'

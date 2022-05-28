@@ -9,7 +9,7 @@ import {
   STATUS_TIME_OUT
 } from '@src/constants'
 import { ParamsNetwork, ResponseBase } from '@src/models'
-import { onLogout } from '@src/store/app-reducer'
+import { onLogout } from '@src/store/reducers/app-reducer'
 import { AxiosError, AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse, Method } from 'axios'
 
 const responseDefault: ResponseBase<Record<string, unknown>> = {
