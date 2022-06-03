@@ -9,7 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { EmptyComment } from './components/empty-comment'
 import styles from './styles'
 
-export default function PostDetailScreen() {
+export function PostDetailScreen() {
   const [loading, setLoading] = useState(true)
   const [comments, setComments] = useState([])
   const [hasMoreToLoad, setHasMoreToLoad] = useState(true)

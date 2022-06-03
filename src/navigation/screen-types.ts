@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Post } from '@src/models/post'
 
 export enum APP_SCREEN {
@@ -12,6 +13,9 @@ export enum APP_SCREEN {
   HOME = 'HOME',
   POST_DETAILS = 'POST_DETAILS',
   FEED_IMAGE_PREVIEW = 'FEED_IMAGE_PREVIEW',
+  ADD_POST = 'ADD_POST',
+
+  PHOTO_CHOOSER = 'PHOTO_CHOOSER',
 
   SEARCH = 'SEARCH',
   NOTIFICATIONS = 'NOTIFICATIONS',
@@ -34,6 +38,8 @@ export type AuthorizeParamsList = {
   [APP_SCREEN.FEED_IMAGE_PREVIEW]: {
     images: string[]
   }
+  [APP_SCREEN.PHOTO_CHOOSER]: undefined
+  [APP_SCREEN.ADD_POST]: undefined
   [APP_SCREEN.CHAT]: undefined
   [APP_SCREEN.CHAT_ROOM]: undefined
 }

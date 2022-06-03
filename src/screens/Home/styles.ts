@@ -6,9 +6,9 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: getRealDimensionsHeight(),
-    marginTop: 50
+    marginTop: 50,
     // FIXME: uncomment if finish home screen
-    // backgroundColor: '#fff'
+    backgroundColor: '#fff'
   },
   posts: {
     flex: 1,

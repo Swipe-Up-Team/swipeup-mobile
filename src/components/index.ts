@@ -1,3 +1,4 @@
+export * from './add-post-card'
 export * from './cached-image'
 export * from './comment-card'
 export * from './comment-input'

@@ -6,7 +6,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     height: 44,
     width: '100%',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
   btnBack: {
     height: 44,
@@ -22,6 +23,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     textAlign: 'center'
+  },
+  accessoryRight: {
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 })
 export default styles

@@ -1,4 +1,4 @@
-import { PostCard, StyledDivider } from '@src/components'
+import { AddPostCard, PostCard, StyledDivider } from '@src/components'
 import { Post } from '@src/models'
 import { Spinner } from '@ui-kitten/components'
 import React, { useState } from 'react'
@@ -77,11 +77,13 @@ export function HomeScreen() {
       <TouchableOpacity onPress={() => dispatch(onSetToken())}>
         <Text>Logout</Text>
       </TouchableOpacity>
+
       <FlatList
         data={POSTS}
         showsVerticalScrollIndicator={false}
         style={styles.posts}
         // TODO:
+        // onRefresh
         // ListEmptyComponent={ListEmpty}
         keyExtractor={data => data.id}
         ItemSeparatorComponent={StyledDivider}
@@ -89,6 +91,7 @@ export function HomeScreen() {
         onEndReachedThreshold={0.5}
         onEndReached={hasMoreToLoad ? handleLoadMore : null}
         renderItem={({ item }) => <PostCard post={item} />}
+        ListHeaderComponent={<AddPostCard />}
       />
     </View>
   )
