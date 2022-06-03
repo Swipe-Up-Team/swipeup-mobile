@@ -8,6 +8,7 @@ export enum APP_SCREEN {
   AUTHORIZE = 'AUTHORIZE',
 
   // FEED
+  HOME_STACK = 'HOME_STACK',
   HOME = 'HOME',
   POST_DETAILS = 'POST_DETAILS',
   FEED_IMAGE_PREVIEW = 'FEED_IMAGE_PREVIEW',
@@ -29,7 +30,6 @@ export type AuthorizeParamsList = {
   [APP_SCREEN.HOME]: undefined
   [APP_SCREEN.POST_DETAILS]: {
     post: Post
-    index: number
   }
   [APP_SCREEN.FEED_IMAGE_PREVIEW]: {
     images: string[]

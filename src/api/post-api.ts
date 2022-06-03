@@ -3,8 +3,8 @@ import { ParamsNetwork, ResponseBase } from '@src/models'
 import { LoginResponseData } from '@src/screens/login/models'
 import { NetworkService } from '../services/network-service'
 
-export const userApi = {
-  logInToDatabase: async (): Promise<ResponseBase<LoginResponseData> | null> => {
+export const postApi = {
+  getList: async (): Promise<ResponseBase<LoginResponseData> | null> => {
     const paramsNetwork: ParamsNetwork = {
       url: API_ENDPOINT.LOGIN
     }

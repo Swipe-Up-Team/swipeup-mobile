@@ -1,11 +1,11 @@
 import { reactionImages } from '@src/constants'
-import { Reactions as ReactionsType, ReactionType } from '@src/models'
+import { Reaction } from '@src/models'
 import React from 'react'
-import { View, Text, Image } from 'react-native'
+import { Image, Text, View } from 'react-native'
 import styles from './styles'
 
-const getReactionIcon = (reaction: ReactionType) => {
-  switch (reaction) {
+const getReactionIcon = (reaction: Reaction) => {
+  switch (reaction.type) {
     case 'like':
       return reactionImages.like_static_fill
     case 'love':
@@ -22,20 +22,11 @@ const getReactionIcon = (reaction: ReactionType) => {
       return reactionImages.like_static_fill
   }
 }
-const calculateTotalReaction = (obj: ReactionsType) => {
-  let total = 0
-  for (const el in obj) {
-    if (obj.hasOwnProperty(el)) {
-      total += parseFloat(obj[el])
-    }
-  }
-  return total
-}
 
-export const Reactions = ({ reactions }: { reactions: ReactionsType }) => {
+export const ReactionsCounter = ({ reactions }: { reactions: Reaction[] }) => {
   return (
     <View style={styles.row}>
-      {Object.keys(reactions).map((reaction, i) => {
+      {reactions.map((reaction, i) => {
         if (i < 3)
           //we only need to show maximum of 3 reaction icons.
           return (
@@ -50,9 +41,7 @@ export const Reactions = ({ reactions }: { reactions: ReactionsType }) => {
             </View>
           )
       })}
-      {Object.keys(reactions).length != 0 && (
-        <Text style={styles.reactionText}>{calculateTotalReaction(reactions)}</Text>
-      )}
+      {reactions.length !== 0 && <Text style={styles.reactionText}>{reactions.length}</Text>}
     </View>
   )
 }

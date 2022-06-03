@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   View
 } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 interface DismissKeyboardHOCProps {
   children: ReactNode
@@ -15,15 +16,20 @@ interface DismissKeyboardHOCProps {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    height: '100%',
+    // flex: 1,
+    // height: '100%',
+    backgroundColor: '#fff'
+  },
+  keyboardAvoidingViewContainer: {
+    position: 'relative'
   }
 })
 
 const DismissKeyboardHOC = (Comp: typeof View) => {
   return ({ children, ...props }: DismissKeyboardHOCProps) => (
+    // <SafeAreaView style={styles.container}>
     <KeyboardAvoidingView
-      style={styles.container}
+      style={styles.keyboardAvoidingViewContainer}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView nestedScrollEnabled={true}>
@@ -34,6 +40,7 @@ const DismissKeyboardHOC = (Comp: typeof View) => {
         </TouchableWithoutFeedback>
       </ScrollView>
     </KeyboardAvoidingView>
+    // </SafeAreaView>
   )
 }
 export const DismissKeyboardView = DismissKeyboardHOC(View)

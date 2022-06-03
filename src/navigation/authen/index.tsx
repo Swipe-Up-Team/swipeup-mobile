@@ -1,7 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { APP_SCREEN } from '@navigation/screen-types'
+import { useTheme } from '@ui-kitten/components'
+import React, { useRef } from 'react'
+import { Animated, Dimensions, View } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+
+import { APP_SCREEN } from '@navigation/screen-types'
 import {
   BellFillIcon,
   BellIcon,
@@ -13,10 +17,7 @@ import {
   UserIcon
 } from '@src/components/icons'
 import { ChatScreen } from '@src/screens/chat'
-import { Home } from '@src/screens/home'
-import { useTheme } from '@ui-kitten/components'
-import React, { useRef } from 'react'
-import { Animated, Dimensions, View } from 'react-native'
+import { HomeStack } from './home-stack'
 import styles from './styles'
 
 function getWidth() {
@@ -44,8 +45,8 @@ export const MainScreen = () => {
         }}
       >
         <Main.Screen
-          name={APP_SCREEN.HOME}
-          component={Home}
+          name={APP_SCREEN.HOME_STACK}
+          component={HomeStack}
           options={{
             headerShown: false,
             tabBarIcon: ({ focused }) => (
@@ -69,7 +70,7 @@ export const MainScreen = () => {
         />
         <Main.Screen
           name={APP_SCREEN.SEARCH}
-          component={Home}
+          component={HomeStack}
           options={{
             tabBarIcon: ({ focused }) => (
               <View style={styles.tabBarItemContainer}>
@@ -111,7 +112,7 @@ export const MainScreen = () => {
         />
         <Main.Screen
           name={APP_SCREEN.NOTIFICATIONS}
-          component={Home}
+          component={HomeStack}
           options={{
             tabBarIcon: ({ focused }) => (
               <View style={styles.tabBarItemContainer}>
@@ -134,7 +135,7 @@ export const MainScreen = () => {
         />
         <Main.Screen
           name={APP_SCREEN.MENU}
-          component={Home}
+          component={HomeStack}
           options={{
             tabBarIcon: ({ focused }) => (
               <View style={styles.tabBarItemContainer}>
@@ -153,7 +154,7 @@ export const MainScreen = () => {
         />
       </Main.Navigator>
 
-      <Animated.View
+      {/* <Animated.View
         style={{
           width: getWidth() - 20,
           height: 2,
@@ -165,7 +166,7 @@ export const MainScreen = () => {
           borderRadius: 20,
           transform: [{ translateX: tabOffsetValue }]
         }}
-      />
+      /> */}
     </>
   )
 }

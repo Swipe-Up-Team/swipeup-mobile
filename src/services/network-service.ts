@@ -9,9 +9,10 @@ import { StyleSheet } from 'react-native'
 
 const tokenKeyHeader = 'authorization'
 let refreshTokenRequest: Promise<string | null> | null = null
+const BASE_URL = 'http://128.199.254.45:3040/'
 
 const AxiosInstance = axios.create({
-  baseURL: 'http://34.142.206.170:3040/',
+  baseURL: BASE_URL,
   timeout: TIME_OUT,
   headers: {
     'Content-Type': 'application/json'
@@ -60,7 +61,7 @@ function Request<T = unknown>(config: AxiosRequestConfig, isCheckOut = true) {
     const { token }: AppState = getState('app')
     const defaultConfig: AxiosRequestConfig = {
       //TODO: fix this
-      baseURL: 'http://34.142.206.170:3040/',
+      baseURL: BASE_URL,
       timeout: TIME_OUT,
       headers: {
         'Content-Type': 'application/json',

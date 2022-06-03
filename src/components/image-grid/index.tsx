@@ -1,6 +1,7 @@
 import React from 'react'
 import { GestureResponderEvent } from 'react-native'
 import { StyleProp, Text, TouchableOpacity, View, ViewStyle } from 'react-native'
+import { ImagesCarousel } from '../images-carousel'
 import { ImageItem } from './image-item'
 import styles from './styles'
 import { TwoImages } from './two-images'
@@ -41,7 +42,7 @@ export type ImageGridProps = {
 export const ImageGrid = ({ images, style, onPress }: ImageGridProps) => {
   return images.length > 0 ? (
     <View style={[styles.container_row, style]}>
-      {images.length <= 2 ? (
+      {/* {images.length <= 2 ? (
         <TwoImages images={images} onPress={onPress} />
       ) : (
         <ImageItem image={images[0]} onPress={onPress} index={0} />
@@ -51,6 +52,11 @@ export const ImageGrid = ({ images, style, onPress }: ImageGridProps) => {
       )}
       {images.length > 3 && (
         <View style={styles.container}>{renderImages(1, true, images, onPress)}</View>
+      )} */}
+      {images.length === 1 ? (
+        <ImageItem image={images[0]} onPress={onPress} index={0} />
+      ) : (
+        <ImagesCarousel />
       )}
     </View>
   ) : null

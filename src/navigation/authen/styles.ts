@@ -7,7 +7,6 @@ const styles = StyleSheet.create({
     position: 'absolute'
   },
   tabBarItemContainer: {
-    marginTop: 10,
     alignItems: 'center',
     justifyContent: 'center'
   }

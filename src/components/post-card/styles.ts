@@ -29,16 +29,16 @@ const styles = StyleSheet.create({
     borderRadius: 5
   },
   createdAt: {
-    fontWeight: '500',
-    fontSize: 12,
-    lineHeight: 13,
-    marginTop: 3
+    fontWeight: '600',
+    fontSize: 10,
+    lineHeight: 13
   },
   creatorName: {
-    fontWeight: 'bold'
+    fontSize: 13,
+    fontWeight: '600'
   },
   descriptionContainer: {
-    marginBottom: 5,
+    marginBottom: 15,
     paddingHorizontal: 15,
     backgroundColor: '#fff'
   },

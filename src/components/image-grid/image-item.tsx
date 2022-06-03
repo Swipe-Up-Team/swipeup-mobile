@@ -1,7 +1,7 @@
 import React from 'react'
 import { GestureResponderEvent, TouchableOpacity, View } from 'react-native'
+import { CachedImage } from '../cached-image'
 import styles from './styles'
-import ExpoFastImage from 'expo-fast-image'
 
 interface ImageItemProps {
   image: string
@@ -15,13 +15,13 @@ export const ImageItem = ({ image, index, onPress }: ImageItemProps) => {
       style={styles.image_view}
       onPress={event => onPress(image, index, event)}
     >
-      <ExpoFastImage
+      <CachedImage
         style={styles.image}
-        resizeMode="cover"
         source={{
           uri: image
         }}
         cacheKey={image}
+        // resizeMode="cover"
       />
     </TouchableOpacity>
   ) : (

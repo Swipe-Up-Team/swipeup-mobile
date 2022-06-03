@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import { useRoute } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { Post as PostType } from '@src/models/post'
 import { navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN } from '@src/navigation/screen-types'
@@ -18,19 +18,23 @@ export interface PostCardProps {
 }
 
 export function PostCard({ post, preview = false }: PostCardProps) {
-  const { reactions, comments, shares, images } = post
+  const {
+    reacts,
+    comments,
+    content: { text, images }
+  } = post
   const descRef = useRef<PostDescriptionType>(null)
   const route = useRoute()
-  // const navigation = useNavigation()
+  const navigation = useNavigation()
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onPressImage = (image: string, index: number, e: GestureResponderEvent) =>
     preview
       ? navigate(APP_SCREEN.FEED_IMAGE_PREVIEW, { images: images || [] }) //To preview a selected single image
-      : navigate(APP_SCREEN.POST_DETAILS, { post, index }) //index is passed to scroll to the specific image on mount
+      : navigate(APP_SCREEN.POST_DETAILS, { post }) //index is passed to scroll to the specific image on mount
 
   const onPressComments = () => {
-    alert('comments')
+    navigate(APP_SCREEN.POST_DETAILS, { post })
   }
 
   const onPressShare = () => {
@@ -72,7 +76,7 @@ export function PostCard({ post, preview = false }: PostCardProps) {
         </View>
       ) : null}
 
-      {post.desc ? (
+      {text ? (
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => descRef.current && descRef.current.toggleNumberOfLines()}
@@ -80,16 +84,16 @@ export function PostCard({ post, preview = false }: PostCardProps) {
         >
           <PostDescription
             ref={descRef}
-            desc={post.desc}
+            desc={text}
             showFull={route.name === 'FacebookFeedPostDetails'}
           />
         </TouchableOpacity>
       ) : null}
 
       {images && images.length > 0 && (
-        <View style={{ height: 300 }}>
+        <View style={{ height: 270 }}>
           <ImageGrid
-            style={{ height: 300, paddingHorizontal: 15 }}
+            style={{ height: 270, paddingHorizontal: 15 }}
             images={images}
             onPress={onPressImage}
           />
@@ -105,7 +109,7 @@ export function PostCard({ post, preview = false }: PostCardProps) {
           onPress={onPressComments}
         >
           <PostCommentIcon />
-          <Text style={styles.buttonText}>{comments} Comments</Text>
+          <Text style={styles.buttonText}>{comments.length} Comments</Text>
         </TouchableOpacity>
 
         <TouchableOpacity activeOpacity={0.8} style={styles.buttonContainer} onPress={onPressShare}>

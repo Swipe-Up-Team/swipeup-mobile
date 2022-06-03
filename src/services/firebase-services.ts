@@ -1,3 +1,6 @@
+import { ResponseBase } from '@src/models'
+import { NetWorkResponseType } from './network-service'
+import { LoginResponseData } from './../screens/login/models/login-response'
 import { userApi } from '@src/api/user-api'
 import { dispatch } from '@src/common/redux'
 import { authentication } from '@src/config/firebase-config'
@@ -15,11 +18,12 @@ export const firebaseService = {
     signInWithEmailAndPassword(authentication, email, password)
       .then(async res => {
         const token = await res.user.getIdToken()
-        console.log('🚀 ~ file: firebase-services.ts ~ line 18 ~ token', token)
-
-        // TODO: split code if du quan
         dispatch(onSetToken(token))
-        userApi.logInToDatabase()
+
+        const resp = await userApi.logInToDatabase()
+        if (resp?.data) {
+          dispatch(onSetToken(resp.data.tokens.accessToken))
+        }
         return token
       })
       .catch(error => {

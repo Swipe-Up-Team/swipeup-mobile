@@ -1,11 +1,12 @@
 import { getRealDimensionsHeight } from '@src/utils'
-import { StyleSheet, StatusBar } from 'react-native'
+import { StatusBar, StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: getRealDimensionsHeight(),
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   bannerContainer: {
     alignItems: 'center',

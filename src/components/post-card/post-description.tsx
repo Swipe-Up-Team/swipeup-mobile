@@ -6,6 +6,11 @@ const styles = StyleSheet.create({
   mainContainer: {
     alignItems: 'flex-start',
     justifyContent: 'center'
+  },
+  text: {
+    fontSize: 13,
+    fontWeight: '600',
+    lineHeight: 16
   }
 })
 export type PostDescriptionType = {
@@ -36,7 +41,7 @@ export const PostDescription = forwardRef(({ desc, showFull }: PostDescriptionPr
   if (showFull) {
     return (
       <View style={styles.mainContainer}>
-        <Text status="basic" style={{ lineHeight: 20 }}>
+        <Text status="basic" style={styles.text}>
           {desc}
         </Text>
       </View>
@@ -47,7 +52,7 @@ export const PostDescription = forwardRef(({ desc, showFull }: PostDescriptionPr
         <Text
           onTextLayout={onTextLayout}
           numberOfLines={textShown ? undefined : 3}
-          style={{ lineHeight: 20 }}
+          style={styles.text}
           status="basic"
         >
           {desc}
@@ -56,7 +61,8 @@ export const PostDescription = forwardRef(({ desc, showFull }: PostDescriptionPr
           <Text
             status="basic"
             onPress={toggleNumberOfLines}
-            style={{ marginVertical: textShown ? 0 : 5, color: 'grey', fontWeight: '500' }}
+            // eslint-disable-next-line react-native/no-inline-styles
+            style={{ marginVertical: textShown ? 0 : 5, color: 'grey', fontWeight: '400' }}
           >
             {textShown ? '' : '...See more'}
           </Text>
