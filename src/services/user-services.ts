@@ -1,7 +1,7 @@
-import { ResponseBase } from '@src/models'
-import { NetWorkResponseType } from './network-service'
-import { LoginResponseData } from './../screens/login/models/login-response'
-import { userApi } from '@src/api/user-api'
+// import { ResponseBase } from '@src/models'
+// import { NetWorkResponseType } from './network-service'
+import { LoginResponseData } from '../screens/login/models/login-response'
+// import { userApi } from '@src/api/user-api'
 import { dispatch } from '@src/common/redux'
 import { authentication } from '@src/config/firebase-config'
 import { onSetToken } from '@src/store/reducers/app-reducer'
@@ -19,12 +19,6 @@ export const firebaseService = {
       .then(async res => {
         const token = await res.user.getIdToken()
         dispatch(onSetToken(token))
-
-        const resp = await userApi.logInToDatabase()
-        if (resp?.data) {
-          dispatch(onSetToken(resp.data.tokens.accessToken))
-        }
-        return token
       })
       .catch(error => {
         //TODO: HANDLE LOGIN FAILED HERE
@@ -37,8 +31,7 @@ export const firebaseService = {
     signInWithCredential(auth, credential)
       .then(async res => {
         const token = await res.user.getIdToken()
-        userApi.logInToDatabase()
-        return token
+        dispatch(onSetToken(token))
       })
       .catch(error => {
         //TODO: HANDLE SIGNUP FAILED HERE
