@@ -1,6 +1,5 @@
 // import { ResponseBase } from '@src/models'
 // import { NetWorkResponseType } from './network-service'
-import { LoginResponseData } from '../screens/login/models/login-response'
 // import { userApi } from '@src/api/user-api'
 import { dispatch } from '@src/common/redux'
 import { authentication } from '@src/config/firebase-config'
@@ -12,12 +11,43 @@ import {
   signInWithCredential,
   getAuth
 } from 'firebase/auth'
+import { firestore } from '@src/config'
+import { User, UserGender, UserStatus } from '@src/models'
+import { FIRESTORE_ENDPOINT } from '@src/constants'
+import { setUser } from '@src/store/reducers/user-reducer'
+import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore'
+import Toast from 'react-native-toast-message'
 
-export const firebaseService = {
+const createNewUser = (uid: string, username: string) => {
+  const newUser: User = {
+    id: uid,
+    email: username,
+    name: username,
+    status: UserStatus.PUBLIC,
+    avatar: '',
+    bio: '',
+    birthDay: {
+      date: 0,
+      month: 0,
+      year: 0
+    },
+    gender: UserGender.MALE,
+    phone: '',
+    followingIDs: [],
+    createdAt: new Date().getTime(),
+    updatedAt: new Date().getTime()
+  }
+  return newUser
+}
+
+export const userService = {
   logInWithEmailAndPassword: async (email: string, password: string) =>
     signInWithEmailAndPassword(authentication, email, password)
       .then(async res => {
         const token = await res.user.getIdToken()
+        const user = await userService.getUser(res.user.uid)
+
+        dispatch(setUser(user!))
         dispatch(onSetToken(token))
       })
       .catch(error => {
@@ -31,7 +61,19 @@ export const firebaseService = {
     signInWithCredential(auth, credential)
       .then(async res => {
         const token = await res.user.getIdToken()
-        dispatch(onSetToken(token))
+        const uid = res.user.uid
+
+        const user = await userService.getUser(uid)
+        if (user) {
+          dispatch(setUser(user))
+          dispatch(onSetToken(token))
+        } else {
+          const newUser = createNewUser(uid, res.user.email!)
+          await setDoc(doc(firestore, FIRESTORE_ENDPOINT.USERS, res.user.uid), newUser)
+
+          dispatch(setUser(newUser))
+          dispatch(onSetToken(token))
+        }
       })
       .catch(error => {
         //TODO: HANDLE SIGNUP FAILED HERE
@@ -39,17 +81,31 @@ export const firebaseService = {
       })
   },
 
-  createUserWithEmailAndPassword: (username: string, password: string) => {
+  createUserWithEmailAndPassword: async (username: string, password: string) =>
     createUserWithEmailAndPassword(authentication, username, password)
       .then(async res => {
-        //TODO: IMPLEMENT
-        // const token = await res.user.getIdToken()
-        // console.log(token)
-        // return token
+        const token = await res.user.getIdToken()
+        const newUser = createNewUser(res.user.uid, username)
+
+        await setDoc(doc(firestore, FIRESTORE_ENDPOINT.USERS, res.user.uid), newUser)
+
+        dispatch(setUser(newUser))
+        dispatch(onSetToken(token))
+
+        //TODO: handle show toast
       })
       .catch(error => {
         //TODO: HANDLE SIGNUP FAILED HERE
         console.log(error)
-      })
+      }),
+
+  getUser: async (uid: string) => {
+    const snapshot = await getDoc(doc(firestore, `${FIRESTORE_ENDPOINT.USERS}/${uid}`))
+
+    if (!snapshot.exists()) {
+      return undefined
+    }
+
+    return snapshot.data() as User
   }
 }

@@ -7,12 +7,16 @@ import { goBack } from '@src/navigation/navigation-service'
 import styles from './styles'
 import { SignupForm } from './components'
 import { SignupFormValues } from './models'
+import { userService } from '@src/services'
+import { dispatch } from '@src/common'
+import { onEndProcess, onStartProcess } from '@src/store/reducers/app-reducer'
 
 export const SignupScreen = () => {
-  const signupWithEmailAndPassword = (data: SignupFormValues) => {
-    //TODO: implement this when BE is ready
+  const signupWithEmailAndPassword = async (data: SignupFormValues) => {
+    dispatch(onStartProcess())
     const { email, password } = data
-    console.log('signup with email and password', email, password)
+    await userService.createUserWithEmailAndPassword(email, password)
+    dispatch(onEndProcess())
   }
 
   const navigateToLoginScreen = () => {
