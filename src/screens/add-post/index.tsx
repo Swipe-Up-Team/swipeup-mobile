@@ -1,13 +1,14 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useInterpolate } from '@src/common/animated'
-import { CloseIcon, NavigationBar } from '@src/components'
-import { goBack } from '@src/navigation/navigation-service'
+import { RouteProp, useRoute } from '@react-navigation/native'
 import { Avatar, Button, Text } from '@ui-kitten/components'
+import * as MediaLibrary from 'expo-media-library'
 import React, { useEffect } from 'react'
 import {
   Animated as RNAnimated,
   Dimensions,
+  FlatList,
   Keyboard,
   KeyboardAvoidingView,
   NativeSyntheticEvent,
@@ -23,15 +24,30 @@ import {
   State,
   TouchableWithoutFeedback
 } from 'react-native-gesture-handler'
-import Animated, { Extrapolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
+import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
+
+import { getState, useArray } from '@src/common'
+import {
+  CloseIcon,
+  NavigationBar,
+  PostPhotoBigIcon,
+  PostTagFriendBigIcon,
+  PostVideoBigIcon
+} from '@src/components'
+import { goBack, navigate } from '@src/navigation/navigation-service'
+import { APP_SCREEN, RootStackParamList } from '@src/navigation/screen-types'
+import { ChoseAsset } from './components'
 import styles from './styles'
-// import Animated  from 'react-native-reanimated'
 
 const screenWidth = Math.round(Dimensions.get('window').width)
 
 export function AddPostScreen() {
-  // const editorWrapperHeight = new RNAnimated.Value(100)
+  const route = useRoute<RouteProp<RootStackParamList, APP_SCREEN.ADD_POST>>()
+  const { systemAssets } = getState('systemAssets')
+  const [selectedAssets, selectedAssetsActions] = useArray<MediaLibrary.Asset>([])
+
+  // ANIMATION VARS
   const editorWrapperHeight = useSharedValue(100)
   let isShowBgColors = true
   const _bgColorListWidth = new RNAnimated.Value(screenWidth - 60)
@@ -47,6 +63,26 @@ export function AddPostScreen() {
     inputRange: [-660, 0, 660],
     outputRange: [710, 0, -610]
   })
+
+  const handleAddMediaPress = async () => {
+    navigate(APP_SCREEN.GALLERY_CHOOSER, { selectedAssets })
+  }
+
+  const handleRemoveAsset = (idx: number) => {
+    selectedAssetsActions.removeIndex(idx)
+  }
+
+  // load selected assets from gallery chooser screen
+  useEffect(() => {
+    if (route.params?.selectedAssetIndexes && route.params?.selectedAssetIndexes.length > 0) {
+      const _selectedAssets: MediaLibrary.Asset[] = []
+      route.params?.selectedAssetIndexes.forEach(idx => _selectedAssets.push(systemAssets[idx]))
+
+      selectedAssetsActions.setValue(_selectedAssets)
+    }
+  }, [route.params?.selectedAssetIndexes])
+
+  // ANIMATION FUNCTIONS
 
   const keyboardWillShow = () => {
     _distanceTopOption.setValue(0)
@@ -158,7 +194,7 @@ export function AddPostScreen() {
           callback={goBack}
           iconLeft={<CloseIcon />}
           accessoryRight={
-            <TouchableOpacity style={{ marginRight: 20 }} onPress={() => {}}>
+            <TouchableOpacity style={styles.accessoryRightNavigationBar} onPress={() => {}}>
               <Button
                 size="small"
                 onPress={() => {
@@ -177,18 +213,18 @@ export function AddPostScreen() {
             style={styles.avatar}
             source={{ uri: 'https://konsept-client.vercel.app/dist/src/assets/images/sang.jpg' }}
           />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              flex: 1
-            }}
-          >
+          <View style={styles.postInfoWrapper}>
             <Text style={styles.name}>{'user.name'}</Text>
             <View style={styles.areaWrapper}>
-              <TouchableOpacity style={styles.areaOption}>
+              {/* FIXME: un-comment if has post status */}
+              {/* <TouchableOpacity
+                style={styles.areaOption}
+                onPress={() => {
+                  navigate(APP_SCREEN.POST_STATUS_OPTIONS_MODAL)
+                }}
+              >
                 <Text>Public</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </View>
         </View>
@@ -196,6 +232,7 @@ export function AddPostScreen() {
         <View style={styles.editorWrapper}>
           <Animated.View style={editorWrapperAnimatedStyle}>
             <TextInput
+              autoFocus
               multiline
               placeholder="What are you thinking?"
               placeholderTextColor="#96A0B0"
@@ -204,6 +241,18 @@ export function AddPostScreen() {
             />
           </Animated.View>
         </View>
+
+        {/* TODO: handle remove/onPress for each image */}
+        <FlatList
+          horizontal
+          data={selectedAssets}
+          keyExtractor={data => data.id}
+          style={styles.selectedAssetsWrapper}
+          contentContainerStyle={styles.selectedAssetsContentWrapper}
+          renderItem={({ item, index }) => (
+            <ChoseAsset key={item.id} item={item} onRemove={() => handleRemoveAsset(index)} />
+          )}
+        />
 
         <RNAnimated.View style={styles.toolOptionsWrapper}>
           <PanGestureHandler
@@ -218,43 +267,46 @@ export function AddPostScreen() {
               }}
             >
               <TouchableWithoutFeedback onPress={onPressShowOptions}>
-                <View style={styles.optionContainer}>
+                <View style={[styles.optionContainer, { justifyContent: 'space-between' }]}>
                   <Text style={styles.optionText}>Add to your post</Text>
-                  {/* <View style={styles.optionImagesWrapper}>
+                  <View style={styles.optionImagesWrapper}>
+                    <View style={styles.optionImage}>
+                      <PostPhotoBigIcon />
+                    </View>
+                    <View style={styles.optionImage}>
+                      <PostVideoBigIcon />
+                    </View>
+                    <View style={styles.optionImage}>
+                      <PostTagFriendBigIcon />
+                    </View>
+                    {/* <Image
+                      style={styles.optionImage}
+                      source={require('../../../assets/icon/camera.png')}
+                    />
                     <Image
                       style={styles.optionImage}
-                      source={require('../../assets/icons/photo.png')}
-                    ></Image>
+                      source={require('../../../assets/icon/vector.png')}
+                    />
                     <Image
                       style={styles.optionImage}
-                      source={require('../../assets/icons/friend.png')}
-                    ></Image>
-                    <Image
-                      style={styles.optionImage}
-                      source={require('../../assets/icons/emoji.png')}
-                    ></Image>
-                    <Image
-                      style={styles.optionImage}
-                      source={require('../../assets/icons/gps.png')}
-                    ></Image>
-                  </View> */}
+                      source={require('../../../assets/icon/user_add_alt.png')}
+                    /> */}
+                  </View>
                 </View>
               </TouchableWithoutFeedback>
-              <TouchableOpacity onPress={() => console.log('do not thing')}>
+              <TouchableOpacity onPress={handleAddMediaPress}>
                 <View style={styles.optionContainer}>
-                  {/* <Image
-                    style={{ ...styles.optionImage, width: 30, marginRight: 15 }}
-                    source={require('../../assets/icons/photo.png')}
-                  ></Image> */}
+                  <View style={{ ...styles.optionImage, width: 30, marginRight: 15 }}>
+                    <PostPhotoBigIcon />
+                  </View>
                   <Text style={styles.optionText}>Image/Video</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => console.log('do not thing')}>
                 <View style={styles.optionContainer}>
-                  {/* <Image
-                    style={{ ...styles.optionImage, width: 30, marginRight: 15 }}
-                    source={require('../../assets/icons/friend.png')}
-                  ></Image> */}
+                  <View style={{ ...styles.optionImage, width: 30, marginRight: 15 }}>
+                    <PostTagFriendBigIcon />
+                  </View>
                   <Text style={styles.optionText}>Tag your friends</Text>
                 </View>
               </TouchableOpacity>

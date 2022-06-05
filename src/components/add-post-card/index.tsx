@@ -6,13 +6,26 @@ import { navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN } from '@src/navigation/screen-types'
 import { PostPhotoIcon, PostTagFriendIcon, PostVideoIcon } from '../icons'
 import styles from './styles'
+import { CommonActions, useNavigation } from '@react-navigation/native'
 
 export function AddPostCard() {
+  const navigation = useNavigation()
+
   const handlePhotoUploadPress = () => {
-    navigate(APP_SCREEN.PHOTO_CHOOSER)
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 1,
+        routes: [
+          { name: APP_SCREEN.AUTHORIZE },
+          { name: APP_SCREEN.ADD_POST },
+          { name: APP_SCREEN.GALLERY_CHOOSER }
+        ]
+      })
+    )
   }
+
   const handleAddPostPress = () => {
-    navigate(APP_SCREEN.ADD_POST)
+    navigate(APP_SCREEN.ADD_POST, {})
   }
 
   return (

@@ -10,7 +10,9 @@ import {
 } from '@src/constants'
 import { ParamsNetwork, ResponseBase } from '@src/models'
 import { onLogout } from '@src/store/reducers/app-reducer'
-import { AxiosError, AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse, Method } from 'axios'
+import { AxiosError, AxiosRequestConfig, AxiosResponse, Method } from 'axios'
+import * as MediaLibrary from 'expo-media-library'
+import Toast from 'react-native-toast-message'
 
 const responseDefault: ResponseBase<Record<string, unknown>> = {
   code: -500,
@@ -80,7 +82,7 @@ export const handleParameter = <T extends ParamsNetwork>(
 ): AxiosRequestConfig => {
   const { url, body, path, params, query } = props
   const resQuery = handleQuery(url, query)
-  
+
   return {
     ...props,
     method,
@@ -88,4 +90,37 @@ export const handleParameter = <T extends ParamsNetwork>(
     data: body,
     params
   }
+}
+
+export const fetchSystemImages = async (page?: number) => {
+  const getPhotos = () =>
+    MediaLibrary.getAssetsAsync({
+      mediaType: MediaLibrary.MediaType.photo,
+      first: page ? 20 * page : 20
+    })
+      .then(result => {
+        return result.assets
+      })
+      .catch(err => {
+        console.log('error at helper -> fetchSystemImages', err)
+      })
+  return MediaLibrary.getPermissionsAsync().then(permission => {
+    if (permission.granted) {
+      return getPhotos()
+    } else {
+      MediaLibrary.requestPermissionsAsync()
+        .then(_permission => {
+          if (_permission.granted) {
+            return getPhotos()
+          } else
+            Toast.show({
+              type: 'error',
+              text1: 'You need to grant permission to get system photos'
+            })
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
+  })
 }

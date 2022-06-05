@@ -1,11 +1,12 @@
 import React from 'react'
 
-import { createStackNavigator } from '@react-navigation/stack'
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
 
 import { MainScreen } from './authen'
 import { APP_SCREEN, RootStackParamList } from './screen-types'
 import { UnAuthentication } from './un-authen'
-import { AddPostScreen, ChatRoomScreen } from '@src/screens'
+import { AddPostScreen, ChatRoomScreen, GalleryChooserScreen } from '@src/screens'
+import { PostStatusOptionsScreen } from '@src/screens/post-status-options'
 
 const RootStack = createStackNavigator<RootStackParamList>()
 
@@ -27,7 +28,24 @@ export const RootNavigation = ({ token }: { token?: string }) => {
             component={MainScreen}
           />
           <RootStack.Screen name={APP_SCREEN.CHAT_ROOM} component={ChatRoomScreen} />
-          <RootStack.Screen name={APP_SCREEN.ADD_POST} component={AddPostScreen} />
+          <RootStack.Screen
+            options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
+            name={APP_SCREEN.ADD_POST}
+            component={AddPostScreen}
+          />
+          <RootStack.Screen
+            options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
+            name={APP_SCREEN.GALLERY_CHOOSER}
+            component={GalleryChooserScreen}
+          />
+          <RootStack.Screen
+            options={{
+              ...TransitionPresets.ModalTransition,
+              cardStyle: { backgroundColor: 'transparent' }
+            }}
+            name={APP_SCREEN.POST_STATUS_OPTIONS_MODAL}
+            component={PostStatusOptionsScreen}
+          />
         </>
       )}
     </RootStack.Navigator>

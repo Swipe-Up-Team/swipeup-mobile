@@ -1,4 +1,5 @@
 export * from './add-post-card'
+export * from './bottom-sheet'
 export * from './cached-image'
 export * from './comment-card'
 export * from './comment-input'

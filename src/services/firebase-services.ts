@@ -1,16 +1,13 @@
-import { ResponseBase } from '@src/models'
-import { NetWorkResponseType } from './network-service'
-import { LoginResponseData } from './../screens/login/models/login-response'
 import { userApi } from '@src/api/user-api'
 import { dispatch } from '@src/common/redux'
 import { authentication } from '@src/config/firebase-config'
 import { onSetToken } from '@src/store/reducers/app-reducer'
 import {
-  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  getAuth,
   GoogleAuthProvider,
   signInWithCredential,
-  getAuth
+  signInWithEmailAndPassword
 } from 'firebase/auth'
 
 export const firebaseService = {
