@@ -3,6 +3,7 @@ import { combineReducers } from '@reduxjs/toolkit'
 import appReducer from './reducers/app-reducer'
 import { persistReducer } from 'redux-persist'
 import systemAssetsReducer from './reducers/system-assets-reducer'
+import userReducer from './reducers/user-reducer'
 
 const appPersistConfig = {
   key: 'app',
@@ -12,7 +13,8 @@ const appPersistConfig = {
 
 export const allReducer = combineReducers({
   app: persistReducer(appPersistConfig, appReducer),
-  systemAssets: systemAssetsReducer
+  systemAssets: systemAssetsReducer,
+  user: userReducer
 })
 
 export type RootState = ReturnType<typeof allReducer>

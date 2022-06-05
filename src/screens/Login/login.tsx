@@ -7,8 +7,8 @@ import React, { useEffect } from 'react'
 import { Pressable, View } from 'react-native'
 import { DismissKeyboardView } from '@components/HOCs'
 import { StyledDivider } from '@components/styled'
-import { googleConfig } from '@src/config/firebase-config'
-import { firebaseService } from '@src/services/firebase-services'
+import { googleConfig } from '@src/config'
+import { userService } from '@src/services'
 import { GoogleSignInButton, LoginForm } from './components'
 import { LoginFormValues } from './models'
 import styles from './styles'
@@ -23,17 +23,16 @@ export const LoginScreen = () => {
   const loginWithEmailAndPassword = async (data: LoginFormValues) => {
     dispatch(onStartProcess())
     const { email, password } = data
-    console.log('🚀 ~ file: login.tsx ~ line 23 ~ loginWithEmailAndPassword ~ data', data)
-    await firebaseService.logInWithEmailAndPassword(email, password)
+    await userService.logInWithEmailAndPassword(email, password)
     dispatch(onEndProcess())
   }
 
-  const loginWithGoogle = () => {
+  const loginWithGoogle = async () => {
     if (response?.type === 'success') {
       const { id_token } = response.params
-      firebaseService.logInWithGoogle(id_token)
-    } else {
-      console.log('error', response)
+      dispatch(onStartProcess())
+      await userService.logInWithGoogle(id_token)
+      dispatch(onEndProcess())
     }
   }
 

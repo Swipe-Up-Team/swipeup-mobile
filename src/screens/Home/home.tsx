@@ -5,11 +5,13 @@ import React, { useState } from 'react'
 import { FlatList, View, Text, TouchableOpacity } from 'react-native'
 import styles from './styles'
 import { onSetToken } from '@src/store/reducers/app-reducer'
-import { dispatch } from '@src/common'
+import { dispatch, getState } from '@src/common'
 
 export function HomeScreen() {
   const [loading, setLoading] = useState(true)
   const [hasMoreToLoad, setHasMoreToLoad] = useState(true)
+
+  console.log('HomeScreen: ', getState('user').user)
 
   const POSTS: Post[] = [
     {

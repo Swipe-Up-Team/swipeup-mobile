@@ -3,6 +3,6 @@ export const R = { strings }
 
 export * from './regex'
 export * from './enums'
-export * from './networking'
 export * from './reaction-images'
 export * from './ui'
+export * from './firestore-endpoint'

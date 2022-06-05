@@ -18,7 +18,6 @@ const initialState: AppState = {
   profile: {},
   token: undefined,
   status: 200,
-
   loadingApp: false,
   showDialog: false,
   loading: 0,
@@ -58,29 +57,31 @@ const app = createSlice({
       state.profile = {}
     }
   },
-  extraReducers: builder => {
-    builder
-      .addMatcher(
-        action => action.type.endsWith('/pending'),
-        state => {
-          state.loading = state.loading + 1
-        }
-      )
-      .addMatcher(
-        action => action.type.endsWith('/fulfilled') || action.type.endsWith('/rejected'),
-        (state, action) => {
-          const errorCode = action.payload.errorCode
-          if (errorCode) {
-            state.status = errorCode
-          }
-          state.loading = state.loading - 1
-        }
-      )
-  }
+  // extraReducers: builder => {
+  //   builder
+  //     .addMatcher(
+  //       action => action.type.endsWith('/pending'),
+  //       state => {
+  //         state.loading = state.loading + 1
+  //       }
+  //     )
+  //     .addMatcher(
+  //       action => action.type.endsWith('/fulfilled') || action.type.endsWith('/rejected'),
+  //       (state, action) => {
+  //         const errorCode = action.payload.errorCode
+  //         if (errorCode) {
+  //           state.status = errorCode
+  //         }
+  //         state.loading = state.loading - 1
+  //       }
+  //     )
+  // }
 })
 
 const appReducer = app.reducer
+
 export default appReducer
+
 export const {
   onSetInternet,
   onSetToken,
