@@ -244,7 +244,7 @@ export default function ProfileScreen() {
                             activeOpacity={1}
                             onPress={_onBackToMainScreen}>
                             <View onLayout={_onSetHeaderHeight}>
-                                <ProfileExtraInfo ref={ref} scrollVRef={scrollVRef} />
+                                <ProfileExtraInfo curRef={ref} scrollVRef={scrollVRef} />
                                 <ProfileInfo />
                                 <TouchableOpacity
                                     // onPress={() => navigate('EditProfile')}
