@@ -26,7 +26,7 @@ export const RootNavigation = ({ token }: { token?: string }) => {
           <RootStack.Screen
             options={{ gestureEnabled: false }}
             name={APP_SCREEN.AUTHORIZE}
-            component={HomeScreen}
+            component={MainScreen}
           />
           <RootStack.Screen name={APP_SCREEN.CHAT_ROOM} component={ChatRoomScreen} />
           <RootStack.Screen
@@ -46,12 +46,6 @@ export const RootNavigation = ({ token }: { token?: string }) => {
             }}
             name={APP_SCREEN.POST_STATUS_OPTIONS_MODAL}
             component={PostStatusOptionsScreen}
-          />
-
-          <RootStack.Screen
-            options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
-            name={APP_SCREEN.PROFILE}
-            component={ProfileScreen}
           />
         </>
       )}
