@@ -7,6 +7,7 @@ import { APP_SCREEN, RootStackParamList } from './screen-types'
 import { UnAuthentication } from './un-authen'
 import { AddPostScreen, ChatRoomScreen, GalleryChooserScreen } from '@src/screens'
 import { PostStatusOptionsScreen } from '@src/screens/post-status-options'
+import ProfileScreen from '@src/screens/profile/profile'
 
 const RootStack = createStackNavigator<RootStackParamList>()
 
@@ -25,7 +26,7 @@ export const RootNavigation = ({ token }: { token?: string }) => {
           <RootStack.Screen
             options={{ gestureEnabled: false }}
             name={APP_SCREEN.AUTHORIZE}
-            component={MainScreen}
+            component={ProfileScreen}
           />
           <RootStack.Screen name={APP_SCREEN.CHAT_ROOM} component={ChatRoomScreen} />
           <RootStack.Screen
@@ -46,6 +47,8 @@ export const RootNavigation = ({ token }: { token?: string }) => {
             name={APP_SCREEN.POST_STATUS_OPTIONS_MODAL}
             component={PostStatusOptionsScreen}
           />
+
+          <RootStack.Screen name={APP_SCREEN.PROFILE} component={ProfileScreen} />
         </>
       )}
     </RootStack.Navigator>
