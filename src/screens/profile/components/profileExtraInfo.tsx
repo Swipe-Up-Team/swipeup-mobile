@@ -8,7 +8,7 @@ import ExpoFastImage from "expo-fast-image";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface Props {
-    ref: React.MutableRefObject<{
+    curRef: React.MutableRefObject<{
         currentTab: number,
         currentGalleryTab: number,
         headerHeight: number,
@@ -23,13 +23,13 @@ interface Props {
     scrollVRef: React.RefObject<ScrollView>,
 }
 
-export default function ProfileExtraInfo({ ref, scrollVRef }: Props) {
+export default function ProfileExtraInfo({ curRef, scrollVRef }: Props) {
     const user = useSelector(state => state.user).user as User
 
     const _scrollToPosts = () => {
         scrollVRef.current?.scrollTo({
             x: 0,
-            y: ref.current.headerHeight,
+            y: curRef.current.headerHeight,
             animated: true
         })
     }
