@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Post } from '@src/models/post'
+import * as MediaLibrary from 'expo-media-library'
 
 export enum APP_SCREEN {
   UN_AUTHORIZE = 'UN_AUTHORIZE',
@@ -15,13 +16,16 @@ export enum APP_SCREEN {
   FEED_IMAGE_PREVIEW = 'FEED_IMAGE_PREVIEW',
   ADD_POST = 'ADD_POST',
 
-  PHOTO_CHOOSER = 'PHOTO_CHOOSER',
+  GALLERY_CHOOSER = 'GALLERY_CHOOSER',
+  POST_STATUS_OPTIONS_MODAL = 'POST_STATUS_OPTIONS_MODAL',
 
   SEARCH = 'SEARCH',
   NOTIFICATIONS = 'NOTIFICATIONS',
   MENU = 'MENU',
   CHAT = 'CHAT',
-  CHAT_ROOM = 'CHAT_ROOM'
+  CHAT_ROOM = 'CHAT_ROOM',
+
+  PROFILE = 'PROFILE'
 }
 
 export type UnAuthorizeParamsList = {
@@ -38,12 +42,18 @@ export type AuthorizeParamsList = {
   [APP_SCREEN.FEED_IMAGE_PREVIEW]: {
     images: string[]
   }
-  [APP_SCREEN.PHOTO_CHOOSER]: undefined
-  [APP_SCREEN.ADD_POST]: undefined
+  [APP_SCREEN.ADD_POST]: {
+    selectedAssetIndexes?: number[]
+  }
+  [APP_SCREEN.GALLERY_CHOOSER]: {
+    selectedAssets?: MediaLibrary.Asset[]
+  }
+  [APP_SCREEN.POST_STATUS_OPTIONS_MODAL]: undefined
   [APP_SCREEN.CHAT]: undefined
   [APP_SCREEN.CHAT_ROOM]: {
     conversationId: string
   }
+  [APP_SCREEN.PROFILE]: undefined
 }
 
 export type RootStackParamList = {

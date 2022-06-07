@@ -15,7 +15,7 @@ import {
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  blacklist: ['app']
+  blacklist: ['app', 'systemAssets']
 }
 const persistedReducer = persistReducer(persistConfig, allReducer)
 
@@ -32,3 +32,5 @@ const store = configureStore({
 export const persistor = persistStore(store)
 
 export default store
+
+export type AppDispatch = typeof store.dispatch

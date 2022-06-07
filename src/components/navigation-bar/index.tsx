@@ -7,7 +7,7 @@ import styles from './styles'
 export interface NavigationBarProps {
   iconLeft?: JSX.Element
   accessoryRight?: ReactNode
-  title: string
+  title: ReactNode | string
   callback?: () => any
 }
 export const NavigationBar = ({
@@ -26,7 +26,7 @@ export const NavigationBar = ({
         {iconLeft ? iconLeft : <ArrowBack />}
       </TouchableOpacity>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>{title}</Text>
+        {typeof title === 'string' ? <Text style={styles.title}>{title}</Text> : title}
       </View>
       <View style={styles.accessoryRight}>{accessoryRight}</View>
     </View>

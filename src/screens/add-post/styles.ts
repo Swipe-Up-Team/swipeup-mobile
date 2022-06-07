@@ -18,12 +18,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     height: 50
   },
-  naviIcon: {
-    padding: 10
-  },
-  naviTitle: {
-    paddingHorizontal: 10,
-    fontSize: 16
+  accessoryRightNavigationBar: {
+    marginRight: 20
   },
   btnPost: {
     position: 'absolute',
@@ -37,6 +33,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderTopWidth: 1.2,
     borderTopColor: '#F5F2F2'
+  },
+  postInfoWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flex: 1
   },
   avatar: {
     marginRight: 10,
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    height: 300
+    height: 250
   },
   editor: {
     justifyContent: 'center',
@@ -77,12 +78,42 @@ const styles = StyleSheet.create({
     color: '#2B3D5C',
     fontWeight: 'bold'
   },
+  selectedAssetsWrapper: {
+    width: '100%'
+  },
+  selectedAssetsContentWrapper: {
+    padding: 15
+  },
+  selectedAssetItem: {
+    width: 110,
+    height: 110,
+    marginRight: 10
+  },
+  selectedAssetImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 8
+  },
+  deleteAssetIconWrapper: {
+    position: 'absolute',
+    top: -8,
+    right: -8
+  },
   toolOptionsWrapper: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     width: '100%',
-    paddingBottom: 55
+    paddingBottom: 55,
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
   },
   optionsWrapper: {
     backgroundColor: '#fff',
@@ -98,19 +129,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     height: 55,
     alignItems: 'center',
-    borderTopColor: '#ddd',
-    borderTopWidth: 1
+    borderBottomColor: '#ddd',
+    borderBottomWidth: 1
   },
   optionText: {
     fontSize: 16
   },
   optionImagesWrapper: {
     flexDirection: 'row',
-    zIndex: 1
+    zIndex: 1,
+    alignItems: 'center'
   },
   optionImage: {
     height: 25,
-    resizeMode: 'contain'
+    marginLeft: 5,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   bgColorsWrapper: {
     backgroundColor: '#fff',

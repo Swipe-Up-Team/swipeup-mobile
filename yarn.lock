@@ -4002,6 +4002,13 @@ expo-linking@~3.0.0:
     qs "^6.9.1"
     url-parse "^1.4.4"
 
+expo-media-library@~14.0.0:
+  version "14.0.1"
+  resolved "https://registry.yarnpkg.com/expo-media-library/-/expo-media-library-14.0.1.tgz#b1a2ce3699edf6b5f561d32812e608ba064ba43f"
+  integrity sha512-a7NGFxZvns81y0fRZJsBROXFWKtyEMaodw+x32IPNhKLUAn+X1ggfBS8FbNpUs3bA4ZvhjFQBn59dxPfcHHxEg==
+  dependencies:
+    "@expo/config-plugins" "^4.0.2"
+
 expo-modules-autolinking@0.5.5:
   version "0.5.5"
   resolved "https://registry.yarnpkg.com/expo-modules-autolinking/-/expo-modules-autolinking-0.5.5.tgz#6bcc42072dcbdfca79d207b7f549f1fdb54a2b74"
@@ -6778,6 +6785,11 @@ react-native-snap-carousel@^3.9.1:
   dependencies:
     prop-types "^15.6.1"
     react-addons-shallow-compare "15.6.2"
+
+react-native-status-bar-height@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-status-bar-height/-/react-native-status-bar-height-2.6.0.tgz#b6afd25b6e3d533c43d0fcdcfd5cafd775592cea"
+  integrity sha512-z3SGLF0mHT+OlJDq7B7h/jXPjWcdBT3V14Le5L2PjntjjWM3+EJzq2BcXDwV+v67KFNJic5pgA26cCmseYek6w==
 
 react-native-svg@12.1.1:
   version "12.1.1"

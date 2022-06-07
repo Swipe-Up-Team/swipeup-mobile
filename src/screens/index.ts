@@ -1,6 +1,7 @@
 export * from './add-post'
 export * from './chat'
 export * from './chat-room'
+export * from './gallery-chooser'
 export * from './home'
 export * from './login'
 export * from './post-detail'
