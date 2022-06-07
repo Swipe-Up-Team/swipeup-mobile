@@ -13,7 +13,7 @@ import {
 } from 'firebase/auth'
 import { firestore } from '@src/config'
 import { User, UserGender, UserStatus } from '@src/models'
-import { FIRESTORE_ENDPOINT } from '@src/constants'
+import { FIREBASE_ERROR_CODE, FIRESTORE_ENDPOINT } from '@src/constants'
 import { setUser } from '@src/store/reducers/user-reducer'
 import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore'
 import Toast from 'react-native-toast-message'
@@ -51,8 +51,24 @@ export const userService = {
         dispatch(onSetToken(token))
       })
       .catch(error => {
-        //TODO: HANDLE LOGIN FAILED HERE
-        console.log(error)
+        switch (error.code) {
+          case FIREBASE_ERROR_CODE.USER_NOT_FOUND:
+            Toast.show({ type: 'error', text1: 'User not found' })
+            break
+          case FIREBASE_ERROR_CODE.WRONG_PASSWORD:
+            Toast.show({ type: 'error', text1: 'Wrong password' })
+            break
+          case FIREBASE_ERROR_CODE.TOO_MANY_REQUESTS:
+            Toast.show({
+              type: 'error',
+              text1: 'Too many request',
+              text2: 'You tried several times, please try again later'
+            })
+            break
+          default:
+            console.warn(error.code)
+            break
+        }
       }),
 
   logInWithGoogle: async (id_token: string) => {
@@ -76,7 +92,7 @@ export const userService = {
         }
       })
       .catch(error => {
-        //TODO: HANDLE SIGNUP FAILED HERE
+        // TODO: missing handle error
         console.log(error)
       })
   },
@@ -96,7 +112,22 @@ export const userService = {
       })
       .catch(error => {
         //TODO: HANDLE SIGNUP FAILED HERE
-        console.log(error)
+        switch (error.code) {
+          case FIREBASE_ERROR_CODE.EMAIL_ALREADY_EXISTS:
+            Toast.show({ type: 'error', text1: 'Email already exists' })
+            break
+          case FIREBASE_ERROR_CODE.TOO_MANY_REQUESTS:
+            Toast.show({
+              type: 'error',
+              text1: 'Too many request',
+              text2: 'You tried several times, please try again later'
+            })
+            break
+          default:
+            console.warn(error.code)
+            break
+        }
+        console.log(error.code)
       }),
 
   getUser: async (uid: string) => {

@@ -1,6 +1,6 @@
 import { Layout, Text } from '@ui-kitten/components'
 import LottieView from 'lottie-react-native'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Pressable, View } from 'react-native'
 import { DismissKeyboardView } from '@components/HOCs'
 import { goBack } from '@src/navigation/navigation-service'
