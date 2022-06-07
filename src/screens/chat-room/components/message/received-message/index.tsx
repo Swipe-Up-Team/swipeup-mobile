@@ -1,8 +1,9 @@
 import { View } from 'react-native'
 import { Text, Avatar, IconElement, Icon } from '@ui-kitten/components'
 import styles from './styles'
+import { formatTime } from '@src/utils'
 
-const ReceivedMessage = () => {
+const ReceivedMessage = ({ message }: any) => {
   return (
     <View style={styles.container}>
       <Avatar
@@ -12,10 +13,10 @@ const ReceivedMessage = () => {
         source={require('@assets/image/img-avatar.jpg')}
       />
       <View style={styles.mainContainer}>
-        <Text style={styles.timeText}>12:35</Text>
+        <Text style={styles.timeText}>{formatTime(message.createdAt)}</Text>
 
         <View style={styles.messageContainer}>
-          <Text>abcdhfahf f hiufehes fiusef sfue sefehsuf suie da uwdha dau dww</Text>
+          <Text>{message.message}</Text>
         </View>
       </View>
     </View>

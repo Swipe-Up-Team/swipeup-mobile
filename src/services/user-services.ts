@@ -14,7 +14,7 @@ import {
 import { firestore } from '@src/config'
 import { User, UserGender, UserStatus } from '@src/models'
 import { FIRESTORE_ENDPOINT } from '@src/constants'
-import { setUser } from '@src/store/reducers/user-reducer'
+import { onSetUser } from '@src/store/reducers/user-reducer'
 import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore'
 import Toast from 'react-native-toast-message'
 
@@ -47,7 +47,7 @@ export const userService = {
         const token = await res.user.getIdToken()
         const user = await userService.getUser(res.user.uid)
 
-        dispatch(setUser(user!))
+        dispatch(onSetUser(user!))
         dispatch(onSetToken(token))
       })
       .catch(error => {
@@ -65,13 +65,13 @@ export const userService = {
 
         const user = await userService.getUser(uid)
         if (user) {
-          dispatch(setUser(user))
+          dispatch(onSetUser(user))
           dispatch(onSetToken(token))
         } else {
           const newUser = createNewUser(uid, res.user.email!)
           await setDoc(doc(firestore, FIRESTORE_ENDPOINT.USERS, res.user.uid), newUser)
 
-          dispatch(setUser(newUser))
+          dispatch(onSetUser(newUser))
           dispatch(onSetToken(token))
         }
       })
@@ -89,7 +89,7 @@ export const userService = {
 
         await setDoc(doc(firestore, FIRESTORE_ENDPOINT.USERS, res.user.uid), newUser)
 
-        dispatch(setUser(newUser))
+        dispatch(onSetUser(newUser))
         dispatch(onSetToken(token))
 
         //TODO: handle show toast

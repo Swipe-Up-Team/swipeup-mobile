@@ -2,6 +2,7 @@
 import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
+import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDXd1fFnDjSpQj83a8KrzgjCaWLqWpZBXI',
@@ -10,7 +11,8 @@ const firebaseConfig = {
   storageBucket: 'swipeup-be.appspot.com',
   messagingSenderId: '98158434111',
   appId: '1:98158434111:web:f05c3310f5beaeab0e258a',
-  measurementId: 'G-X0JK3SXC5P'
+  measurementId: 'G-X0JK3SXC5P',
+  databaseURL: 'https://swipeup-be-default-rtdb.asia-southeast1.firebasedatabase.app'
 }
 
 export const googleConfig = {
@@ -24,3 +26,4 @@ export const googleConfig = {
 const app = initializeApp(firebaseConfig)
 export const authentication = getAuth(app)
 export const firestore = getFirestore(app)
+export const database = getDatabase(app)

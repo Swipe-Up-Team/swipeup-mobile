@@ -1,17 +1,18 @@
 import { View } from 'react-native'
 import { Text, Avatar, IconElement, Icon } from '@ui-kitten/components'
 import styles from './styles'
+import { formatTime } from '@src/utils'
 
-const SentMessage = () => {
+const SentMessage = ({ message }: any) => {
   return (
     <View style={styles.container}>
       <View style={styles.mainContainer}>
         <View style={styles.messageContainer}>
-          <Text style={styles.messageText}>abcdhfahf f hiufehes fiusef sfue sefehsuf suie da uwdha dau dww</Text>
+          <Text style={styles.messageText}>{message.message}</Text>
         </View>
         <View style={styles.statusContainer}>
           <SentIcon />
-          <Text style={styles.timeText}>12:35</Text>
+          <Text style={styles.timeText}>{formatTime(message.createdAt)}</Text>
         </View>
       </View>
     </View>

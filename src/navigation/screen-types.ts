@@ -41,7 +41,9 @@ export type AuthorizeParamsList = {
   [APP_SCREEN.PHOTO_CHOOSER]: undefined
   [APP_SCREEN.ADD_POST]: undefined
   [APP_SCREEN.CHAT]: undefined
-  [APP_SCREEN.CHAT_ROOM]: undefined
+  [APP_SCREEN.CHAT_ROOM]: {
+    conversationId: string
+  }
 }
 
 export type RootStackParamList = {
