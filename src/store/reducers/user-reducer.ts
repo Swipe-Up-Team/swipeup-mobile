@@ -14,7 +14,7 @@ const user = createSlice({
   name: SLICE_NAME.USER,
   initialState: initialState,
   reducers: {
-    setUser: (state, { payload }: PayloadAction<User>) => {
+    onSetUser: (state, { payload }: PayloadAction<User>) => {
       state.user = payload
     }
   }
@@ -24,4 +24,4 @@ const userReducer = user.reducer
 
 export default userReducer
 
-export const { setUser } = user.actions
+export const { onSetUser } = user.actions

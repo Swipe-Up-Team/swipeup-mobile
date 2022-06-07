@@ -23,7 +23,9 @@ export enum APP_SCREEN {
   NOTIFICATIONS = 'NOTIFICATIONS',
   MENU = 'MENU',
   CHAT = 'CHAT',
-  CHAT_ROOM = 'CHAT_ROOM'
+  CHAT_ROOM = 'CHAT_ROOM',
+
+  PROFILE = 'PROFILE'
 }
 
 export type UnAuthorizeParamsList = {
@@ -48,7 +50,10 @@ export type AuthorizeParamsList = {
   }
   [APP_SCREEN.POST_STATUS_OPTIONS_MODAL]: undefined
   [APP_SCREEN.CHAT]: undefined
-  [APP_SCREEN.CHAT_ROOM]: undefined
+  [APP_SCREEN.CHAT_ROOM]: {
+    conversationId: string
+  }
+  [APP_SCREEN.PROFILE]: undefined
 }
 
 export type RootStackParamList = {

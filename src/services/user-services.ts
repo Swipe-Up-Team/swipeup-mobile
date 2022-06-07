@@ -2,20 +2,20 @@
 // import { NetWorkResponseType } from './network-service'
 // import { userApi } from '@src/api/user-api'
 import { dispatch } from '@src/common/redux'
+import { firestore } from '@src/config'
 import { authentication } from '@src/config/firebase-config'
+import { FIREBASE_ERROR_CODE, FIRESTORE_ENDPOINT } from '@src/constants'
+import { User, UserGender, UserStatus } from '@src/models'
 import { onSetToken } from '@src/store/reducers/app-reducer'
+import { onSetUser } from '@src/store/reducers/user-reducer'
 import {
-  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  getAuth,
   GoogleAuthProvider,
   signInWithCredential,
-  getAuth
+  signInWithEmailAndPassword
 } from 'firebase/auth'
-import { firestore } from '@src/config'
-import { User, UserGender, UserStatus } from '@src/models'
-import { FIREBASE_ERROR_CODE, FIRESTORE_ENDPOINT } from '@src/constants'
-import { setUser } from '@src/store/reducers/user-reducer'
-import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
 import Toast from 'react-native-toast-message'
 
 const createNewUser = (uid: string, username: string) => {
@@ -47,7 +47,7 @@ export const userService = {
         const token = await res.user.getIdToken()
         const user = await userService.getUser(res.user.uid)
 
-        dispatch(setUser(user!))
+        dispatch(onSetUser(user!))
         dispatch(onSetToken(token))
       })
       .catch(error => {
@@ -81,13 +81,13 @@ export const userService = {
 
         const user = await userService.getUser(uid)
         if (user) {
-          dispatch(setUser(user))
+          dispatch(onSetUser(user))
           dispatch(onSetToken(token))
         } else {
           const newUser = createNewUser(uid, res.user.email!)
           await setDoc(doc(firestore, FIRESTORE_ENDPOINT.USERS, res.user.uid), newUser)
 
-          dispatch(setUser(newUser))
+          dispatch(onSetUser(newUser))
           dispatch(onSetToken(token))
         }
       })
@@ -105,7 +105,7 @@ export const userService = {
 
         await setDoc(doc(firestore, FIRESTORE_ENDPOINT.USERS, res.user.uid), newUser)
 
-        dispatch(setUser(newUser))
+        dispatch(onSetUser(newUser))
         dispatch(onSetToken(token))
 
         //TODO: handle show toast

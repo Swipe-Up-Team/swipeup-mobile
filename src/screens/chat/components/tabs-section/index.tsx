@@ -1,5 +1,7 @@
+import { getState, useSelector } from '@src/common'
+import { chatService } from '@src/services/chat-service'
 import { Text, Layout, TabView, Tab, List } from '@ui-kitten/components'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Conversation from '../conversation'
 import styles from './styles'
 
@@ -9,12 +11,17 @@ const TabTitle = ({ text, ...props }: any) => (
   </Text>
 )
 
-const renderItem = ({ item, index }: any) => <Conversation />
-
 const TabViewSection = () => {
+  const userId = getState('user').user?.id
+  const { conversations } = useSelector(x => x.chat)
+
   const [selectedIndex, setSelectedIndex] = React.useState(0)
 
-  const data = new Array(18)
+  const renderItem = ({ item, index }: any) => <Conversation conversation={item} />
+
+  useEffect(() => {
+    chatService.getConversations(userId!)
+  }, [])
 
   return (
     <TabView
@@ -23,10 +30,10 @@ const TabViewSection = () => {
       onSelect={index => setSelectedIndex(index)}
     >
       <Tab title={<TabTitle text="Direct Message" />}>
-        <List data={data} renderItem={renderItem}/>
+        <List data={conversations} renderItem={renderItem} />
       </Tab>
       <Tab title={<TabTitle text="Group Chat" />}>
-        <List data={data} renderItem={renderItem}/>
+        <List data={conversations} renderItem={renderItem} />
       </Tab>
     </TabView>
   )
