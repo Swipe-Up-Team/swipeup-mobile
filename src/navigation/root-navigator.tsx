@@ -5,7 +5,7 @@ import { createStackNavigator, TransitionPresets } from '@react-navigation/stack
 import { MainScreen } from './authen'
 import { APP_SCREEN, RootStackParamList } from './screen-types'
 import { UnAuthentication } from './un-authen'
-import { AddPostScreen, ChatRoomScreen, GalleryChooserScreen } from '@src/screens'
+import { AddPostScreen, ChatRoomScreen, GalleryChooserScreen, HomeScreen } from '@src/screens'
 import { PostStatusOptionsScreen } from '@src/screens/post-status-options'
 import ProfileScreen from '@src/screens/profile/profile'
 
@@ -26,7 +26,7 @@ export const RootNavigation = ({ token }: { token?: string }) => {
           <RootStack.Screen
             options={{ gestureEnabled: false }}
             name={APP_SCREEN.AUTHORIZE}
-            component={ProfileScreen}
+            component={HomeScreen}
           />
           <RootStack.Screen name={APP_SCREEN.CHAT_ROOM} component={ChatRoomScreen} />
           <RootStack.Screen
@@ -48,7 +48,11 @@ export const RootNavigation = ({ token }: { token?: string }) => {
             component={PostStatusOptionsScreen}
           />
 
-          <RootStack.Screen name={APP_SCREEN.PROFILE} component={ProfileScreen} />
+          <RootStack.Screen
+            options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
+            name={APP_SCREEN.PROFILE}
+            component={ProfileScreen}
+          />
         </>
       )}
     </RootStack.Navigator>
