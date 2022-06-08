@@ -1,21 +1,56 @@
 import { View } from 'react-native'
 import { Text, Avatar, IconElement, Icon } from '@ui-kitten/components'
 import styles from './styles'
-import { formatTime } from '@src/utils'
+import { formatDate, formatTime } from '@src/utils'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import { useState } from 'react'
 
-const SentMessage = ({ message }: any) => {
+const SentMessage = ({ message, displayDate, displayTime }: any) => {
+  const [isShowTime, setIsShowTime] = useState(displayTime)
+
+  const getDisplayDateText = () => {
+    const now = new Date()
+    const inputDate = new Date(message.createdAt)
+
+    if (inputDate.getDate() === now.getDate()) {
+      return 'Today'
+    } else if (inputDate.getDate() === now.getDate() - 1) {
+      return 'Yesterday'
+    } else {
+      return formatDate(displayDate)
+    }
+  }
+
+  const changeDisplayTime = () => {
+    if (!displayTime) {
+      setIsShowTime(!isShowTime)
+    }
+  }
+
   return (
-    <View style={styles.container}>
-      <View style={styles.mainContainer}>
-        <View style={styles.messageContainer}>
-          <Text style={styles.messageText}>{message.message}</Text>
+    <>
+      {displayDate && (
+        <View style={styles.dateContainer}>
+          <View style={styles.divider} />
+          <Text style={styles.dateText}>{getDisplayDateText()}</Text>
+          <View style={styles.divider} />
         </View>
-        <View style={styles.statusContainer}>
-          <SentIcon />
-          <Text style={styles.timeText}>{formatTime(message.createdAt)}</Text>
+      )}
+
+      <View style={styles.container}>
+        <View style={styles.mainContainer}>
+          <TouchableOpacity style={styles.messageContainer} onPress={changeDisplayTime}>
+            <Text style={styles.messageText}>{message.message}</Text>
+          </TouchableOpacity>
+          {isShowTime && (
+            <View style={styles.statusContainer}>
+              <SentIcon />
+              <Text style={styles.timeText}>{formatTime(message.createdAt)}</Text>
+            </View>
+          )}
         </View>
       </View>
-    </View>
+    </>
   )
 }
 
