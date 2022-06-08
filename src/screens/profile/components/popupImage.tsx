@@ -1,17 +1,8 @@
 import { SCREEN_WIDTH, STATUS_BAR_HEIGHT } from '@src/constants'
 import React from 'react'
-import {
-  Animated,
-  Image,
-  ImageBackground,
-  LayoutChangeEvent,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
-import { Post, User } from '@src/models'
+import { Animated, Image, ImageBackground, LayoutChangeEvent, StyleSheet, View } from 'react-native'
+import { Post } from '@src/models'
 import { PopupImageLocation } from '../profile'
-import { useSelector } from '@src/common'
 import ExpoFastImage from 'expo-fast-image'
 
 interface Prop {
@@ -45,23 +36,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%'
   },
-  profile__user: {
-    backgroundColor: '#fff',
-    height: 40,
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%'
-  },
-  profile__user_avatar: {
-    width: 30,
-    height: 30,
-    borderRadius: 30,
-    marginLeft: 15,
-    marginRight: 10
-  },
-  font_medium: {
-    fontWeight: '500'
-  },
   screen_full: {
     width: '100%',
     height: '100%'
@@ -69,7 +43,6 @@ const styles = StyleSheet.create({
 })
 
 export default function PopupImage({ selectedPhoto, refProps, popupImageLocation }: Prop) {
-  const user = useSelector(state => state.user).user as User
   const { popupImageTop, popupImageLeft, popupImageWidth, popupImageHeight } = popupImageLocation
 
   const onAnimatePopup = ({ nativeEvent }: LayoutChangeEvent) => {
@@ -123,13 +96,6 @@ export default function PopupImage({ selectedPhoto, refProps, popupImageLocation
             overflow: 'hidden'
           }}
         >
-          <View style={styles.profile__user}>
-            <ExpoFastImage
-              style={styles.profile__user_avatar}
-              source={{ uri: user.avatar, priority: ExpoFastImage.priority.normal }}
-            />
-            <Text style={styles.font_medium}>{user.name}</Text>
-          </View>
           <Animated.View
             style={{
               height: popupImageHeight,
@@ -139,8 +105,7 @@ export default function PopupImage({ selectedPhoto, refProps, popupImageLocation
             <ExpoFastImage
               style={styles.screen_full}
               source={{
-                uri: selectedPhoto.content.images[0],
-                priority: ExpoFastImage.priority.high
+                uri: selectedPhoto.content.images[0]
               }}
             />
           </Animated.View>
