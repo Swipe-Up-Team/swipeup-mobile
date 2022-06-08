@@ -3,7 +3,7 @@ import { DismissKeyboardView } from '@src/components'
 import { Message } from '@src/models'
 import { chatService } from '@src/services/chat-service'
 import { Button, Icon, IconElement, Input, List } from '@ui-kitten/components'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { View, Text, KeyboardAvoidingView, Platform, ImageStyle } from 'react-native'
 import ReceivedMessage from '../message/received-message'
 import SentMessage from '../message/sent-message'
@@ -13,6 +13,8 @@ import styles from './styles'
 export const ContentView = ({ conversationId }: any) => {
   const userId = getState('user').user?.id
   const conversation = useSelector(x => x.chat.conversations.find(x => x.id === conversationId))
+  
+  const listRef = useRef<List>(null)
 
   const [messageList, setMessageList] = useState<Message[]>([])
   const [inputMessage, setinputMessage] = useState('')
@@ -106,7 +108,14 @@ export const ContentView = ({ conversationId }: any) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.container}>
-        <List style={styles.messageContainer} data={messageList} renderItem={renderItem} />
+        <List
+          style={styles.messageContainer}
+          ref={listRef}
+          data={messageList}
+          renderItem={renderItem}
+          onLayout={() => listRef.current?.scrollToEnd()}
+          onContentSizeChange={() => listRef.current?.scrollToEnd() }
+        />
         <View style={styles.messageInputContainer}>
           <Button
             style={[styles.iconButton, styles.attachButton]}

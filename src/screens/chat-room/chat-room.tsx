@@ -5,11 +5,11 @@ import { APP_SCREEN, AuthorizeParamsList } from '@src/navigation/screen-types'
 
 export const ChatRoomScreen = () => {
   const route = useRoute<RouteProp<AuthorizeParamsList, APP_SCREEN.CHAT_ROOM>>()
-  const { conversationId } = route.params
+  const { conversationId, friendName } = route.params
 
   return (
     <>
-      <TopHeader />
+      <TopHeader friendName={friendName}/>
       <ContentView conversationId={conversationId}/>
     </>
   )

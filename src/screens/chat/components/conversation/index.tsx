@@ -56,7 +56,8 @@ const Conversation = ({ conversation, ...props }: any) => {
 
   const navigateToChatRoom = () => {
     navigate(APP_SCREEN.CHAT_ROOM, {
-      conversationId: conversation.id
+      conversationId: conversation.id,
+      friendName: friend.name,
     })
   }
 
