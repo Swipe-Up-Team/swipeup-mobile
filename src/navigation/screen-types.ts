@@ -37,7 +37,7 @@ export type UnAuthorizeParamsList = {
 export type AuthorizeParamsList = {
   [APP_SCREEN.HOME]: undefined
   [APP_SCREEN.POST_DETAILS]: {
-    post: Post
+    postId: string
   }
   [APP_SCREEN.FEED_IMAGE_PREVIEW]: {
     images: string[]

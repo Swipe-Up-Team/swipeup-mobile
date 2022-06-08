@@ -19,6 +19,7 @@ import {
 import { ChatScreen } from '@src/screens/chat'
 import { HomeStack } from './home-stack'
 import styles from './styles'
+import { NotificationsScreen } from '@src/screens'
 import ProfileScreen from '@src/screens/profile/profile'
 
 function getWidth() {
@@ -113,7 +114,7 @@ export const MainScreen = () => {
         />
         <Main.Screen
           name={APP_SCREEN.NOTIFICATIONS}
-          component={HomeStack}
+          component={NotificationsScreen}
           options={{
             tabBarIcon: ({ focused }) => (
               <View style={styles.tabBarItemContainer}>

@@ -19,7 +19,7 @@ export function HomeScreen() {
       creator: {
         id: 'post-creator',
         name: 'Võ Hoàng Đức Khoa',
-        picture:
+        avatar:
           'https://scontent.fsgn4-1.fna.fbcdn.net/v/t39.30808-6/277354606_1735667546794382_2091283980980135583_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=ZFXnVaeGWe0AX_oSYBj&_nc_ht=scontent.fsgn4-1.fna&oh=00_AT-Emla3arx5NgYpvN0LhTLti_f0iqxlw0qyqyVpRCMxvQ&oe=62952609'
       },
       reacts: [

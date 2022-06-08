@@ -6,6 +6,7 @@ import styles from './styles'
 
 export interface NavigationBarProps {
   iconLeft?: JSX.Element
+  showLeftIcon?: boolean
   accessoryRight?: ReactNode
   title: ReactNode | string
   callback?: () => any
@@ -13,6 +14,7 @@ export interface NavigationBarProps {
 export const NavigationBar = ({
   accessoryRight,
   iconLeft,
+  showLeftIcon = true,
   callback,
   title
 }: NavigationBarProps) => {
@@ -22,9 +24,11 @@ export const NavigationBar = ({
 
   return (
     <View style={styles.navigationBar}>
-      <TouchableOpacity onPress={onCallBack} style={styles.btnBack}>
-        {iconLeft ? iconLeft : <ArrowBack />}
-      </TouchableOpacity>
+      {showLeftIcon && (
+        <TouchableOpacity onPress={onCallBack} style={styles.btnBack}>
+          {iconLeft ? iconLeft : <ArrowBack />}
+        </TouchableOpacity>
+      )}
       <View style={styles.titleContainer}>
         {typeof title === 'string' ? <Text style={styles.title}>{title}</Text> : title}
       </View>
