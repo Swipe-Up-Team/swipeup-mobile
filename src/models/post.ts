@@ -38,7 +38,22 @@ export interface Reaction {
 
 export type Reactions = Partial<Record<ReactionType, number>>
 
-export interface PostsResponseData {}
+export interface PostsResponseData {
+  id: string
+  creator: string
+  reacts: Reaction[]
+  shares: number
+  createdAt: string
+  updatedAt: string
+  content: {
+    sharedPostId?: string
+    text: string
+    images?: string[]
+  }
+  type: string
+  authorId: string
+  comments: string[]
+}
 
 // COMMENT
 export interface Comment {

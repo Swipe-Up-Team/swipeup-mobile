@@ -1,6 +1,9 @@
+import { useSelector } from '@src/common'
+import { firestore } from '@src/config'
 import { SCREEN_WIDTH } from '@src/constants'
-import { Post } from '@src/models'
-import React, { useRef, useState } from 'react'
+import { Post, User } from '@src/models'
+import { collection, getDocs, query, where } from 'firebase/firestore'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   Animated,
   LayoutChangeEvent,
@@ -83,6 +86,26 @@ export default function ProfileScreen() {
   const popupImageLeft = new Animated.Value(0)
   const popupImageWidth = new Animated.Value(0)
   const popupImageHeight = new Animated.Value(0)
+
+  const user = useSelector(state => state.user).user as User
+
+  const [photos, setPhotos] = useState<Post[]>([])
+
+  useEffect(() => {
+    async function fetchMyAPI() {
+      const queryString = query(collection(firestore, 'posts'), where('authorId', '==', user.id))
+      const querySnapshot = await getDocs(queryString)
+
+      const tempPostList: Post[] = []
+
+      querySnapshot.forEach(responseData => {
+        tempPostList.push(responseData.data() as Post)
+      })
+
+      setPhotos(tempPostList)
+    }
+    fetchMyAPI()
+  }, [user.id])
 
   const showPopupImage = (e: { pX: number; pY: number; w: number; h: number }, photo: Post) => {
     ref.current.prePopupImage = e
@@ -316,7 +339,7 @@ export default function ProfileScreen() {
                 onScrollEndDragGalleryTabScroll={onScrollEndDragGalleryTabScroll}
                 hidePopupImage={hidePopupImage}
                 showPopupImage={showPopupImage}
-                photos={[]}
+                photos={photos}
               />
               <ProfileRecommend />
             </TouchableOpacity>
