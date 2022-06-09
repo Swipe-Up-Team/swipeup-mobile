@@ -21,7 +21,6 @@ const systemAssets = createSlice({
     onSetSelectedAssetIndexes: (state, { payload }: PayloadAction<number[]>) => {
       const selectedAssets: MediaLibrary.Asset[] = []
       payload.forEach(idx => selectedAssets.push(state.systemAssets[idx]))
-      console.log('🚀 ~ file: system-assets-reducer.ts ~ line 24 ~ selectedAssets', selectedAssets)
 
       state.selectedAssets = selectedAssets
     }

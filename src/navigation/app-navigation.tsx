@@ -17,12 +17,16 @@ import { hideLoading, ProgressDialog, showLoading } from '@src/components/progre
 export const AppContainer = () => {
   // state
   const { token, loadingApp, showDialog, theme } = useSelector(x => x.app)
+  const { user } = useSelector(x => x.user)
 
   // effect
   useEffect(() => {
     dispatch(onLoadApp())
-    dispatch(onLoadAppEnd())
-  }, [])
+    ;(async () => {
+      console.log('user', user)
+      dispatch(onLoadAppEnd())
+    })()
+  }, [user])
 
   useEffect(() => {
     console.log({ token })
