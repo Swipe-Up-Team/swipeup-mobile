@@ -1,13 +1,11 @@
-import React from 'react'
-
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
 
+import { AddPostScreen, ChatRoomScreen, GalleryChooserScreen } from '@src/screens'
+import { PostStatusOptionsScreen } from '@src/screens/post-status-options'
+import React from 'react'
 import { MainScreen } from './authen'
 import { APP_SCREEN, RootStackParamList } from './screen-types'
 import { UnAuthentication } from './un-authen'
-import { AddPostScreen, ChatRoomScreen, GalleryChooserScreen, HomeScreen } from '@src/screens'
-import { PostStatusOptionsScreen } from '@src/screens/post-status-options'
-import ProfileScreen from '@src/screens/profile/profile'
 
 const RootStack = createStackNavigator<RootStackParamList>()
 

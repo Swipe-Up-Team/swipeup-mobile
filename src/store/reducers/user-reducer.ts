@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { SLICE_NAME } from "@src/constants/enums"
-import { User } from "@src/models"
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { SLICE_NAME } from '@src/constants/enums'
+import { User } from '@src/models'
 
 export interface UserState {
   user?: User
