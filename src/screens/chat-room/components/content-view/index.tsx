@@ -1,10 +1,11 @@
 import { getState, useSelector } from '@src/common'
-import { DismissKeyboardView } from '@src/components'
+import { MicIcon, PaperPlaneIcon, PlusIcon, XIcon } from '@src/components'
 import { Message } from '@src/models'
 import { chatService } from '@src/services/chat-service'
 import { Button, Icon, IconElement, Input, List } from '@ui-kitten/components'
 import React, { useEffect, useRef, useState } from 'react'
 import { View, Text, KeyboardAvoidingView, Platform, ImageStyle } from 'react-native'
+import { AttachmentsMenu } from '../attachment-menu'
 import ReceivedMessage from '../message/received-message'
 import SentMessage from '../message/sent-message'
 import TypingMessage from '../message/typing-message'
@@ -13,11 +14,12 @@ import styles from './styles'
 export const ContentView = ({ conversationId }: any) => {
   const userId = getState('user').user?.id
   const conversation = useSelector(x => x.chat.conversations.find(x => x.id === conversationId))
-  
+
   const listRef = useRef<List>(null)
 
-  const [messageList, setMessageList] = useState<Message[]>([])
   const [inputMessage, setinputMessage] = useState('')
+  const [messageList, setMessageList] = useState<Message[]>([])
+  const [attachmentsMenuVisible, setAttachmentsMenuVisible] = useState<boolean>(false)
 
   const renderItem = ({ item, index }: any) => {
     // Sent Message
@@ -98,6 +100,22 @@ export const ContentView = ({ conversationId }: any) => {
     await chatService.sendMessage(message, conversationId)
   }
 
+  const toggleAttachmentsMenu = (): void => {
+    setAttachmentsMenuVisible(!attachmentsMenuVisible)
+  }
+
+  const renderAttachmentsMenu = (): React.ReactElement => (
+    <AttachmentsMenu
+      onSelectPhoto={toggleAttachmentsMenu}
+      onSelectFile={toggleAttachmentsMenu}
+      onSelectLocation={toggleAttachmentsMenu}
+      onSelectContact={toggleAttachmentsMenu}
+      onAttachmentSelect={toggleAttachmentsMenu}
+      onCameraPress={toggleAttachmentsMenu}
+      onDismiss={toggleAttachmentsMenu}
+    />
+  )
+
   useEffect(() => {
     setMessageList(conversation?.messages)
   }, [conversation])
@@ -114,13 +132,13 @@ export const ContentView = ({ conversationId }: any) => {
           data={messageList}
           renderItem={renderItem}
           onLayout={() => listRef.current?.scrollToEnd()}
-          onContentSizeChange={() => listRef.current?.scrollToEnd() }
+          onContentSizeChange={() => listRef.current?.scrollToEnd()}
         />
         <View style={styles.messageInputContainer}>
           <Button
             style={[styles.iconButton, styles.attachButton]}
-            accessoryLeft={PlusIcon}
-            // onPress={toggleAttachmentsMenu}
+            accessoryLeft={attachmentsMenuVisible ? XIcon : PlusIcon}
+            onPress={toggleAttachmentsMenu}
           />
           <Input
             style={styles.messageInput}
@@ -134,18 +152,12 @@ export const ContentView = ({ conversationId }: any) => {
             style={[styles.iconButton, styles.sendButton]}
             accessoryLeft={PaperPlaneIcon}
             onPress={sendMessage}
-            // disabled={!sendButtonEnabled()}
           />
         </View>
+        {attachmentsMenuVisible && renderAttachmentsMenu()}
       </View>
     </KeyboardAvoidingView>
   )
 }
-
-export const PlusIcon = (style: any): IconElement => <Icon {...style} name="plus" />
-
-export const MicIcon = (style: any): IconElement => <Icon {...style} name="mic" />
-
-export const PaperPlaneIcon = (style: any): IconElement => <Icon {...style} name="paper-plane" />
 
 export default ContentView
