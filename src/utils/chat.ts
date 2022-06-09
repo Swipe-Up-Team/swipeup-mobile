@@ -13,6 +13,19 @@ export const formatTime = (time: number) => {
   return formattedTime
 }
 
+export const formatDate = (time: number) => {
+  const date = new Date(time)
+  const originDay = date.getDate()
+  const originMonth = date.getMonth() + 1
+  const originYear = date.getFullYear()
+
+  const day = originDay < 10 ? `0${originDay}` : originDay
+  const month = originMonth < 10 ? `0${originMonth}` : originMonth
+
+  const formattedDate = `${day}/${month}/${originYear}`
+  return formattedDate
+}
+
 export const shortenConversationText = (text: string) => {
   if (text.length > CONVERSATION_MAX_CHARACTERS) {
     return `${text.substring(0, CONVERSATION_MAX_CHARACTERS)}...`

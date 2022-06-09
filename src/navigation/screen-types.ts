@@ -51,7 +51,8 @@ export type AuthorizeParamsList = {
   [APP_SCREEN.POST_STATUS_OPTIONS_MODAL]: undefined
   [APP_SCREEN.CHAT]: undefined
   [APP_SCREEN.CHAT_ROOM]: {
-    conversationId: string
+    conversationId: string,
+    friendName: string,
   }
   [APP_SCREEN.PROFILE]: undefined
 }

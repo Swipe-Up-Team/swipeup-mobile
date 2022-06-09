@@ -1,7 +1,7 @@
 import { getState, useSelector } from '@src/common'
 import { chatService } from '@src/services/chat-service'
 import { Text, Layout, TabView, Tab, List } from '@ui-kitten/components'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Conversation from '../conversation'
 import styles from './styles'
 
@@ -15,7 +15,7 @@ const TabViewSection = () => {
   const userId = getState('user').user?.id
   const { conversations } = useSelector(x => x.chat)
 
-  const [selectedIndex, setSelectedIndex] = React.useState(0)
+  const [selectedIndex, setSelectedIndex] = useState(0)
 
   const renderItem = ({ item, index }: any) => <Conversation conversation={item} />
 
