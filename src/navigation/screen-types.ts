@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Post } from '@src/models/post'
 import * as MediaLibrary from 'expo-media-library'
 
 export enum APP_SCREEN {
@@ -25,7 +24,8 @@ export enum APP_SCREEN {
   CHAT = 'CHAT',
   CHAT_ROOM = 'CHAT_ROOM',
 
-  PROFILE = 'PROFILE'
+  PROFILE = 'PROFILE',
+  EDIT_PROFILE = 'EDIT_PROFILE'
 }
 
 export type UnAuthorizeParamsList = {
@@ -54,6 +54,7 @@ export type AuthorizeParamsList = {
     conversationId: string
   }
   [APP_SCREEN.PROFILE]: undefined
+  [APP_SCREEN.EDIT_PROFILE]: undefined
 }
 
 export type RootStackParamList = {

@@ -5,9 +5,9 @@ import { createStackNavigator, TransitionPresets } from '@react-navigation/stack
 import { MainScreen } from './authen'
 import { APP_SCREEN, RootStackParamList } from './screen-types'
 import { UnAuthentication } from './un-authen'
-import { AddPostScreen, ChatRoomScreen, GalleryChooserScreen, HomeScreen } from '@src/screens'
+import { AddPostScreen, ChatRoomScreen, GalleryChooserScreen } from '@src/screens'
 import { PostStatusOptionsScreen } from '@src/screens/post-status-options'
-import ProfileScreen from '@src/screens/profile/profile'
+import EditProfile from '@src/screens/edt-profile'
 
 const RootStack = createStackNavigator<RootStackParamList>()
 
@@ -47,6 +47,7 @@ export const RootNavigation = ({ token }: { token?: string }) => {
             name={APP_SCREEN.POST_STATUS_OPTIONS_MODAL}
             component={PostStatusOptionsScreen}
           />
+          <RootStack.Screen name={APP_SCREEN.EDIT_PROFILE} component={EditProfile} />
         </>
       )}
     </RootStack.Navigator>

@@ -54,7 +54,7 @@ export function PostCard({ post, preview = false }: PostCardProps) {
             <Avatar
               style={styles.creatorImage}
               shape="square"
-              source={{ uri: post.creator.picture }}
+              source={{ uri: post.creator.avatar }}
             />
             <View style={{ marginHorizontal: 10 }}>
               <View style={styles.row}>
