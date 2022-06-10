@@ -39,7 +39,8 @@ import { goBack, navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN, RootStackParamList } from '@src/navigation/screen-types'
 import { ChoseAsset } from './components'
 import styles from './styles'
-import { firebaseService } from '@src/services'
+import { storageService } from '@src/services'
+import { STORAGE_ENDPOINT } from '@src/constants'
 
 const screenWidth = Math.round(Dimensions.get('window').width)
 
@@ -66,7 +67,7 @@ export function AddPostScreen() {
   })
 
   const handleAddMediaPress = async () => {
-    navigate(APP_SCREEN.GALLERY_CHOOSER, { selectedAssets })
+    navigate(APP_SCREEN.GALLERY_CHOOSER, { selectedAssets, prevScreen: APP_SCREEN.ADD_POST })
   }
 
   const handleRemoveAsset = (idx: number) => {
@@ -85,7 +86,7 @@ export function AddPostScreen() {
 
   const handleAddPostPress = async () => {
     // upload images to firebase -> get storage url
-    const urls = await firebaseService.uploadMultipleFiles(selectedAssets)
+    const urls = await storageService.uploadMultipleFiles(selectedAssets, STORAGE_ENDPOINT.FILES)
     console.log('urls', urls)
   }
 

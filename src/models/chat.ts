@@ -1,8 +1,8 @@
 export interface Message {
   id?: string
   senderId: string
-  // conversationId: string
   message: string
+  image: string
   createdAt: number
 }
 

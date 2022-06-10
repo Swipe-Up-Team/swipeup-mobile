@@ -5,17 +5,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingLeft: 10,
-    paddingRight: 10,
-    marginTop: 8,
-    marginBottom: 8,
-  },
-  divider: {
-    flex: 1,
-    width: '100%',
-    height: 1,
-    backgroundColor: '#000',
-    opacity: 0.2,
+    marginTop: 14,
+    marginBottom: 10,
   },
   dateText: {
     fontSize: 12,
@@ -28,6 +19,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginTop: 4,
     flexDirection: 'row',
+  },
+  mainTextContainer: {
+    maxWidth: '80%',
+    marginRight: 10,
+    alignItems: 'flex-end',
+  },
+  imageMessage: {
+    width: 150,
+    height: 200,
+    resizeMode: 'cover',
+    borderRadius: 6,
   },
   avatar: {
     marginLeft: 10,

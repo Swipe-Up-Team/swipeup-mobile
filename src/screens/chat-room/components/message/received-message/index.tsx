@@ -1,4 +1,4 @@
-import { View } from 'react-native'
+import { View, Image } from 'react-native'
 import { Text, Avatar, IconElement, Icon } from '@ui-kitten/components'
 import styles from './styles'
 import { formatDate, formatTime } from '@src/utils'
@@ -31,9 +31,7 @@ const ReceivedMessage = ({ message, date, displayTime, displayAvatar }: any) => 
     <>
       {date && (
         <View style={styles.dateContainer}>
-          <View style={styles.divider} />
           <Text style={styles.dateText}>{getDisplayDateText()}</Text>
-          <View style={styles.divider} />
         </View>
       )}
 
@@ -47,9 +45,13 @@ const ReceivedMessage = ({ message, date, displayTime, displayAvatar }: any) => 
 
         <View style={styles.mainContainer}>
           {isShowTime && <Text style={styles.timeText}>{formatTime(message.createdAt)}</Text>}
-          <TouchableOpacity style={styles.messageContainer} onPress={changeDisplayTime}>
-            <Text>{message.message}</Text>
-          </TouchableOpacity>
+          {message.message ? (
+            <TouchableOpacity style={styles.messageContainer} onPress={changeDisplayTime}>
+              <Text>{message.message}</Text>
+            </TouchableOpacity>
+          ) : (
+            <Image style={styles.imageMessage} source={{ uri: message.image }} />
+          )}
         </View>
       </View>
     </>

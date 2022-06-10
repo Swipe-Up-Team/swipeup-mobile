@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { User } from '@src/models'
 import { Post } from '@src/models/post'
 import * as MediaLibrary from 'expo-media-library'
 
@@ -47,12 +48,14 @@ export type AuthorizeParamsList = {
   }
   [APP_SCREEN.GALLERY_CHOOSER]: {
     selectedAssets?: MediaLibrary.Asset[]
+    prevScreen?: APP_SCREEN.ADD_POST | APP_SCREEN.CHAT_ROOM
   }
   [APP_SCREEN.POST_STATUS_OPTIONS_MODAL]: undefined
   [APP_SCREEN.CHAT]: undefined
   [APP_SCREEN.CHAT_ROOM]: {
-    conversationId: string,
-    friendName: string,
+    conversationId: string
+    friend: User
+    selectedAssetIndexes?: number[]
   }
   [APP_SCREEN.PROFILE]: undefined
 }
