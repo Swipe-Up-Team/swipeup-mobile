@@ -6,6 +6,8 @@ export const R = { strings }
 // export const STATUS_BAR_HEIGHT: number = getStatusBarHeight()
 export const SCREEN_HEIGHT: number = Math.round(Dimensions.get('window').height)
 export const SCREEN_WIDTH: number = Math.round(Dimensions.get('window').width)
+export const DEFAULT_PHOTO_URI =
+  'https://iptc.org/wp-content/uploads/2018/05/avatar-anonymous-300x300.png'
 
 export * from './regex'
 export * from './enums'
