@@ -5,7 +5,11 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     backgroundColor: '#fff',
-    marginTop: 4,
+    marginTop: 10,
+    // position: 'absolute',
+    // bottom: 30,
+    // left: 0,
+    // right: 0,
   },
   avatar: {
     marginLeft: 10,

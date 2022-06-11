@@ -3,7 +3,7 @@ import { RouteProp, useRoute } from '@react-navigation/native'
 import { APP_SCREEN, AuthorizeParamsList } from '@src/navigation/screen-types'
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './styles'
-import { BackIcon, ChatActionIcon, MicIcon, PaperPlaneIcon, PlusIcon, XIcon } from '@src/components'
+import { BackIcon, ChatActionIcon, DismissKeyboardView, MicIcon, PaperPlaneIcon, PlusIcon, XIcon } from '@src/components'
 import { KeyboardAvoidingView, Platform, View } from 'react-native'
 import { Input, List, ListItem, Button } from '@ui-kitten/components'
 import { shortenConversationText } from '@src/utils'
@@ -16,8 +16,9 @@ import SentMessage from './components/message/sent-message'
 import ReceivedMessage from './components/message/received-message'
 import { chatService } from '@src/services/chat-service'
 import { navigate } from '@src/navigation/navigation-service'
-import { defaultUser } from '@src/constants'
+import { defaultUser, USERIDS_DIVIDER } from '@src/constants'
 import { storageService } from '@src/services'
+import TypingMessage from './components/message/typing-message'
 
 const RightSection = () => (
   <View style={styles.topRightContainer}>
@@ -38,9 +39,14 @@ export const ChatRoomScreen = (props: any) => {
   const [friend, setFriend] = useState<User>(route.params?.friend)
   const [inputMessage, setinputMessage] = useState('')
   const [messageList, setMessageList] = useState<Message[]>([])
+  const [typingList, setTypingList] = useState<string[]>([])
   const [attachmentsMenuVisible, setAttachmentsMenuVisible] = useState<boolean>(false)
 
   const conversation = useSelector(x => x.chat.conversations.find(x => x.id === conversationId))
+  const typingIds = useSelector(
+    x => x.chat.conversations.find(x => x.id === conversationId)?.typingIds
+  )
+
   const [selectedAssets, selectedAssetsActions] = useArray<MediaLibrary.Asset>([])
 
   const renderItem = ({ item, index }: any) => {
@@ -101,11 +107,20 @@ export const ChatRoomScreen = (props: any) => {
     }
 
     await chatService.sendTextMessage(message, conversationId)
+    setinputMessage('')
   }
 
   const sendImageMessage = async () => {
     await chatService.sendImageMessage(selectedAssets, userId!, conversationId)
     selectedAssetsActions.clear()
+  }
+
+  const sendTypingAction = async () => {
+    await chatService.sendTypingAction(userId!, conversationId)
+  }
+
+  const removeTypingAction = async () => {
+    await chatService.removeTypingAction(userId!, conversationId)
   }
 
   const toggleAttachmentsMenu = (): void => {
@@ -134,6 +149,7 @@ export const ChatRoomScreen = (props: any) => {
 
   useEffect(() => {
     setMessageList(conversation?.messages)
+    setTypingList(typingIds ? typingIds.split(USERIDS_DIVIDER) : [])
   }, [conversation])
 
   useEffect(() => {
@@ -172,6 +188,17 @@ export const ChatRoomScreen = (props: any) => {
             ref={listRef}
             data={messageList}
             renderItem={renderItem}
+            ListHeaderComponent={<View style={{ height: 200 }} />}
+            ListFooterComponent={
+              <View>
+                {typingList.map(typingId => {
+                  if (typingId && typingId !== userId) {
+                    return <TypingMessage />
+                  }
+                  return null
+                })}
+              </View>
+            }
             onLayout={() => listRef.current?.scrollToEnd()}
             onContentSizeChange={() => listRef.current?.scrollToEnd()}
           />
@@ -197,8 +224,10 @@ export const ChatRoomScreen = (props: any) => {
                 style={styles.messageInput}
                 placeholder="Message..."
                 value={inputMessage}
-                onChangeText={setinputMessage}
                 accessoryRight={MicIcon}
+                onChangeText={setinputMessage}
+                // onFocus={sendTypingAction}
+                // onBlur={removeTypingAction}
                 disabled={selectedAssets.length > 0}
               />
               <Button

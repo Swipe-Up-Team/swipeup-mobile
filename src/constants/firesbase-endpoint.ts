@@ -4,7 +4,8 @@ export const FIRESTORE_ENDPOINT = {
 
 export const REALTIMEDB_ENDPOINT = {
   CONVERSATIONS: 'conversations',
-  CONVERSATIONS_MESSAGES: 'messages'
+  CONVERSATIONS_MESSAGES: 'messages',
+  CONVERSATIONS_TYPING: 'typingIds',
 }
 
 export const STORAGE_ENDPOINT = {

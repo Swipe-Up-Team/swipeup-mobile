@@ -3,10 +3,12 @@ import { Text, Avatar, IconElement, Icon } from '@ui-kitten/components'
 import styles from './styles'
 import { formatDate, formatTime } from '@src/utils'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { useState } from 'react'
+import React, { useState } from 'react'
+import { LoadingView } from '../../loading-message'
 
 const SentMessage = ({ message, displayDate, displayTime }: any) => {
   const [isShowTime, setIsShowTime] = useState(displayTime)
+  const [isLoadingImage, setIsLoadingImage] = useState(false)
 
   const getDisplayDateText = () => {
     const now = new Date()
@@ -27,6 +29,10 @@ const SentMessage = ({ message, displayDate, displayTime }: any) => {
     }
   }
 
+  const changeLoadingState = () => {
+    setIsLoadingImage(!isLoadingImage)
+  }
+
   return (
     <>
       {displayDate && (
@@ -42,7 +48,15 @@ const SentMessage = ({ message, displayDate, displayTime }: any) => {
               <Text style={styles.messageText}>{message.message}</Text>
             </TouchableOpacity>
           ) : (
-            <Image style={styles.imageMessage} source={{ uri: message.image }} />
+            <>
+              <Image
+                style={styles.imageMessage}
+                source={{ uri: message.image }}
+                onLoadStart={changeLoadingState}
+                onLoadEnd={changeLoadingState}
+              />
+              {isLoadingImage && <LoadingView />}
+            </>
           )}
           {isShowTime && (
             <View style={styles.statusContainer}>

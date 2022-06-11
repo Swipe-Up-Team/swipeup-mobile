@@ -1,9 +1,9 @@
 import { dispatch } from '@src/common'
 import { database } from '@src/config'
-import { REALTIMEDB_ENDPOINT, STORAGE_ENDPOINT } from '@src/constants'
+import { REALTIMEDB_ENDPOINT, STORAGE_ENDPOINT, USERIDS_DIVIDER } from '@src/constants'
 import { Conversation, Message } from '@src/models'
 import { onSetConversations } from '@src/store/reducers/chat-reducer'
-import { get, onValue, push, ref, set } from 'firebase/database'
+import { get, onValue, push, ref, update } from 'firebase/database'
 import * as MediaLibrary from 'expo-media-library'
 import { storageService } from './storage-services'
 
@@ -71,5 +71,51 @@ export const chatService = {
         dispatch(onSetConversations(conversations))
       }
     })
+  },
+
+  getTypingIdList: async (conversationId: string) => {
+    const snapshot = await get(
+      ref(
+        database,
+        `${REALTIMEDB_ENDPOINT.CONVERSATIONS}/${conversationId}/${REALTIMEDB_ENDPOINT.CONVERSATIONS_TYPING}`
+      )
+    )
+
+    if (snapshot.exists()) {
+      const typingList = (snapshot.val() as string)
+        ? (snapshot.val() as string).split(USERIDS_DIVIDER)
+        : []
+      return typingList
+    }
+
+    return undefined
+  },
+
+  sendTypingAction: async (userId: string, conversationId: string) => {
+    const typingList = await chatService.getTypingIdList(conversationId)
+
+    if (typingList && !typingList.includes(userId)) {
+      typingList.push(userId)
+      const newTypingIds = typingList.join(USERIDS_DIVIDER)
+
+      await update(ref(database, `${REALTIMEDB_ENDPOINT.CONVERSATIONS}/${conversationId}`), {
+        [REALTIMEDB_ENDPOINT.CONVERSATIONS_TYPING]: newTypingIds
+      })
+    }
+  },
+
+  removeTypingAction: async (userId: string, conversationId: string) => {
+    const typingList = await chatService.getTypingIdList(conversationId)
+
+    if (typingList && typingList.includes(userId)) {
+      const index = typingList.indexOf(userId)
+
+      typingList.splice(index, 1)
+      const newTypingIds = typingList.join(USERIDS_DIVIDER)
+
+      await update(ref(database, `${REALTIMEDB_ENDPOINT.CONVERSATIONS}/${conversationId}`), {
+        [REALTIMEDB_ENDPOINT.CONVERSATIONS_TYPING]: newTypingIds
+      })
+    }
   }
 }
