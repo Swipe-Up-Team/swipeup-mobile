@@ -1,8 +1,13 @@
 export const FIRESTORE_ENDPOINT = {
-  USERS: 'users',
+  USERS: 'users'
 }
 
-export const FIREBASE_ENDPOINT = {
+export const REALTIMEDB_ENDPOINT = {
   CONVERSATIONS: 'conversations',
-  CONVERSATIONS_MESSAGES: 'messages',
+  CONVERSATIONS_MESSAGES: 'messages'
+}
+
+export const STORAGE_ENDPOINT = {
+  FILES: 'files',
+  MESSAGE: 'messages',
 }

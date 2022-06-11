@@ -1,29 +1,53 @@
 import { dispatch } from '@src/common'
 import { database } from '@src/config'
-import { FIREBASE_ENDPOINT } from '@src/constants'
+import { REALTIMEDB_ENDPOINT, STORAGE_ENDPOINT } from '@src/constants'
 import { Conversation, Message } from '@src/models'
 import { onSetConversations } from '@src/store/reducers/chat-reducer'
 import { get, onValue, push, ref, set } from 'firebase/database'
+import * as MediaLibrary from 'expo-media-library'
+import { storageService } from './storage-services'
 
 export const chatService = {
-  sendMessage: async (message: Message, conversationId: string | undefined) => {
-    let key = conversationId
-    if (!key) {
-      key = push(ref(database, FIREBASE_ENDPOINT.CONVERSATIONS)).key || undefined
-    }
+  getKeyPush: (conversationId: string | undefined) => {
+    return conversationId
+      ? conversationId
+      : push(ref(database, REALTIMEDB_ENDPOINT.CONVERSATIONS)).key || undefined
+  },
+
+  sendTextMessage: async (message: Message, conversationId: string | undefined) => {
+    const key = chatService.getKeyPush(conversationId)
 
     await push(
       ref(
         database,
-        `${FIREBASE_ENDPOINT.CONVERSATIONS}/${key}/${FIREBASE_ENDPOINT.CONVERSATIONS_MESSAGES}`
+        `${REALTIMEDB_ENDPOINT.CONVERSATIONS}/${key}/${REALTIMEDB_ENDPOINT.CONVERSATIONS_MESSAGES}`
       ),
       message
     )
   },
 
+  sendImageMessage: async (
+    files: MediaLibrary.AssetInfo[],
+    userId: string,
+    conversationId: string | undefined
+  ) => {
+    const urls = await storageService.uploadMultipleFiles(files, STORAGE_ENDPOINT.MESSAGE)
+
+    urls.forEach(async url => {
+      const message: Message = {
+        senderId: userId,
+        message: '',
+        image: url,
+        createdAt: new Date().getTime()
+      }
+
+      await chatService.sendTextMessage(message, conversationId)
+    })
+  },
+
   getConversations: async (userId: string) => {
     let conversations: Conversation[] = []
-    onValue(ref(database, FIREBASE_ENDPOINT.CONVERSATIONS), snapshot => {
+    onValue(ref(database, REALTIMEDB_ENDPOINT.CONVERSATIONS), snapshot => {
       if (snapshot.exists()) {
         conversations = []
         const allConversation = snapshot.val()
@@ -47,7 +71,5 @@ export const chatService = {
         dispatch(onSetConversations(conversations))
       }
     })
-  },
-
-  listenConversation: async (conversationId: string) => {}
+  }
 }

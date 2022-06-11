@@ -1,7 +1,7 @@
 // import { ResponseBase } from '@src/models'
 // import { NetWorkResponseType } from './network-service'
 // import { userApi } from '@src/api/user-api'
-import { dispatch } from '@src/common/redux'
+import { dispatch } from '@src/common'
 import { firestore } from '@src/config'
 import { authentication } from '@src/config/firebase-config'
 import { FIREBASE_ERROR_CODE, FIRESTORE_ENDPOINT } from '@src/constants'
@@ -44,8 +44,10 @@ export const userService = {
   logInWithEmailAndPassword: async (email: string, password: string) =>
     signInWithEmailAndPassword(authentication, email, password)
       .then(async res => {
+        // console.log('🚀 ~ file: user-services.ts ~ line 49 ~ ̥', res)
         const token = await res.user.getIdToken()
         const user = await userService.getUser(res.user.uid)
+        // console.log('🚀 ~ file: user-services.ts ~ line 49 ~ ̥', user)
 
         dispatch(onSetUser(user!))
         dispatch(onSetToken(token))
@@ -111,7 +113,6 @@ export const userService = {
         //TODO: handle show toast
       })
       .catch(error => {
-        //TODO: HANDLE SIGNUP FAILED HERE
         switch (error.code) {
           case FIREBASE_ERROR_CODE.EMAIL_ALREADY_EXISTS:
             Toast.show({ type: 'error', text1: 'Email already exists' })
@@ -131,7 +132,7 @@ export const userService = {
       }),
 
   getUser: async (uid: string) => {
-    const snapshot = await getDoc(doc(firestore, `${FIRESTORE_ENDPOINT.USERS}/${uid}`))
+    const snapshot = await getDoc(doc(firestore, `/${FIRESTORE_ENDPOINT.USERS}/${uid}`))
 
     if (!snapshot.exists()) {
       return undefined

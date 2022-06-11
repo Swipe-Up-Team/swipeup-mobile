@@ -39,6 +39,8 @@ import { goBack, navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN, RootStackParamList } from '@src/navigation/screen-types'
 import { ChoseAsset } from './components'
 import styles from './styles'
+import { storageService } from '@src/services'
+import { STORAGE_ENDPOINT } from '@src/constants'
 
 const screenWidth = Math.round(Dimensions.get('window').width)
 
@@ -65,7 +67,7 @@ export function AddPostScreen() {
   })
 
   const handleAddMediaPress = async () => {
-    navigate(APP_SCREEN.GALLERY_CHOOSER, { selectedAssets })
+    navigate(APP_SCREEN.GALLERY_CHOOSER, { selectedAssets, prevScreen: APP_SCREEN.ADD_POST })
   }
 
   const handleRemoveAsset = (idx: number) => {
@@ -82,12 +84,19 @@ export function AddPostScreen() {
     }
   }, [route.params?.selectedAssetIndexes])
 
+  const handleAddPostPress = async () => {
+    // upload images to firebase -> get storage url
+    const urls = await storageService.uploadMultipleFiles(selectedAssets, STORAGE_ENDPOINT.FILES)
+    console.log('urls', urls)
+  }
+
   // ANIMATION FUNCTIONS
 
   const keyboardWillShow = () => {
     _distanceTopOption.setValue(0)
     _prevTranslationY = 0
   }
+
   const keyboardDidShow = () => {
     isKeyBoardVisible = true
     if (!isShowBgColors) {
@@ -195,12 +204,7 @@ export function AddPostScreen() {
           iconLeft={<CloseIcon />}
           accessoryRight={
             <TouchableOpacity style={styles.accessoryRightNavigationBar} onPress={() => {}}>
-              <Button
-                size="small"
-                onPress={() => {
-                  console.log('posted')
-                }}
-              >
+              <Button size="small" onPress={handleAddPostPress}>
                 Post
               </Button>
             </TouchableOpacity>
@@ -279,18 +283,6 @@ export function AddPostScreen() {
                     <View style={styles.optionImage}>
                       <PostTagFriendBigIcon />
                     </View>
-                    {/* <Image
-                      style={styles.optionImage}
-                      source={require('../../../assets/icon/camera.png')}
-                    />
-                    <Image
-                      style={styles.optionImage}
-                      source={require('../../../assets/icon/vector.png')}
-                    />
-                    <Image
-                      style={styles.optionImage}
-                      source={require('../../../assets/icon/user_add_alt.png')}
-                    /> */}
                   </View>
                 </View>
               </TouchableWithoutFeedback>
