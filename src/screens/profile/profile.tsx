@@ -1,12 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
-import { useNavigationState } from '@react-navigation/native'
+import { RouteProp, useNavigationState, useRoute } from '@react-navigation/native'
 import { useSelector } from '@src/common'
-import { AddPostCard, PostCard, StyledDivider } from '@src/components'
+import { AddPostCard, NavigationBar, PostCard, StyledDivider } from '@src/components'
 import { firestore } from '@src/config'
 import { BOTTOM_TAB_BAR_HEIGHT, SCREEN_WIDTH } from '@src/constants'
 import { Post, User } from '@src/models'
-import { Spinner } from '@ui-kitten/components'
-import { collection, getDoc, getDocs, query, where } from 'firebase/firestore'
+import { goBack, navigate } from '@src/navigation/navigation-service'
+import { APP_SCREEN, RootStackParamList } from '@src/navigation/screen-types'
+import { Icon, Spinner } from '@ui-kitten/components'
+import { collection, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore'
 import React, { useEffect, useRef, useState } from 'react'
 import {
   Animated,
@@ -31,7 +33,7 @@ const styles = StyleSheet.create({
   },
   profileContainer: {
     width: SCREEN_WIDTH,
-    paddingTop: 24
+    paddingTop: 10
   },
 
   w_full: {
@@ -47,7 +49,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: SCREEN_WIDTH,
     justifyContent: 'space-evenly',
-    padding: 20,
+    padding: 10,
     backgroundColor: '#FCFCFC'
   },
   touch_center: {
@@ -59,9 +61,9 @@ const styles = StyleSheet.create({
     fontWeight: '500'
   },
   btnEditProfile: {
-    marginVertical: 10,
+    marginVertical: 5,
     width: SCREEN_WIDTH - 30,
-    marginHorizontal: 15,
+    marginHorizontal: 5,
     backgroundColor: '#fff',
     borderRadius: 3,
     paddingVertical: 5,
@@ -71,6 +73,16 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   }
 })
+
+/**
+ * 1 - Followed
+ * 2 - Unfollow
+ * 3 - User login Profile
+ */
+type UserInfo = {
+  user: User
+  followType: number
+}
 
 export default function ProfileScreen() {
   const ref = useRef<{
@@ -94,30 +106,65 @@ export default function ProfileScreen() {
 
   const headerTabOpacity = React.useMemo(() => new Animated.Value(-1), [])
 
-  const user = useSelector(state => state.user).user as User
+  const route = useRoute<RouteProp<RootStackParamList, APP_SCREEN.PROFILE>>()
 
-  const [isFollow, setIsFollow] = useState(false)
+  const loginUser = useSelector(state => state.user).user as User
+  const [userInfo, setUserInfo] = useState<UserInfo>({} as UserInfo)
 
   const [photos, setPhotos] = useState<Post[]>([])
 
+  const [loading, setLoading] = useState(true)
+  const [hasMoreToLoad, setHasMoreToLoad] = useState(true)
+
+  useEffect(() => {
+    setUserInfo({} as UserInfo)
+    setPhotos([])
+    if (route.params?.userId) {
+      console.log('FETCH USER')
+      const userRef = doc(firestore, 'users', route.params.userId)
+      getDoc(userRef).then(value => {
+        const user = value.data() as User
+        const followType = loginUser.followingIDs?.some(id => id === user?.id) ? 1 : 2
+        setUserInfo({ user, followType })
+      })
+    } else {
+      setUserInfo({ user: loginUser, followType: 3 })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [route.params])
+
   useEffect(() => {
     async function fetchMyAPI() {
-      const queryString = query(collection(firestore, 'posts'), where('authorId', '==', user.id))
+      console.log('RUN FETCH')
+
+      setLoading(true)
+
+      const queryString = query(
+        collection(firestore, 'posts'),
+        where('authorId', '==', userInfo?.user?.id)
+      )
       const querySnapshot = await getDocs(queryString)
 
       const tempPostList: Post[] = []
-
+      if (querySnapshot.empty) {
+        setLoading(false)
+        setPhotos(tempPostList)
+      }
       querySnapshot.forEach(responseData => {
+        console.log('DONE 1')
         const data = responseData.data()
         getDoc(data.creator).then(res => {
           data.creator = res.data() as User
           tempPostList.push(data as Post)
+          console.log('DONE')
+          setLoading(true)
           setPhotos(tempPostList)
         })
       })
     }
-    fetchMyAPI()
-  }, [user.id])
+    console.log('RUN')
+    if (userInfo.user) fetchMyAPI()
+  }, [userInfo?.user])
 
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
@@ -159,16 +206,16 @@ export default function ProfileScreen() {
   //     })
   //   }
   // }
-  const onBackToMainScreen = () => {
-    if (ref.current.currentTab === 2) {
-      scrollHRef.current?.scrollTo({
-        x: 0,
-        y: 0,
-        animated: true
-      })
-      ref.current.currentTab = 1
-    }
-  }
+  // const onBackToMainScreen = () => {
+  //   if (ref.current.currentTab === 2) {
+  //     scrollHRef.current?.scrollTo({
+  //       x: 0,
+  //       y: 0,
+  //       animated: true
+  //     })
+  //     ref.current.currentTab = 1
+  //   }
+  // }
 
   const onVerticalScrollViewScroll = ({
     nativeEvent: {
@@ -204,9 +251,6 @@ export default function ProfileScreen() {
     ref.current.headerHeight = height
   }
 
-  const [loading, setLoading] = useState(true)
-  const [hasMoreToLoad, setHasMoreToLoad] = useState(true)
-
   const handleLoadMore = async () => {}
 
   const renderFooter = () => {
@@ -218,86 +262,117 @@ export default function ProfileScreen() {
     )
   }
 
+  const onFollow = () => {
+    loginUser.followingIDs?.push(userInfo?.user?.id)
+    //Update login user following
+    const userRef = doc(firestore, 'users', loginUser?.id)
+    updateDoc(userRef, {
+      followingIDs: loginUser.followingIDs
+    })
+  }
+
+  const onUnfollow = () => {
+    loginUser.followingIDs = loginUser.followingIDs?.filter(id => id !== userInfo?.user?.id)
+    //Update login user following
+    const userRef = doc(firestore, 'users', loginUser?.id)
+    updateDoc(userRef, {
+      followingIDs: loginUser.followingIDs
+    })
+  }
+
+  const onClickFollow = () => {
+    let tempFollowType: number = 3
+    //follow => unfollow
+    if (userInfo.followType === 1) {
+      tempFollowType = 2
+      onUnfollow()
+    } else if (userInfo.followType === 2) {
+      tempFollowType = 1
+      onFollow()
+    }
+    setUserInfo({ user: userInfo.user, followType: tempFollowType })
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.profileContainer}>
-        <ScrollView
-          ref={scrollVRef}
-          onScroll={onVerticalScrollViewScroll}
-          scrollEventThrottle={20}
-          style={styles.w_full}
-        >
-          <TouchableOpacity activeOpacity={1} onPress={onBackToMainScreen}>
-            <View onLayout={onSetHeaderHeight}>
-              <ProfileExtraInfo user={user} />
-              <ProfileInfo user={user} />
-              <TouchableOpacity
-                /**
-                 * @todo On press
-                 */
-                onPress={() => setIsFollow(!isFollow)}
-                activeOpacity={0.6}
-                style={styles.btnEditProfile}
-              >
-                {isFollow ? (
-                  <Text
-                    style={{
-                      fontWeight: '500',
-                      color: 'green'
-                    }}
+      {userInfo.user ? (
+        <View style={styles.profileContainer}>
+          <ScrollView
+            ref={scrollVRef}
+            onScroll={onVerticalScrollViewScroll}
+            scrollEventThrottle={20}
+            style={styles.w_full}
+          >
+            <TouchableOpacity activeOpacity={1}>
+              <View onLayout={onSetHeaderHeight}>
+                <ProfileExtraInfo user={userInfo.user} />
+                <ProfileInfo user={userInfo.user} />
+                {userInfo.followType === 3 ? null : (
+                  <TouchableOpacity
+                    onPress={onClickFollow}
+                    activeOpacity={0.6}
+                    style={styles.btnEditProfile}
                   >
-                    Followed
-                  </Text>
-                ) : (
-                  <Text
-                    style={{
-                      fontWeight: '500',
-                      color: 'black'
-                    }}
-                  >
-                    Following
-                  </Text>
+                    {userInfo.followType === 1 ? (
+                      <Text
+                        style={{
+                          fontWeight: '500',
+                          color: 'green'
+                        }}
+                      >
+                        Followed
+                      </Text>
+                    ) : (
+                      <Text
+                        style={{
+                          fontWeight: '500',
+                          color: 'black'
+                        }}
+                      >
+                        Following
+                      </Text>
+                    )}
+                  </TouchableOpacity>
                 )}
-              </TouchableOpacity>
-              <View style={styles.extraInfoWrapper}>
-                <TouchableOpacity onPress={scrollToPosts} style={styles.touch_center}>
-                  <Text style={styles.text_extra_info}>{100}</Text>
-                  <Text>Posts</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    /**
-                     * @todo Add navigate
-                     */
-                    // navigate('Follow', { type: 2 })
-                  }}
-                  style={styles.touch_center}
-                >
-                  <Text style={styles.text_extra_info}>{user?.followingIDs?.length}</Text>
-                  <Text>Following</Text>
-                </TouchableOpacity>
+                <View style={styles.extraInfoWrapper}>
+                  <TouchableOpacity onPress={scrollToPosts} style={styles.touch_center}>
+                    <Text style={styles.text_extra_info}>{photos?.length}</Text>
+                    <Text>Posts</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigate(APP_SCREEN.FOLLOWING)
+                    }}
+                    style={styles.touch_center}
+                  >
+                    <Text style={styles.text_extra_info}>
+                      {userInfo.user?.followingIDs?.length}
+                    </Text>
+                    <Text>Following</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={{ backgroundColor: '#fff' }}>
+                  <FlatList
+                    data={photos}
+                    showsVerticalScrollIndicator={false}
+                    style={styles.posts}
+                    // TODO:
+                    // onRefresh
+                    // ListEmptyComponent={ListEmpty}
+                    keyExtractor={item => item?.id}
+                    ItemSeparatorComponent={StyledDivider}
+                    ListFooterComponent={renderFooter}
+                    onEndReachedThreshold={0.5}
+                    onEndReached={hasMoreToLoad ? handleLoadMore : null}
+                    renderItem={({ item }) => <PostCard post={item} />}
+                    ListHeaderComponent={<AddPostCard />}
+                  />
+                </View>
               </View>
-              <View style={{ backgroundColor: '#fff' }}>
-                <FlatList
-                  data={photos}
-                  showsVerticalScrollIndicator={false}
-                  style={styles.posts}
-                  // TODO:
-                  // onRefresh
-                  // ListEmptyComponent={ListEmpty}
-                  keyExtractor={item => item.id}
-                  ItemSeparatorComponent={StyledDivider}
-                  ListFooterComponent={renderFooter}
-                  onEndReachedThreshold={0.5}
-                  onEndReached={hasMoreToLoad ? handleLoadMore : null}
-                  renderItem={({ item }) => <PostCard post={item} />}
-                  ListHeaderComponent={<AddPostCard />}
-                />
-              </View>
-            </View>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
+            </TouchableOpacity>
+          </ScrollView>
+        </View>
+      ) : null}
     </SafeAreaView>
   )
 }

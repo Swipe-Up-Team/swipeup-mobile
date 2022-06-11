@@ -6,7 +6,7 @@ import ExpoFastImage from 'expo-fast-image'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { DEFAULT_PHOTO_URI } from '@src/constants'
 import { APP_SCREEN } from '@src/navigation/screen-types'
-import { navigate } from '@src/navigation/navigation-service'
+import { goBack, navigate } from '@src/navigation/navigation-service'
 import { useSelector } from '@src/common'
 
 // interface Props {
@@ -68,6 +68,9 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     bottom: 40
+  },
+  backArrow: {
+    margin: 10
   }
 })
 
@@ -83,6 +86,15 @@ export default function ProfileExtraInfo({ user }: Props) {
         style={styles.imageBackground}
         source={{ uri: user.avatar, cache: 'force-cache' }}
       />
+      {user.id !== useSelector(state => state.user).user?.id ? (
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onPress={() => navigate(APP_SCREEN.FOLLOWING)}
+          style={styles.backArrow}
+        >
+          <Icon name="arrow-back" width={24} height={24} fill="#000" />
+        </TouchableOpacity>
+      ) : null}
       <View style={styles.infoWrapper}>
         <TouchableOpacity style={styles.avatarWrapper}>
           <ExpoFastImage

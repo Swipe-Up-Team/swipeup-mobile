@@ -13,7 +13,6 @@ const initialState: UserState = {
 }
 
 export const reloadUser = createAsyncThunk('user/reloadUser', async (userId: string) => {
-  console.log('RUN HERE')
   if (userId) {
     const userRef = doc(firestore, 'users', userId)
     const docSnap = await getDoc(userRef)
@@ -32,7 +31,6 @@ const user = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(reloadUser.fulfilled, (state, action) => {
-      console.log(action.payload)
       state.user = action.payload
     })
   }

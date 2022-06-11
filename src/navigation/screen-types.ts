@@ -25,7 +25,8 @@ export enum APP_SCREEN {
   CHAT_ROOM = 'CHAT_ROOM',
 
   PROFILE = 'PROFILE',
-  EDIT_PROFILE = 'EDIT_PROFILE'
+  EDIT_PROFILE = 'EDIT_PROFILE',
+  FOLLOWING = 'FOLLOW'
 }
 
 export type UnAuthorizeParamsList = {
@@ -53,8 +54,11 @@ export type AuthorizeParamsList = {
   [APP_SCREEN.CHAT_ROOM]: {
     conversationId: string
   }
-  [APP_SCREEN.PROFILE]: undefined
+  [APP_SCREEN.PROFILE]: {
+    userId: string | null
+  }
   [APP_SCREEN.EDIT_PROFILE]: undefined
+  [APP_SCREEN.FOLLOWING]: undefined
 }
 
 export type RootStackParamList = {
