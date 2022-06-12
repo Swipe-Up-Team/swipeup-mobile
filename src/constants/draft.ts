@@ -23,5 +23,6 @@ export const defaultMessage: Message = {
   id: '',
   senderId: '',
   message: '',
+  image: '',
   createdAt: 0
 }

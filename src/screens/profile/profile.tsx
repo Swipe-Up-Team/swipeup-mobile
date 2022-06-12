@@ -2,29 +2,29 @@
 import { RouteProp, useRoute } from '@react-navigation/native'
 import { useSelector } from '@src/common'
 import { AddPostCard, PostCard, StyledDivider } from '@src/components'
+import { defaultUser } from '@src/constants'
 import { Post, User } from '@src/models'
 import { navigate } from '@src/navigation/navigation-service'
-import { APP_SCREEN, RootStackParamList } from '@src/navigation/screen-types'
+import { APP_SCREEN, AuthorizeParamsList, RootStackParamList } from '@src/navigation/screen-types'
+import { postService, userService } from '@src/services'
 import { Icon, Spinner } from '@ui-kitten/components'
 import React, { useEffect, useRef, useState } from 'react'
-import { Text, View } from 'react-native'
+import { RefreshControl, Text, View } from 'react-native'
 import { FlatList, ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ActionButtonRow } from './components/action-button-row'
 import ProfileHeader from './components/profile-header'
 import styles from './styles'
 
-/**
- * 1 - Followed
- * 2 - Unfollow
- * 3 - User login Profile
- */
-type UserInfo = {
-  user: User
-  followType: number
-}
-
 export default function ProfileScreen() {
+  const route = useRoute<RouteProp<AuthorizeParamsList, APP_SCREEN.PROFILE>>()
+  const friendUserId = route.params?.userId
+
+  const { user } = useSelector(x => x.user)
+  const [currentUser, setCurrentUser] = useState<User>(defaultUser)
+  const [allPost, setAllPost] = useState<Post[]>([])
+  const [refreshing, setRefreshing] = useState(false)
+
   const handleLoadMore = async () => {}
 
   const renderFooter = () => {
@@ -43,24 +43,58 @@ export default function ProfileScreen() {
 
   const onClickFollow = () => {}
 
+  const getFriendUser = async () => {
+    const friend = await userService.getUser(friendUserId!)
+    setCurrentUser(friend!)
+  }
+
+  const getAllPost = async () => {
+    const posts = await postService.getAllPostByUserId(friendUserId! ?? user?.id)
+    setAllPost(posts)
+  }
+
+  const renderPostItem = ({ item }: any) => <PostCard post={item} />
+
+  const handleRefresh = async () => {
+    setRefreshing(true)
+    await getAllPost()
+    setRefreshing(false)
+  }
+
+  useEffect(() => {
+    // if this is not current user, fetch data
+    if (friendUserId) {
+      getFriendUser()
+    } else {
+      setCurrentUser(user!)
+    }
+  }, [])
+
+  useEffect(() => {
+    getAllPost()
+  }, [])
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileContainer}>
-        <ScrollView style={styles.w_full}>
+        <ScrollView
+          style={styles.w_full}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+        >
           <TouchableOpacity activeOpacity={1}>
             <View>
-              <ProfileHeader user={userInfo.user} />
+              <ProfileHeader user={currentUser} />
 
               <View style={styles.bioWrapper}>
-                <Text style={styles.nameText}>{userInfo.user.name}</Text>
-                <Text style={styles.emailText}>{userInfo.user.email}</Text>
+                <Text style={styles.nameText}>{currentUser.name}</Text>
+                <Text style={styles.emailText}>{currentUser.email}</Text>
               </View>
 
-              <ActionButtonRow />
+              {friendUserId && <ActionButtonRow />}
 
               <View style={styles.extraInfoWrapper}>
                 <TouchableOpacity style={styles.touch_center}>
-                  <Text style={styles.text_extra_info}>{photos?.length}</Text>
+                  <Text style={styles.text_extra_info}>{allPost.length}</Text>
                   <Text>Posts</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -69,21 +103,21 @@ export default function ProfileScreen() {
                   }}
                   style={styles.touch_center}
                 >
-                  <Text style={styles.text_extra_info}>{userInfo.user?.followingIDs?.length}</Text>
+                  <Text style={styles.text_extra_info}>{currentUser.followingIDs?.length}</Text>
                   <Text>Following</Text>
                 </TouchableOpacity>
               </View>
 
               <View style={{ backgroundColor: '#fff' }}>
                 <FlatList
-                  data={photos}
+                  data={allPost}
                   showsVerticalScrollIndicator={false}
                   style={styles.posts}
                   keyExtractor={item => item?.id}
                   ItemSeparatorComponent={StyledDivider}
                   ListFooterComponent={renderFooter}
                   onEndReachedThreshold={0.5}
-                  renderItem={({ item }) => <PostCard post={item} />}
+                  renderItem={renderPostItem}
                   // ListEmptyComponent={ListEmpty}
                   // onEndReached={hasMoreToLoad ? handleLoadMore : null}
                   // ListHeaderComponent={loginUser.id === userInfo.user.id ? <AddPostCard /> : null}
