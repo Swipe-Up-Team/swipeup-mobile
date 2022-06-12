@@ -37,13 +37,14 @@ export type UnAuthorizeParamsList = {
 export type AuthorizeParamsList = {
   [APP_SCREEN.HOME]: undefined
   [APP_SCREEN.POST_DETAILS]: {
-    postId: string
+    postId?: string
   }
   [APP_SCREEN.FEED_IMAGE_PREVIEW]: {
     images: string[]
   }
   [APP_SCREEN.ADD_POST]: {
     selectedAssetIndexes?: number[]
+    onSuccess?: (id: string) => void
   }
   [APP_SCREEN.GALLERY_CHOOSER]: {
     selectedAssets?: MediaLibrary.Asset[]
@@ -51,8 +52,8 @@ export type AuthorizeParamsList = {
   [APP_SCREEN.POST_STATUS_OPTIONS_MODAL]: undefined
   [APP_SCREEN.CHAT]: undefined
   [APP_SCREEN.CHAT_ROOM]: {
-    conversationId: string,
-    friendName: string,
+    conversationId: string
+    friendName: string
   }
   [APP_SCREEN.PROFILE]: undefined
 }

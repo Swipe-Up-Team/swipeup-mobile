@@ -1,30 +1,30 @@
-import { Avatar, Text } from '@ui-kitten/components'
+import { Text } from '@ui-kitten/components'
 import React from 'react'
 import { View } from 'react-native'
 
-import { Comment } from '@src/models'
+import { CommentResponseData } from '@src/models'
 import styles from './styles'
 import { CommentReplyIcon, HeartIcon } from '../icons'
 import { TouchableOpacity } from 'react-native'
+import { UserAvatarSquare } from '../user-avatar-square'
+import { formatDistanceToNow } from 'date-fns'
 
 export const CommentCard = ({
   item,
   onSharePress
 }: {
-  item: Comment
+  item: CommentResponseData
   onSharePress: () => void
 }) => {
-  const { authorId, images, createdAt, text, reacts } = item
+  const { author, createdAt, text } = item
   return (
     <View style={styles.commentContainer}>
       <View style={styles.row}>
-        {images && (
-          <Avatar style={styles.imageContainer} shape="square" source={{ uri: images[0] }} />
-        )}
+        {author.avatar && <UserAvatarSquare uri={author.avatar} />}
         <View style={styles.userInfo}>
-          <Text style={styles.creatorName}>{authorId}</Text>
+          <Text style={styles.creatorName}>{author.name}</Text>
           <Text numberOfLines={1} appearance="hint" style={styles.createdAt}>
-            {createdAt}
+            {createdAt && formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
           </Text>
         </View>
       </View>

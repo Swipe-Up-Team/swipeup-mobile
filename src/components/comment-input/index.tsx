@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Avatar, Input } from '@ui-kitten/components'
-import React, { useEffect, useState } from 'react'
+import { getState } from '@src/common'
+import { Input, Spinner } from '@ui-kitten/components'
+import React, { memo, useEffect, useState } from 'react'
+import isEqual from 'react-fast-compare'
 import { Dimensions, TouchableOpacity, View } from 'react-native'
 import Animated, {
   useAnimatedStyle,
@@ -9,14 +11,30 @@ import Animated, {
   withTiming
 } from 'react-native-reanimated'
 import { SendFillIcon } from '../icons'
+import { UserAvatarSquare } from '../user-avatar-square'
 import styles from './styles'
 
-export const CommentInput = ({ reply }) => {
+interface CommentInputComponentProps {
+  reply?: boolean
+  onSubmit: (text: string) => void
+}
+const CommentInputComponent = ({ reply, onSubmit }: CommentInputComponentProps) => {
+  const { user } = getState('user')
+
+  const [addingComment, setAddingComment] = useState(false)
   const [message, setMessage] = useState('')
   const height = useSharedValue(60)
   const widthInput = useSharedValue(Dimensions.get('screen').width - 100)
   const sendButtonOpacity = useSharedValue(1)
 
+  const handleAddComment = async () => {
+    if (onSubmit) {
+      setAddingComment(true)
+      await onSubmit(message)
+      setAddingComment(false)
+    }
+  }
+  // Animated funcs
   useEffect(() => {
     if (reply) {
       height.value = withTiming(130)
@@ -57,11 +75,7 @@ export const CommentInput = ({ reply }) => {
     <Animated.View style={[styles.container, heightAnimatedStyle]}>
       <View style={styles.innerContainer}>
         <TouchableOpacity onPress={() => {}}>
-          <Avatar
-            style={styles.imageContainer}
-            shape="square"
-            source={{ uri: 'https://konsept-client.vercel.app/dist/src/assets/images/sang.jpg' }}
-          />
+          <UserAvatarSquare uri={user?.avatar} />
         </TouchableOpacity>
         <Animated.View style={[styles.input, widthInputAnimatedStyle]}>
           <Input
@@ -73,9 +87,13 @@ export const CommentInput = ({ reply }) => {
           />
         </Animated.View>
         <Animated.View style={[opacitySendButtonStyle]}>
-          <TouchableOpacity style={styles.sendButton}>
-            <SendFillIcon fill="#5243AA" />
-          </TouchableOpacity>
+          {addingComment ? (
+            <Spinner />
+          ) : (
+            <TouchableOpacity style={styles.sendButton} onPress={handleAddComment}>
+              <SendFillIcon fill="#5243AA" />
+            </TouchableOpacity>
+          )}
         </Animated.View>
       </View>
     </Animated.View>
@@ -91,3 +109,4 @@ export const CommentInput = ({ reply }) => {
 //     <Text style={styles.reply}>{reply}</Text>
 //   </View>
 // ) : null}
+export const CommentInput = memo(CommentInputComponent, isEqual)

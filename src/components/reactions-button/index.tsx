@@ -6,12 +6,12 @@ import {
   View,
   Pressable,
   GestureResponderEvent,
-  PanResponderGestureState,
-  Image
+  PanResponderGestureState
 } from 'react-native'
 import { reactionImages } from '@src/constants'
 import styles from './styles'
 import { Text } from '@ui-kitten/components'
+import { Image } from 'react-native-expo-image-cache'
 
 export class ReactionsButton extends Component {
   timeDilation: number
@@ -1066,9 +1066,7 @@ export class ReactionsButton extends Component {
           >
             <Image
               style={styles.imgIcon}
-              source={{
-                uri: 'https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/like.gif'
-              }}
+              uri="https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/like.gif"
             />
           </Animated.View>
         </View>
@@ -1110,9 +1108,7 @@ export class ReactionsButton extends Component {
           >
             <Image
               style={styles.imgIcon}
-              source={{
-                uri: 'https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/love.gif'
-              }}
+              uri="https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/love.gif"
             />
           </Animated.View>
         </View>
@@ -1154,9 +1150,7 @@ export class ReactionsButton extends Component {
           >
             <Image
               style={styles.imgIcon}
-              source={{
-                uri: 'https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/haha.gif'
-              }}
+              uri="https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/haha.gif"
             />
           </Animated.View>
         </View>
@@ -1198,9 +1192,7 @@ export class ReactionsButton extends Component {
           >
             <Image
               style={styles.imgIcon}
-              source={{
-                uri: 'https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/wow.gif'
-              }}
+              uri="https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/wow.gif"
             />
           </Animated.View>
         </View>
@@ -1242,9 +1234,7 @@ export class ReactionsButton extends Component {
           >
             <Image
               style={styles.imgIcon}
-              source={{
-                uri: 'https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/sad.gif'
-              }}
+              uri="https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/sad.gif"
             />
           </Animated.View>
         </View>
@@ -1286,9 +1276,7 @@ export class ReactionsButton extends Component {
           >
             <Image
               style={styles.imgIcon}
-              source={{
-                uri: 'https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/angry.gif'
-              }}
+              uri="https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/angry.gif"
             />
           </Animated.View>
         </View>
@@ -1318,9 +1306,7 @@ export class ReactionsButton extends Component {
           >
             <Image
               style={styles.imgIcon}
-              source={{
-                uri: 'https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/like.gif'
-              }}
+              uri="https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/like.gif"
             />
           </Animated.View>
         ) : null}
@@ -1339,9 +1325,7 @@ export class ReactionsButton extends Component {
           >
             <Image
               style={styles.imgIcon}
-              source={{
-                uri: 'https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/love.gif'
-              }}
+              uri="https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/love.gif"
             />
           </Animated.View>
         ) : null}
@@ -1360,9 +1344,7 @@ export class ReactionsButton extends Component {
           >
             <Image
               style={styles.imgIcon}
-              source={{
-                uri: 'https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/haha.gif'
-              }}
+              uri="https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/haha.gif"
             />
           </Animated.View>
         ) : null}
@@ -1381,9 +1363,7 @@ export class ReactionsButton extends Component {
           >
             <Image
               style={styles.imgIcon}
-              source={{
-                uri: 'https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/wow.gif'
-              }}
+              uri="https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/wow.gif"
             />
           </Animated.View>
         ) : null}
@@ -1402,9 +1382,7 @@ export class ReactionsButton extends Component {
           >
             <Image
               style={styles.imgIcon}
-              source={{
-                uri: 'https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/sad.gif'
-              }}
+              uri="https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/sad.gif"
             />
           </Animated.View>
         ) : null}
@@ -1423,9 +1401,7 @@ export class ReactionsButton extends Component {
           >
             <Image
               style={styles.imgIcon}
-              source={{
-                uri: 'https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/angry.gif'
-              }}
+              uri="https://raw.githubusercontent.com/duytq94/facebook-reaction-animation2/master/Images/angry.gif"
             />
           </Animated.View>
         ) : null}

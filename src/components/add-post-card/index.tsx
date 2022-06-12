@@ -1,15 +1,19 @@
-import { Avatar, Text } from '@ui-kitten/components'
-import React from 'react'
+import { Text } from '@ui-kitten/components'
+import React, { memo } from 'react'
 import { TouchableOpacity, View } from 'react-native'
+import { CommonActions, useNavigation } from '@react-navigation/native'
 
 import { navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN } from '@src/navigation/screen-types'
 import { PostPhotoIcon, PostTagFriendIcon, PostVideoIcon } from '../icons'
 import styles from './styles'
-import { CommonActions, useNavigation } from '@react-navigation/native'
+import { UserAvatarSquare } from '../user-avatar-square'
+import { getState } from '@src/common'
+import isEqual from 'react-fast-compare'
 
-export function AddPostCard() {
+const AddPostCardComponent = () => {
   const navigation = useNavigation()
+  const { user } = getState('user')
 
   const handlePhotoUploadPress = () => {
     navigation.dispatch(
@@ -32,11 +36,7 @@ export function AddPostCard() {
     <View style={styles.container}>
       <View style={styles.postToolWrapper}>
         <TouchableOpacity activeOpacity={0.5} style={styles.userAvatarWrapper}>
-          <Avatar
-            shape="square"
-            source={{ uri: 'https://konsept-client.vercel.app/dist/src/assets/images/sang.jpg' }}
-            style={styles.userAvatar}
-          />
+          <UserAvatarSquare uri={user?.avatar} />
         </TouchableOpacity>
         <TouchableOpacity onPress={handleAddPostPress} style={styles.postInputWrapper}>
           <View style={styles.postInput}>
@@ -79,3 +79,4 @@ export function AddPostCard() {
     </View>
   )
 }
+export const AddPostCard = memo(AddPostCardComponent, isEqual)

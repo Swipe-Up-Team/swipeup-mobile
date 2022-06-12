@@ -14,7 +14,8 @@ const styles = StyleSheet.create({
     flex: 1,
     marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
     backgroundColor: 'white',
-    borderRadius: 8
+    borderRadius: 8,
+    overflow: 'hidden'
   },
   image: {
     ...StyleSheet.absoluteFillObject,

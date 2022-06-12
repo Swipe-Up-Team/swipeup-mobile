@@ -8,7 +8,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: getRealDimensionsHeight(),
-    width: '100%'
+    width: '100%',
+    backgroundColor: 'red'
   },
   keyboardAvoidingViewContainer: {
     position: 'relative',
@@ -22,7 +23,9 @@ const styles = StyleSheet.create({
     padding: 10
   },
   commentListContainer: {
-    // height: getRealDimensionsHeight() - 44 - (StatusBar.currentHeight ?? 60) - BOTTOM_TAB_BAR_HEIGHT
-  }
+    // height
+    height: getRealDimensionsHeight() - 44 - (StatusBar.currentHeight ?? 60) - BOTTOM_TAB_BAR_HEIGHT
+  },
+  commentsContentContainer: {}
 })
 export default styles

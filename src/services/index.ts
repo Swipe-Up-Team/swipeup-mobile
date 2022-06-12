@@ -1,3 +1,5 @@
 // export * from './network-service'
 export * from './firebase-services'
+export * from './comment-services'
+export * from './post-services'
 export * from './user-services'

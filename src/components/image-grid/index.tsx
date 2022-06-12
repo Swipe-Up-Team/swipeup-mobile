@@ -1,10 +1,16 @@
-import React from 'react'
-import { GestureResponderEvent } from 'react-native'
-import { StyleProp, Text, TouchableOpacity, View, ViewStyle } from 'react-native'
+import React, { memo } from 'react'
+import isEqual from 'react-fast-compare'
+import {
+  GestureResponderEvent,
+  StyleProp,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle
+} from 'react-native'
 import { ImagesCarousel } from '../images-carousel'
 import { ImageItem } from './image-item'
 import styles from './styles'
-import { TwoImages } from './two-images'
 
 const renderImages = (
   start: number,
@@ -39,25 +45,15 @@ export type ImageGridProps = {
   onPress: (image: string, index: number, event: GestureResponderEvent) => void
 }
 
-export const ImageGrid = ({ images, style, onPress }: ImageGridProps) => {
+const ImageGridComponent = ({ images, style, onPress }: ImageGridProps) => {
   return images.length > 0 ? (
     <View style={[styles.container_row, style]}>
-      {/* {images.length <= 2 ? (
-        <TwoImages images={images} onPress={onPress} />
-      ) : (
-        <ImageItem image={images[0]} onPress={onPress} index={0} />
-      )}
-      {images.length === 3 && (
-        <View style={styles.container}>{renderImages(1, false, images, onPress)}</View>
-      )}
-      {images.length > 3 && (
-        <View style={styles.container}>{renderImages(1, true, images, onPress)}</View>
-      )} */}
       {images.length === 1 ? (
         <ImageItem image={images[0]} onPress={onPress} index={0} />
       ) : (
-        <ImagesCarousel />
+        <ImagesCarousel images={images} />
       )}
     </View>
   ) : null
 }
+export const ImageGrid = memo(ImageGridComponent, isEqual)

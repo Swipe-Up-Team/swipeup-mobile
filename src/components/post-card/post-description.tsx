@@ -1,5 +1,6 @@
 import { Text } from '@ui-kitten/components'
-import React, { forwardRef, useCallback, useImperativeHandle, useState } from 'react'
+import React, { forwardRef, memo, useCallback, useImperativeHandle, useState } from 'react'
+import isEqual from 'react-fast-compare'
 import { View, StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
@@ -20,7 +21,7 @@ export interface PostDescriptionProps {
   desc: string
   showFull: boolean
 }
-export const PostDescription = forwardRef(({ desc, showFull }: PostDescriptionProps, ref) => {
+const PostDescriptionComponent = forwardRef(({ desc, showFull }: PostDescriptionProps, ref) => {
   const [textShown, setTextShown] = useState(false)
   const [lengthMore, setLengthMore] = useState(false)
 
@@ -70,3 +71,4 @@ export const PostDescription = forwardRef(({ desc, showFull }: PostDescriptionPr
       </View>
     )
 })
+export const PostDescription = memo(PostDescriptionComponent, isEqual)

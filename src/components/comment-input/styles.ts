@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   input: {
+    marginLeft: 5,
     alignItems: 'center',
     justifyContent: 'center',
     width: Dimensions.get('screen').width - 100

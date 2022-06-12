@@ -1,27 +1,41 @@
-import { Text, View } from 'react-native'
+import { Image, Text, View } from 'react-native'
 import { StyleSheet } from 'react-native'
-import React from 'react'
+import React, { memo } from 'react'
+import isEqual from 'react-fast-compare'
 
 const styles = StyleSheet.create({
   emptyContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 15
+    padding: 15,
+    marginTop: 80
+    // height: '100%',
   },
-  lightText: {
+  image: {
+    height: 100,
+    width: 100,
+    resizeMode: 'contain',
+    marginBottom: 20
+  },
+  text: {
     color: 'grey',
     fontSize: 16,
-    fontWeight: '600'
+    fontWeight: '400'
+  },
+  boldText: {
+    fontWeight: '500',
+    fontSize: 18
   }
 })
 
-export const EmptyComment = () => {
+const EmptyCommentComponent = () => {
   return (
     <View style={styles.emptyContainer}>
-      <Text style={[styles.lightText]}>
-        No comments on this post yet. Be the first one to comment.
-      </Text>
+      <Image style={styles.image} source={require('@assets/image/no-comment.png')} />
+      <Text style={[styles.text, styles.boldText]}>No comments yet</Text>
+      <Text style={[styles.text]}>Be the first to comment.</Text>
     </View>
   )
 }
+export const EmptyComment = memo(EmptyCommentComponent, isEqual)

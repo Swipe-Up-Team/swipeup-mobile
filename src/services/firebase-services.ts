@@ -13,7 +13,7 @@ export const firebaseService = {
   },
   uploadSingleFile: async (
     file: MediaLibrary.AssetInfo,
-    { onProgress }: { onProgress: (progress: number) => void }
+    { onProgress }: { onProgress?: (progress: number) => void }
   ) => {
     const storageRef = ref(storage, `${FIREBASE_STORAGE_ENDPOINT.FILES}/${nanoid(8)}`)
     const blobFile = await getBlobFromUri(file.uri)

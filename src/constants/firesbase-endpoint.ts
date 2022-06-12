@@ -1,5 +1,6 @@
 export const FIRESTORE_ENDPOINT = {
-  USERS: 'users'
+  USERS: 'users',
+  POSTS: 'posts'
 }
 
 export const FIREBASE_ENDPOINT = {

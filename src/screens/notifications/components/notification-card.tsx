@@ -3,7 +3,8 @@ import { ExtraNotification } from '@src/models/notification'
 import { navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN } from '@src/navigation/screen-types'
 import React from 'react'
-import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image } from 'react-native-expo-image-cache'
 
 const styles = StyleSheet.create({
   rootContainer: {
@@ -50,7 +51,7 @@ export function NotificationCard({ notification }: { notification: ExtraNotifica
       content = `commented: ${notification.replyInfo?.text}`
       break
     case NOTIFICATION_TYPES.SOMEONE_POSTS:
-      content = `${notification.postInfo?.creator.name} posted new photo.`
+      content = `${notification.postInfo?.creator?.name} posted new photo.`
       break
     case NOTIFICATION_TYPES.SOMEONE_LIKE_SOMEONE_POST:
       content = `liked your following post.`
@@ -129,10 +130,7 @@ export function NotificationCard({ notification }: { notification: ExtraNotifica
             <>
               {notification.previewFroms.length > 1 && (
                 <>
-                  <Image
-                    style={styles.avatar}
-                    source={{ uri: notification.previewFroms[1].avatar || '' }}
-                  />
+                  <Image style={styles.avatar} uri={notification.previewFroms[1].avatar || ''} />
                   <Image
                     style={{
                       ...styles.avatar,
@@ -145,7 +143,7 @@ export function NotificationCard({ notification }: { notification: ExtraNotifica
                         }
                       ]
                     }}
-                    source={{ uri: notification.previewFroms[0].avatar || '' }}
+                    uri={notification.previewFroms[0].avatar || ''}
                   />
                 </>
               )}
@@ -157,7 +155,7 @@ export function NotificationCard({ notification }: { notification: ExtraNotifica
                       height: 50,
                       width: 50
                     }}
-                    source={{ uri: notification.previewFroms[0].avatar || '' }}
+                    uri={notification.previewFroms[0].avatar || ''}
                   />
                 </>
               )}
@@ -211,14 +209,11 @@ export function NotificationCard({ notification }: { notification: ExtraNotifica
           }}
         >
           <Image
-            source={{
-              uri: notification.postInfo.content.images[0]
-            }}
+            uri={notification.postInfo.content.images[0] || ''}
             style={{
               width: 50,
               height: 50
             }}
-            resizeMode="contain"
           />
         </TouchableOpacity>
       )}

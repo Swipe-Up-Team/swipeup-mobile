@@ -12,7 +12,7 @@ import {
 import { fetchSystemImages } from '@src/utils'
 import { Button } from '@ui-kitten/components'
 import React, { useEffect, useState } from 'react'
-import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Text, TouchableOpacity, View, Image } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from './styles'
 

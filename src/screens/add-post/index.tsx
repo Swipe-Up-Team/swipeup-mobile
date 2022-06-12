@@ -4,7 +4,7 @@
 import { RouteProp, useRoute } from '@react-navigation/native'
 import { Avatar, Button, Text } from '@ui-kitten/components'
 import * as MediaLibrary from 'expo-media-library'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Animated as RNAnimated,
   Dimensions,
@@ -27,26 +27,32 @@ import {
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-import { getState, useArray } from '@src/common'
+import { dispatch, getState, useArray } from '@src/common'
 import {
   CloseIcon,
   NavigationBar,
   PostPhotoBigIcon,
   PostTagFriendBigIcon,
-  PostVideoBigIcon
+  PostVideoBigIcon,
+  UserAvatarSquare
 } from '@src/components'
 import { goBack, navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN, RootStackParamList } from '@src/navigation/screen-types'
 import { ChoseAsset } from './components'
 import styles from './styles'
 import { firebaseService } from '@src/services'
+import { Post } from '@src/models'
+import { postService } from '@src/services/post-services'
+import { onEndProcess, onStartProcess } from '@src/store/reducers/app-reducer'
 
 const screenWidth = Math.round(Dimensions.get('window').width)
 
 export function AddPostScreen() {
   const route = useRoute<RouteProp<RootStackParamList, APP_SCREEN.ADD_POST>>()
   const { systemAssets } = getState('systemAssets')
+  const { user: loggedUser } = getState('user')
   const [selectedAssets, selectedAssetsActions] = useArray<MediaLibrary.Asset>([])
+  const [textPost, setTextPost] = useState('')
 
   // ANIMATION VARS
   const editorWrapperHeight = useSharedValue(100)
@@ -84,9 +90,30 @@ export function AddPostScreen() {
   }, [route.params?.selectedAssetIndexes])
 
   const handleAddPostPress = async () => {
+    dispatch(onStartProcess())
+
     // upload images to firebase -> get storage url
     const urls = await firebaseService.uploadMultipleFiles(selectedAssets)
-    console.log('urls', urls)
+
+    const newPost: Post = {
+      content: {
+        images: urls,
+        text: textPost
+      },
+      createdAt: new Date().getTime(),
+      updatedAt: new Date().getTime(),
+      reacts: [],
+      shares: 0,
+      type: '',
+      authorId: loggedUser?.id,
+      comments: []
+    }
+    const result = await postService.createNew(newPost)
+
+    dispatch(onEndProcess())
+    goBack()
+
+    if (result && route.params.onSuccess) route.params.onSuccess(result.id)
   }
 
   // ANIMATION FUNCTIONS
@@ -211,10 +238,9 @@ export function AddPostScreen() {
         />
 
         <View style={styles.infoWrapper}>
-          <Avatar
-            shape="square"
-            style={styles.avatar}
-            source={{ uri: 'https://konsept-client.vercel.app/dist/src/assets/images/sang.jpg' }}
+          {/* TODO: get user state */}
+          <UserAvatarSquare
+            uri={'https://konsept-client.vercel.app/dist/src/assets/images/sang.jpg'}
           />
           <View style={styles.postInfoWrapper}>
             <Text style={styles.name}>{'user.name'}</Text>
@@ -241,6 +267,8 @@ export function AddPostScreen() {
               placeholderTextColor="#96A0B0"
               style={styles.editor}
               onContentSizeChange={onContentSizeChangeHandler}
+              value={textPost}
+              onChangeText={setTextPost}
             />
           </Animated.View>
         </View>

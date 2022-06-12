@@ -1,8 +1,9 @@
 import { PostDeleteAssetIcon } from '@src/components'
 import * as MediaLibrary from 'expo-media-library'
 import React from 'react'
-import { Image, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View, Image } from 'react-native'
 import styles from '../styles'
+// import { Image } from 'react-native-expo-image-cache'
 
 export function ChoseAsset({ item, onRemove }: { item: MediaLibrary.Asset; onRemove: () => void }) {
   return (
