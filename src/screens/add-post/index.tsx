@@ -11,7 +11,7 @@ import {
   PostVideoBigIcon,
   UserAvatarSquare
 } from '@src/components'
-import { FIREBASE_STORAGE_ENDPOINT } from '@src/constants'
+import { STORAGE_ENDPOINT } from '@src/constants'
 import { PostPayload } from '@src/models'
 import { goBack, navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN, RootStackParamList } from '@src/navigation/screen-types'
@@ -97,10 +97,7 @@ const AddPostScreenComponent = () => {
     dispatch(onStartProcess())
 
     // upload images to firebase -> get storage url
-    const urls = await storageService.uploadMultipleFiles(
-      selectedAssets,
-      FIREBASE_STORAGE_ENDPOINT.FILES
-    )
+    const urls = await storageService.uploadMultipleFiles(selectedAssets, STORAGE_ENDPOINT.FILES)
 
     const newPost: Partial<PostPayload> = {
       content: {

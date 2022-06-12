@@ -19,7 +19,7 @@ export const postService = {
       ...post,
       comments: post.comments || [],
       reacts: post.reacts || [],
-      creator: doc(firestore, `${FIRESTORE_ENDPOINT.USERS}/${post.authorId}`)
+      creator: doc(firestore, `${FIRESTORE_ENDPOINT.USERS}/${creator.id}`)
     }
     try {
       const result = await addDoc(collection(firestore, FIRESTORE_ENDPOINT.POSTS), editedPost)
