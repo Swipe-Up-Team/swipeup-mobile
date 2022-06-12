@@ -22,6 +22,7 @@ import {
 } from 'react-native'
 import { FlatList, ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { ActionButtonRow } from './components/action-button-row'
 import ProfileExtraInfo from './components/profileExtraInfo'
 import ProfileInfo from './components/profileInfo'
 
@@ -32,8 +33,7 @@ const styles = StyleSheet.create({
     height: '100%'
   },
   profileContainer: {
-    width: SCREEN_WIDTH,
-    paddingTop: 10
+    width: SCREEN_WIDTH
   },
 
   w_full: {
@@ -314,52 +314,11 @@ export default function ProfileScreen() {
             <TouchableOpacity activeOpacity={1}>
               <View onLayout={onSetHeaderHeight}>
                 <ProfileExtraInfo user={userInfo.user} />
+
                 <ProfileInfo user={userInfo.user} />
-                {userInfo.followType === 3 ? null : (
-                  <View
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      justifyContent: 'space-around'
-                    }}
-                  >
-                    <TouchableOpacity
-                      onPress={onClickFollow}
-                      activeOpacity={0.6}
-                      style={styles.btnEditProfile}
-                    >
-                      {userInfo.followType === 1 ? (
-                        <Text
-                          style={{
-                            fontWeight: '500',
-                            color: 'green'
-                          }}
-                        >
-                          Followed
-                        </Text>
-                      ) : (
-                        <Text
-                          style={{
-                            fontWeight: '500',
-                            color: 'black'
-                          }}
-                        >
-                          Following
-                        </Text>
-                      )}
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      /**
-                       * @todo do this
-                       */
-                      onPress={() => navigate(APP_SCREEN.EDIT_PROFILE)}
-                      activeOpacity={0.6}
-                      style={{ marginTop: 5 }}
-                    >
-                      <Icon width={28} height={28} name="message-circle-outline" fill="#000" />
-                    </TouchableOpacity>
-                  </View>
-                )}
+
+                <ActionButtonRow />
+
                 <View style={styles.extraInfoWrapper}>
                   <TouchableOpacity onPress={scrollToPosts} style={styles.touch_center}>
                     <Text style={styles.text_extra_info}>{photos?.length}</Text>
@@ -377,6 +336,7 @@ export default function ProfileScreen() {
                     <Text>Following</Text>
                   </TouchableOpacity>
                 </View>
+
                 <View style={{ backgroundColor: '#fff' }}>
                   <FlatList
                     data={photos}

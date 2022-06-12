@@ -4,11 +4,17 @@ import { StyleSheet, Text, View } from 'react-native'
 
 const styles = StyleSheet.create({
   bioWrapper: {
-    paddingHorizontal: 35,
-    marginVertical: 15
+    marginVertical: 15,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
-  text_medium: {
-    fontWeight: '500'
+  nameText: {
+    fontWeight: '500',
+    fontSize: 20
+  },
+  emailText: {
+    color: 'grey',
+    marginTop: 4
   }
 })
 
@@ -19,8 +25,8 @@ interface Props {
 export default function ProfileInfo({ user }: Props) {
   return (
     <View style={styles.bioWrapper}>
-      <Text style={styles.text_medium}>{user.name}</Text>
-      <Text>{user.bio}</Text>
+      <Text style={styles.nameText}>{user.name}</Text>
+      <Text style={styles.emailText}>{user.email}</Text>
     </View>
   )
 }

@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   container: {
     height: '100%',
     width: '100%',
-    marginTop: 24,
+    // marginTop: 24,
     backgroundColor: '#fff'
   },
   navigationBar: {
@@ -418,7 +418,7 @@ const Follow = () => {
         >
           <TouchableOpacity
             onPress={() => {
-              navigate(APP_SCREEN.PROFILE)
+              goBack()
             }}
             style={styles.btnGoBack}
           >

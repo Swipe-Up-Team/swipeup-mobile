@@ -4,7 +4,7 @@ import React from 'react'
 import { ImageBackground, StyleSheet, View } from 'react-native'
 import ExpoFastImage from 'expo-fast-image'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { DEFAULT_PHOTO_URI } from '@src/constants'
+import { DEFAULT_BACKGROUND_URI, DEFAULT_PHOTO_URI } from '@src/constants'
 import { APP_SCREEN } from '@src/navigation/screen-types'
 import { goBack, navigate } from '@src/navigation/navigation-service'
 import { useSelector } from '@src/common'
@@ -26,20 +26,22 @@ import { useSelector } from '@src/common'
 // }
 
 const styles = StyleSheet.create({
-  infoWrapper: {
+  headerBtnContainer: {
+    flex: 1,
     flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  infoWrapper: {
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 30,
-    paddingLeft: 30
+    justifyContent: 'center'
   },
   avatarWrapper: {
-    position: 'relative'
+    // position: 'relative'
   },
   mainAvatar: {
-    height: 80,
-    width: 80,
-    borderRadius: 80
+    height: 100,
+    width: 100,
+    borderRadius: 100
   },
   plusIcon: {
     width: 24,
@@ -64,10 +66,12 @@ const styles = StyleSheet.create({
   },
   imageBackground: {
     position: 'absolute',
-    width: '100%',
+    height: 300,
     top: 0,
     left: 0,
-    bottom: 40
+    right: 0
+    // overflow: 'hidden',
+    // borderRadius: 30,
   },
   backArrow: {
     margin: 10
@@ -81,12 +85,13 @@ interface Props {
 export default function ProfileExtraInfo({ user }: Props) {
   return (
     <View>
-      <ImageBackground
-        blurRadius={20}
+      {/* <ImageBackground
+        blurRadius={6}
         style={styles.imageBackground}
-        source={{ uri: user.avatar, cache: 'force-cache' }}
-      />
-      {user.id !== useSelector(state => state.user).user?.id ? (
+        imageStyle={{ borderRadius: 20 }}
+        source={{ uri: user.avatar || DEFAULT_BACKGROUND_URI, cache: 'force-cache' }}
+      /> */}
+      {/* {user.id !== useSelector(state => state.user).user?.id ? (
         <TouchableOpacity
           activeOpacity={0.6}
           onPress={() => navigate(APP_SCREEN.FOLLOWING)}
@@ -94,7 +99,16 @@ export default function ProfileExtraInfo({ user }: Props) {
         >
           <Icon name="arrow-back" width={24} height={24} fill="#000" />
         </TouchableOpacity>
-      ) : null}
+      ) : null} */}
+      <View style={styles.headerBtnContainer}>
+        <TouchableOpacity activeOpacity={0.6} onPress={() => goBack()} style={styles.backArrow}>
+          <Icon name="arrow-back" width={24} height={24} fill="#000" />
+        </TouchableOpacity>
+
+        <TouchableOpacity activeOpacity={0.6} onPress={() => goBack()} style={styles.backArrow}>
+          <Icon name="more-vertical-outline" width={24} height={24} fill="#000" />
+        </TouchableOpacity>
+      </View>
       <View style={styles.infoWrapper}>
         <TouchableOpacity style={styles.avatarWrapper}>
           <ExpoFastImage
@@ -103,11 +117,11 @@ export default function ProfileExtraInfo({ user }: Props) {
               uri: user?.avatar || DEFAULT_PHOTO_URI
             }}
           />
-          <View style={styles.plusIcon}>
+          {/* <View style={styles.plusIcon}>
             <Icon width={16} height={16} fill="#fff" name="plus" />
-          </View>
+          </View> */}
         </TouchableOpacity>
-        {user.id === useSelector(state => state.user).user?.id ? (
+        {/* {user.id === useSelector(state => state.user).user?.id ? (
           <TouchableOpacity
             onPress={() => navigate(APP_SCREEN.EDIT_PROFILE)}
             activeOpacity={0.6}
@@ -115,7 +129,7 @@ export default function ProfileExtraInfo({ user }: Props) {
           >
             <Icon width={30} height={30} name="edit" fill="#000" />
           </TouchableOpacity>
-        ) : null}
+        ) : null} */}
       </View>
     </View>
   )
