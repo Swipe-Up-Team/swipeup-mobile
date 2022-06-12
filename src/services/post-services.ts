@@ -133,5 +133,30 @@ export const postService = {
     } catch (error) {
       console.log(error)
     }
+  },
+
+  getAllPostByUserId: async (uid: string) => {
+    let allPost: Post[] = []
+
+    const q = query(collection(firestore, FIRESTORE_ENDPOINT.POSTS), where('authorId', '==', uid))
+
+    const querySnapshot = await getDocs(q)
+
+    const promises = querySnapshot.docs.map(async _doc => {
+      const creatorDocRef = _doc.data().creator
+      const creator = await getDoc(creatorDocRef)
+      return {
+        id: _doc.id,
+        ..._doc.data(),
+        creator: creator.data(),
+        createdAt:
+          typeof _doc.data().createdAt === 'number'
+            ? _doc.data().createdAt
+            : _doc.data().createdAt.toDate().getTime()
+      } as Post
+    })
+
+    allPost = await Promise.all(promises)
+    return allPost
   }
 }

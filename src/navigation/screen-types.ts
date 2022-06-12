@@ -60,11 +60,11 @@ export type AuthorizeParamsList = {
     selectedAssetIndexes?: number[]
   }
   [APP_SCREEN.PROFILE]: {
-    userId: string | null
+    userId?: string
   }
   [APP_SCREEN.EDIT_PROFILE]: undefined
   [APP_SCREEN.FOLLOWING]: {
-    userId: string | null
+    userId?: string
   }
 }
 
