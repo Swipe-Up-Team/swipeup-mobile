@@ -102,7 +102,7 @@ const AddPostScreenComponent = () => {
     const newPost: Partial<PostPayload> = {
       content: {
         images: urls,
-        text: textPost
+        text: textPost.trim()
       },
       createdAt: new Date().getTime(),
       updatedAt: new Date().getTime(),

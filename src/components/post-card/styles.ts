@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native'
 const styles = StyleSheet.create({
   post: {
     paddingTop: 20,
-    paddingBottom: 25,
+    paddingBottom: -5,
     width: '100%',
     backgroundColor: '#fff'
   },

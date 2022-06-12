@@ -1,13 +1,6 @@
 import { firestore } from '@src/config'
 import { FIRESTORE_ENDPOINT } from '@src/constants'
-import {
-  Comment,
-  CommentPayload,
-  CommentResponseData,
-  FirebasePagination,
-  Post,
-  User
-} from '@src/models'
+import { Comment, CommentPayload, CommentResponseData, Post, User } from '@src/models'
 import { arrayUnion, doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore'
 
 export const commentService = {

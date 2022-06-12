@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet, FlatList } from 'react-native'
-import React, { memo, useCallback, useMemo } from 'react'
+import { View, StyleSheet, FlatList } from 'react-native'
+import React, { memo, useCallback, useMemo, useState } from 'react'
 import { BOTTOM_TAB_BAR_HEIGHT } from '@src/constants'
 import { AddPostCard, PostCard, StyledDivider } from '@src/components'
 import { Post } from '@src/models'
-import { Spinner } from '@ui-kitten/components'
+import { Spinner, Text } from '@ui-kitten/components'
 import isEqual from 'react-fast-compare'
 
 const styles = StyleSheet.create({
@@ -11,25 +11,41 @@ const styles = StyleSheet.create({
     flex: 1,
     marginBottom: BOTTOM_TAB_BAR_HEIGHT + 50
   },
-  spinnerContainer: { height: 40, width: '100%', alignItems: 'center' }
+  spinnerContainer: { height: 40, width: '100%', alignItems: 'center' },
+  footerContainer: {
+    paddingBottom: 20,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  footerText: {
+    fontWeight: '500'
+  }
 })
 export interface PostFlatListComponentProps {
   posts: Post[]
   hasMoreToLoad: boolean
   onLoadMore: () => void
+  onRefresh: () => void
 }
 const PostFlatListComponent = ({
   posts,
   hasMoreToLoad,
-  onLoadMore
+  onLoadMore,
+  onRefresh
 }: PostFlatListComponentProps) => {
+  const [refreshing, setRefreshing] = useState(false)
   const renderItem = useCallback(({ item }: { item: Post }) => <PostCard post={item} />, [])
   const keyExtractor = useCallback(data => `${data.id}`, [])
 
   const renderFooter = useMemo(() => {
-    if (!hasMoreToLoad) return <Text>Nothing to load</Text>
-
-    // if (!loading) return null
+    if (!hasMoreToLoad)
+      return (
+        <View style={styles.footerContainer}>
+          <Text style={styles.footerText} appearance={'hint'}>
+            No posts yet
+          </Text>
+        </View>
+      )
 
     return (
       <View style={styles.spinnerContainer}>
@@ -37,14 +53,20 @@ const PostFlatListComponent = ({
       </View>
     )
   }, [hasMoreToLoad])
-  console.log('rerender post flatlist')
+
+  const handleRefresh = async () => {
+    setRefreshing(true)
+    await onRefresh()
+    setRefreshing(false)
+  }
   return (
     <FlatList
       data={posts}
       showsVerticalScrollIndicator={false}
       style={styles.posts}
       // TODO:
-      // onRefresh
+      refreshing={refreshing}
+      onRefresh={handleRefresh}
       // ListEmptyComponent={ListEmpty}
       keyExtractor={keyExtractor}
       // key="id"
@@ -63,4 +85,5 @@ const PostFlatListComponent = ({
     />
   )
 }
+
 export const PostFlatList = memo(PostFlatListComponent, isEqual)

@@ -30,7 +30,14 @@ const CommentInputComponent = ({ reply, onSubmit }: CommentInputComponentProps) 
   const handleAddComment = async () => {
     if (onSubmit) {
       setAddingComment(true)
-      await onSubmit(message)
+
+      try {
+        await onSubmit(message.trim())
+        setMessage('')
+      } catch (error) {
+        console.log(error)
+      }
+
       setAddingComment(false)
     }
   }
@@ -44,7 +51,7 @@ const CommentInputComponent = ({ reply, onSubmit }: CommentInputComponentProps) 
   }, [reply])
 
   useEffect(() => {
-    if (message) {
+    if (message.trim()) {
       widthInput.value = withTiming(Dimensions.get('screen').width - 100)
       sendButtonOpacity.value = withTiming(1)
     } else {

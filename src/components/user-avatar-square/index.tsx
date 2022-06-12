@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
 
 const UserAvatarSquareComponent = ({ uri }: { uri?: string }) => {
   if (uri) return <Image style={styles.creatorImage} uri={uri} />
+
   return (
     <RNImage style={styles.creatorImage} source={require('@assets/image/default-avatar-1.png')} />
   )

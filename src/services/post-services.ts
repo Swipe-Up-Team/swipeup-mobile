@@ -1,8 +1,11 @@
+import { getState } from '@src/common'
 import { firestore } from '@src/config'
 import { FIRESTORE_ENDPOINT } from '@src/constants'
-import { FirebasePagination, Post, PostPayload, User } from '@src/models'
+import { FirebasePagination, Post, PostPayload, Reaction, User } from '@src/models'
 import {
   addDoc,
+  arrayRemove,
+  arrayUnion,
   collection,
   doc,
   getDoc,
@@ -10,7 +13,8 @@ import {
   onSnapshot,
   orderBy,
   query,
-  startAfter
+  startAfter,
+  updateDoc
 } from 'firebase/firestore'
 
 export const postService = {
@@ -24,6 +28,31 @@ export const postService = {
     try {
       const result = await addDoc(collection(firestore, FIRESTORE_ENDPOINT.POSTS), editedPost)
       return result
+    } catch (error) {
+      console.log(error)
+    }
+  },
+
+  likePost: async (postId: string, _isLiked: boolean) => {
+    const { user } = getState('user')
+    if (!user) return
+
+    const postRef = doc(firestore, FIRESTORE_ENDPOINT.POSTS, postId)
+    const postSnap = await getDoc(postRef)
+
+    if (!postSnap.exists()) throw new Error(`The post has ID ${postId} is not found.`)
+
+    const reaction: Reaction = { userId: user?.id, type: 'like' }
+    try {
+      if (_isLiked) {
+        await updateDoc(postRef, {
+          reacts: arrayUnion(reaction)
+        })
+      } else {
+        await updateDoc(postRef, {
+          reacts: arrayRemove(reaction)
+        })
+      }
     } catch (error) {
       console.log(error)
     }

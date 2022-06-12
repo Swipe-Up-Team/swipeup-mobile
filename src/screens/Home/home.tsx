@@ -19,7 +19,11 @@ const HomeScreenComponent = () => {
   })
 
   const onLoadPostsSuccess = (result: { posts: any; lastDoc: any; isLast: any }) => {
-    setPosts([...posts, ...result.posts])
+    if (pagination.page === 1) {
+      setPosts(result.posts)
+    } else {
+      setPosts([...posts, ...result.posts])
+    }
     setPagination({ ...pagination, startAfter: result.lastDoc })
     if (result.isLast) setHasMoreToLoad(false)
   }
@@ -47,46 +51,13 @@ const HomeScreenComponent = () => {
   const handleLoadMore = async () => {
     if (!hasMoreToLoad) return
 
-    // setPagination({ ...pagination, page: pagination.page + 1 })
-    console.log('rerender handleLoadMore')
     increasePagination()
   }
 
-  // const renderFooter = useMemo(() => {
-  //   if (!hasMoreToLoad) return <Text>Nothing to load</Text>
-
-  //   // if (!loading) return null
-
-  //   return (
-  //     <View style={styles.spinnerContainer}>
-  //       <Spinner />
-  //     </View>
-  //   )
-  // }, [hasMoreToLoad])
-
-  // const renderItem = useCallback(({ item }: { item: Post }) => <PostCard post={item} />, [])
-  // const keyExtractor = useCallback(data => `${data.id}`, [])
-
-  // const dataProvider = useMemo(
-  //   () =>
-  //     new DataProvider((r1, r2) => {
-  //       return !isEqual(r1, r2)
-  //     }).cloneWithRows(posts),
-  //   [posts]
-  // )
-
-  // const renderItemRecyclerListView = (type, data) => {
-  //   return <PostCard post={data} />
-  // }
-  // const layoutProvider = new LayoutProvider(
-  //   () => 0,
-  //   (type, dim) => {
-  //     dim.width = screenWidth
-  //     dim.height = 100
-  //   }
-  // )
-
-  console.log('rerender home')
+  const handleRefresh = () => {
+    setHasMoreToLoad(true)
+    setPagination({ ...pagination, page: 1, startAfter: undefined })
+  }
 
   return (
     <View style={styles.container}>
@@ -94,19 +65,12 @@ const HomeScreenComponent = () => {
         <Text>Logout</Text>
       </TouchableOpacity> */}
 
-      <PostFlatList posts={posts} hasMoreToLoad={hasMoreToLoad} onLoadMore={handleLoadMore} />
-
-      {/* <RecyclerListView
-        style={{ flex: 1 }}
-        // contentContainerStyle={{ margin: 3 }}
-        onEndReached={handleLoadMore}
-        dataProvider={dataProvider}
-        layoutProvider={layoutProvider}
-        canChangeSize
-        forceNonDeterministicRendering
-        rowRenderer={renderItemRecyclerListView}
-        // renderFooter={renderFooter}
-      /> */}
+      <PostFlatList
+        posts={posts}
+        hasMoreToLoad={hasMoreToLoad}
+        onLoadMore={handleLoadMore}
+        onRefresh={handleRefresh}
+      />
     </View>
   )
 }

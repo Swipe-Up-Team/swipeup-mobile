@@ -1,19 +1,24 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import { useRoute } from '@react-navigation/native'
-import { Post as PostType } from '@src/models/post'
+import { Post as PostType, Reaction } from '@src/models'
 import { navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN } from '@src/navigation/screen-types'
 import { Text } from '@ui-kitten/components'
-import React, { memo, useRef } from 'react'
+import React, { memo, useCallback, useRef, useState } from 'react'
 import { GestureResponderEvent, TouchableOpacity, View } from 'react-native'
 import { DotsHorizontal, ExportIcon, PostCommentIcon } from '../icons'
 import { ImageGrid } from '../image-grid'
-import { ReactionsButton } from '../reactions-button'
 import { PostDescription, PostDescriptionType } from './post-description'
 import styles from './styles'
 import { formatDistanceToNow } from 'date-fns'
 import { UserAvatarSquare } from '../user-avatar-square'
 import isEqual from 'react-fast-compare'
+import { LikeButton } from '../like-button'
+import { getState } from '@src/common'
+import debounce from 'lodash/debounce'
+import { postService } from '@src/services'
 
 export interface PostCardProps {
   post: PostType
@@ -23,22 +28,47 @@ export interface PostCardProps {
 const PostCardComponent = ({ post, preview = false }: PostCardProps) => {
   const {
     comments,
-    content: { text, images }
+    content: { text, images },
+    reacts
   } = post
+
+  const { user } = getState('user')
   const descRef = useRef<PostDescriptionType>(null)
   const route = useRoute()
-  console.log('render postcard')
+
+  const [isLiked, setIsLiked] = useState(() => {
+    let liked = false
+    reacts?.forEach(react => {
+      if (react.userId === user?.id) liked = true
+    })
+    return liked
+  })
+
+  const handleUpdateLikeOfPost = async (_isLiked: boolean) => {
+    if (!user) return
+    if (_isLiked === isLiked) return
+
+    await postService.likePost(post.id, _isLiked)
+  }
+  const debouncedLikePost = useRef(debounce(handleUpdateLikeOfPost, 300)).current
+
+  const handleLikePress = async () => {
+    const _isLiked = !isLiked
+    setIsLiked(_isLiked)
+    debouncedLikePost(_isLiked)
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onPressImage = (image: string, index: number, e: GestureResponderEvent) =>
     preview
       ? navigate(APP_SCREEN.FEED_IMAGE_PREVIEW, { images: images || [] }) //To preview a selected single image
       : navigate(APP_SCREEN.POST_DETAILS, { postId: post.id }) //index is passed to scroll to the specific image on mount
 
-  const onPressComments = () => {
+  const handleCommentPress = () => {
     navigate(APP_SCREEN.POST_DETAILS, { postId: post.id })
   }
 
-  const onPressShare = () => {
+  const handleSharePress = () => {
     alert('Share')
   }
 
@@ -50,12 +80,7 @@ const PostCardComponent = ({ post, preview = false }: PostCardProps) => {
     <View style={styles.post}>
       {post.creator ? (
         <View style={[styles.header, styles.row]}>
-          <TouchableOpacity
-            onPress={() => {
-              onPressPost()
-            }}
-            style={styles.row}
-          >
+          <TouchableOpacity onPress={onPressPost} style={styles.row}>
             <UserAvatarSquare uri={post.creator.avatar} />
             <View style={{ marginHorizontal: 10 }}>
               <View style={styles.row}>
@@ -103,18 +128,29 @@ const PostCardComponent = ({ post, preview = false }: PostCardProps) => {
       )}
 
       <View style={styles.buttonsContainer}>
-        <ReactionsButton />
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={[styles.buttonContainer, { marginLeft: -10 }]}
+          onPress={handleLikePress}
+        >
+          <LikeButton isLiked={isLiked} />
+          <Text style={[styles.buttonText, { marginLeft: -5 }]}>Like</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity
           activeOpacity={0.8}
           style={styles.buttonContainer}
-          onPress={onPressComments}
+          onPress={handleCommentPress}
         >
           <PostCommentIcon />
           <Text style={styles.buttonText}>{comments ? comments.length : ''} Comments</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity activeOpacity={0.8} style={styles.buttonContainer} onPress={onPressShare}>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={styles.buttonContainer}
+          onPress={handleSharePress}
+        >
           <ExportIcon />
           <Text style={styles.buttonText}>Share</Text>
         </TouchableOpacity>
