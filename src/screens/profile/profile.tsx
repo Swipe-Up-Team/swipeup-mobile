@@ -150,15 +150,18 @@ export default function ProfileScreen() {
         setLoading(false)
         setPhotos(tempPostList)
       }
-      querySnapshot.forEach(responseData => {
+      querySnapshot.docs.forEach(async (value, index, array) => {
         console.log('DONE 1')
-        const data = responseData.data()
+        const data = value.data()
         getDoc(data.creator).then(res => {
           data.creator = res.data() as User
           tempPostList.push(data as Post)
-          console.log('DONE')
-          setLoading(true)
-          setPhotos(tempPostList)
+          if (index === array.length - 1)
+            return Promise.resolve().then(() => {
+              console.log('DONE')
+              setLoading(false)
+              setPhotos(tempPostList)
+            })
         })
       })
     }
