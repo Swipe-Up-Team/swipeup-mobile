@@ -42,13 +42,17 @@ const PostCardComponent = ({ post, preview = false }: PostCardProps) => {
     alert('Share')
   }
 
+  const onPressPost = () => {
+    navigate(APP_SCREEN.PROFILE, { userId: post.creator.id })
+  }
+
   return (
     <View style={styles.post}>
       {post.creator ? (
         <View style={[styles.header, styles.row]}>
           <TouchableOpacity
             onPress={() => {
-              alert('profile')
+              onPressPost()
             }}
             style={styles.row}
           >

@@ -1,12 +1,14 @@
-import { View } from 'react-native'
+import { View, Image } from 'react-native'
 import { Text, Avatar, IconElement, Icon } from '@ui-kitten/components'
 import styles from './styles'
 import { formatDate, formatTime } from '@src/utils'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { useState } from 'react'
+import React, { useState } from 'react'
+import { LoadingView } from '../../loading-message'
 
 const SentMessage = ({ message, displayDate, displayTime }: any) => {
   const [isShowTime, setIsShowTime] = useState(displayTime)
+  const [isLoadingImage, setIsLoadingImage] = useState(false)
 
   const getDisplayDateText = () => {
     const now = new Date()
@@ -27,21 +29,35 @@ const SentMessage = ({ message, displayDate, displayTime }: any) => {
     }
   }
 
+  const changeLoadingState = () => {
+    setIsLoadingImage(!isLoadingImage)
+  }
+
   return (
     <>
       {displayDate && (
         <View style={styles.dateContainer}>
-          <View style={styles.divider} />
           <Text style={styles.dateText}>{getDisplayDateText()}</Text>
-          <View style={styles.divider} />
         </View>
       )}
 
       <View style={styles.container}>
-        <View style={styles.mainContainer}>
-          <TouchableOpacity style={styles.messageContainer} onPress={changeDisplayTime}>
-            <Text style={styles.messageText}>{message.message}</Text>
-          </TouchableOpacity>
+        <View style={styles.mainTextContainer}>
+          {message.message ? (
+            <TouchableOpacity style={styles.messageContainer} onPress={changeDisplayTime}>
+              <Text style={styles.messageText}>{message.message}</Text>
+            </TouchableOpacity>
+          ) : (
+            <>
+              <Image
+                style={styles.imageMessage}
+                source={{ uri: message.image }}
+                onLoadStart={changeLoadingState}
+                onLoadEnd={changeLoadingState}
+              />
+              {isLoadingImage && <LoadingView />}
+            </>
+          )}
           {isShowTime && (
             <View style={styles.statusContainer}>
               <SentIcon />

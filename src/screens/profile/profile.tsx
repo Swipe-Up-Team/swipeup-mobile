@@ -1,47 +1,69 @@
+/* eslint-disable react-native/no-inline-styles */
+import { RouteProp, useRoute } from '@react-navigation/native'
 import { useSelector } from '@src/common'
+import { AddPostCard, PostCard, StyledDivider } from '@src/components'
 import { firestore } from '@src/config'
-import { SCREEN_WIDTH } from '@src/constants'
+import { BOTTOM_TAB_BAR_HEIGHT, SCREEN_WIDTH } from '@src/constants'
 import { Post, User } from '@src/models'
-import { collection, getDocs, query, where } from 'firebase/firestore'
+import { navigate } from '@src/navigation/navigation-service'
+import { APP_SCREEN, RootStackParamList } from '@src/navigation/screen-types'
+import { Icon, Spinner } from '@ui-kitten/components'
+import { collection, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore'
 import React, { useEffect, useRef, useState } from 'react'
 import {
   Animated,
   LayoutChangeEvent,
+  LogBox,
   NativeScrollEvent,
   NativeSyntheticEvent,
   StyleSheet,
   Text,
   View
 } from 'react-native'
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
+import { FlatList, ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import PopupImage from './components/popupImage'
 import ProfileExtraInfo from './components/profileExtraInfo'
-import ProfileGallery from './components/profileGallery'
 import ProfileInfo from './components/profileInfo'
-import ProfileRecommend from './components/profileRecommend'
-
-export interface PopupImageLocation {
-  popupImageTop: Animated.Value
-  popupImageLeft: Animated.Value
-  popupImageWidth: Animated.Value
-  popupImageHeight: Animated.Value
-}
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'rgb(250,250,250)',
+    backgroundColor: '#fff',
     width: '100%',
     height: '100%'
   },
   profileContainer: {
     width: SCREEN_WIDTH,
-    paddingTop: 24
+    paddingTop: 10
+  },
+
+  w_full: {
+    width: '100%'
+  },
+
+  posts: {
+    flex: 1,
+    marginBottom: BOTTOM_TAB_BAR_HEIGHT + 50
+  },
+  spinnerContainer: { height: 40, width: '100%', alignItems: 'center' },
+  extraInfoWrapper: {
+    flexDirection: 'row',
+    width: SCREEN_WIDTH,
+    justifyContent: 'space-evenly',
+    padding: 10,
+    backgroundColor: '#FCFCFC'
+  },
+  touch_center: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  text_extra_info: {
+    fontSize: 18,
+    fontWeight: '500'
   },
   btnEditProfile: {
-    marginVertical: 10,
-    width: SCREEN_WIDTH - 30,
-    marginHorizontal: 15,
+    marginVertical: 5,
+    width: SCREEN_WIDTH - 100,
+    marginHorizontal: 5,
     backgroundColor: '#fff',
     borderRadius: 3,
     paddingVertical: 5,
@@ -50,16 +72,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  w_full: {
-    width: '100%'
-  },
-  font_medium: {
-    fontWeight: '500'
+  btnMessage: {
+    width: 30,
+    height: 30,
+    marginTop: 50
   }
 })
 
+/**
+ * 1 - Followed
+ * 2 - Unfollow
+ * 3 - User login Profile
+ */
+type UserInfo = {
+  user: User
+  followType: number
+}
+
 export default function ProfileScreen() {
-  const [selectedPhoto, setSelectedPhoto] = useState<Post>({} as Post)
   const ref = useRef<{
     currentTab: number
     currentGalleryTab: number
@@ -80,143 +110,120 @@ export default function ProfileScreen() {
   })
 
   const headerTabOpacity = React.useMemo(() => new Animated.Value(-1), [])
-  const tabLineOffsetX = React.useMemo(() => new Animated.Value(0), [])
 
-  const popupImageTop = new Animated.Value(0)
-  const popupImageLeft = new Animated.Value(0)
-  const popupImageWidth = new Animated.Value(0)
-  const popupImageHeight = new Animated.Value(0)
+  const route = useRoute<RouteProp<RootStackParamList, APP_SCREEN.PROFILE>>()
 
-  const user = useSelector(state => state.user).user as User
+  const loginUser = useSelector(state => state.user).user as User
+  const [userInfo, setUserInfo] = useState<UserInfo>({} as UserInfo)
 
   const [photos, setPhotos] = useState<Post[]>([])
 
+  const [loading, setLoading] = useState(true)
+  const [hasMoreToLoad, setHasMoreToLoad] = useState(true)
+
+  useEffect(() => {
+    setUserInfo({} as UserInfo)
+    setPhotos([])
+    if (route.params?.userId) {
+      console.log('FETCH USER')
+      const userRef = doc(firestore, 'users', route.params.userId)
+      getDoc(userRef).then(value => {
+        const user = value.data() as User
+        const followType = loginUser.followingIDs?.some(id => id === user?.id) ? 1 : 2
+        setUserInfo({ user, followType })
+      })
+    } else {
+      setUserInfo({ user: loginUser, followType: 3 })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [route.params])
+
   useEffect(() => {
     async function fetchMyAPI() {
-      const queryString = query(collection(firestore, 'posts'), where('authorId', '==', user.id))
+      console.log('RUN FETCH')
+
+      setLoading(true)
+
+      const queryString = query(
+        collection(firestore, 'posts'),
+        where('authorId', '==', userInfo?.user?.id)
+      )
       const querySnapshot = await getDocs(queryString)
 
       const tempPostList: Post[] = []
-
-      querySnapshot.forEach(responseData => {
-        tempPostList.push(responseData.data() as Post)
+      if (querySnapshot.empty) {
+        setLoading(false)
+        setPhotos(tempPostList)
+      }
+      querySnapshot.docs.forEach(async (value, index, array) => {
+        console.log('DONE 1')
+        const data = value.data()
+        getDoc(data.creator).then(res => {
+          data.creator = res.data() as User
+          tempPostList.push(data as Post)
+          if (index === array.length - 1)
+            return Promise.resolve().then(() => {
+              console.log('DONE')
+              setLoading(false)
+              setPhotos(tempPostList)
+            })
+        })
       })
-
-      setPhotos(tempPostList)
     }
-    fetchMyAPI()
-  }, [user.id])
+    console.log('RUN')
+    if (userInfo.user) fetchMyAPI()
+  }, [userInfo?.user])
 
-  const showPopupImage = (e: { pX: number; pY: number; w: number; h: number }, photo: Post) => {
-    ref.current.prePopupImage = e
-    setSelectedPhoto(photo)
-  }
-  const hidePopupImage = () => {
-    Animated.timing(popupImageTop, {
-      toValue: ref.current.prePopupImage.pY - 44 - 40,
-      duration: 150,
-      useNativeDriver: false
-    }).start()
-    Animated.timing(popupImageLeft, {
-      toValue: ref.current.prePopupImage.pX,
-      duration: 150,
-      useNativeDriver: false
-    }).start()
-    Animated.timing(popupImageWidth, {
-      toValue: ref.current.prePopupImage.w,
-      duration: 150,
-      useNativeDriver: false
-    }).start()
-    Animated.timing(popupImageHeight, {
-      toValue: ref.current.prePopupImage.h,
-      duration: 150,
-      useNativeDriver: false
-    }).start(() => setSelectedPhoto({} as Post))
-  }
-
-  const popupImageLocation = {
-    popupImageTop,
-    popupImageLeft,
-    popupImageWidth,
-    popupImageHeight
-  }
+  useEffect(() => {
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
+  }, [])
 
   const scrollHRef = useRef<ScrollView>(null)
   const scrollVRef = useRef<ScrollView>(null)
-  const scrollTabRef = useRef<ScrollView>(null)
 
-  const onScrollEndDragContainerScroll = ({
-    nativeEvent: {
-      contentOffset: { x }
-    }
-  }: NativeSyntheticEvent<NativeScrollEvent>) => {
-    if (x > SCREEN_WIDTH / 4 && ref.current.currentTab === 1) {
-      ref.current.currentTab = 2
-      scrollHRef.current?.scrollTo({
-        x: SCREEN_WIDTH / 2,
-        y: 0,
-        animated: true
-      })
-    } else if (x < SCREEN_WIDTH / 4 && ref.current.currentTab === 2) {
-      ref.current.currentTab = 1
-      scrollHRef.current?.scrollTo({
-        x: 0,
-        y: 0,
-        animated: true
-      })
-    } else if (x < SCREEN_WIDTH / 4 && ref.current.currentTab === 1) {
-      scrollHRef.current?.scrollTo({
-        x: 0,
-        y: 0,
-        animated: true
-      })
-    } else if (x > SCREEN_WIDTH / 4 && ref.current.currentTab === 2) {
-      scrollHRef.current?.scrollTo({
-        x: SCREEN_WIDTH / 2,
-        y: 0,
-        animated: true
-      })
-    }
-  }
-  const onBackToMainScreen = () => {
-    if (ref.current.currentTab === 2) {
-      scrollHRef.current?.scrollTo({
-        x: 0,
-        y: 0,
-        animated: true
-      })
-      ref.current.currentTab = 1
-    }
-  }
-
-  const onToggleGalleryTab = (tab: number) => {
-    onBackToMainScreen()
-    if (ref.current.currentGalleryTab === 1 && tab === 2) {
-      ref.current.currentGalleryTab = 2
-      Animated.timing(tabLineOffsetX, {
-        toValue: SCREEN_WIDTH / 2,
-        duration: 200,
-        useNativeDriver: false
-      }).start()
-      scrollTabRef.current?.scrollTo({
-        x: SCREEN_WIDTH,
-        y: 0,
-        animated: true
-      })
-    } else if (ref.current.currentGalleryTab === 2 && tab === 1) {
-      ref.current.currentGalleryTab = 1
-      Animated.timing(tabLineOffsetX, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: false
-      }).start()
-      scrollTabRef.current?.scrollTo({
-        x: 0,
-        y: 0,
-        animated: true
-      })
-    }
-  }
+  // const onScrollEndDragContainerScroll = ({
+  //   nativeEvent: {
+  //     contentOffset: { x }
+  //   }
+  // }: NativeSyntheticEvent<NativeScrollEvent>) => {
+  //   if (x > SCREEN_WIDTH / 4 && ref.current.currentTab === 1) {
+  //     ref.current.currentTab = 2
+  //     scrollHRef.current?.scrollTo({
+  //       x: SCREEN_WIDTH / 2,
+  //       y: 0,
+  //       animated: true
+  //     })
+  //   } else if (x < SCREEN_WIDTH / 4 && ref.current.currentTab === 2) {
+  //     ref.current.currentTab = 1
+  //     scrollHRef.current?.scrollTo({
+  //       x: 0,
+  //       y: 0,
+  //       animated: true
+  //     })
+  //   } else if (x < SCREEN_WIDTH / 4 && ref.current.currentTab === 1) {
+  //     scrollHRef.current?.scrollTo({
+  //       x: 0,
+  //       y: 0,
+  //       animated: true
+  //     })
+  //   } else if (x > SCREEN_WIDTH / 4 && ref.current.currentTab === 2) {
+  //     scrollHRef.current?.scrollTo({
+  //       x: SCREEN_WIDTH / 2,
+  //       y: 0,
+  //       animated: true
+  //     })
+  //   }
+  // }
+  // const onBackToMainScreen = () => {
+  //   if (ref.current.currentTab === 2) {
+  //     scrollHRef.current?.scrollTo({
+  //       x: 0,
+  //       y: 0,
+  //       animated: true
+  //     })
+  //     ref.current.currentTab = 1
+  //   }
+  // }
 
   const onVerticalScrollViewScroll = ({
     nativeEvent: {
@@ -236,6 +243,14 @@ export default function ProfileScreen() {
     }
   }
 
+  const scrollToPosts = () => {
+    scrollVRef.current?.scrollTo({
+      x: 0,
+      y: ref.current.headerHeight,
+      animated: true
+    })
+  }
+
   const onSetHeaderHeight = ({
     nativeEvent: {
       layout: { height }
@@ -244,75 +259,51 @@ export default function ProfileScreen() {
     ref.current.headerHeight = height
   }
 
-  const onScrollEndDragGalleryTabScroll = ({
-    nativeEvent: {
-      contentOffset: { x }
+  const handleLoadMore = async () => {}
+
+  const renderFooter = () => {
+    if (!loading || !hasMoreToLoad) return null
+    return (
+      <View style={styles.spinnerContainer}>
+        <Spinner />
+      </View>
+    )
+  }
+
+  const onFollow = () => {
+    loginUser.followingIDs?.push(userInfo?.user?.id)
+    //Update login user following
+    const userRef = doc(firestore, 'users', loginUser?.id)
+    updateDoc(userRef, {
+      followingIDs: loginUser.followingIDs
+    })
+  }
+
+  const onUnfollow = () => {
+    loginUser.followingIDs = loginUser.followingIDs?.filter(id => id !== userInfo?.user?.id)
+    //Update login user following
+    const userRef = doc(firestore, 'users', loginUser?.id)
+    updateDoc(userRef, {
+      followingIDs: loginUser.followingIDs
+    })
+  }
+
+  const onClickFollow = () => {
+    let tempFollowType: number = 3
+    //follow => unfollow
+    if (userInfo.followType === 1) {
+      tempFollowType = 2
+      onUnfollow()
+    } else if (userInfo.followType === 2) {
+      tempFollowType = 1
+      onFollow()
     }
-  }: NativeSyntheticEvent<NativeScrollEvent>) => {
-    onBackToMainScreen()
-    if (x > SCREEN_WIDTH / 2 && ref.current.currentGalleryTab === 1) {
-      ref.current.currentGalleryTab = 2
-      scrollTabRef.current?.scrollTo({
-        x: SCREEN_WIDTH,
-        y: 0,
-        animated: true
-      })
-      Animated.timing(tabLineOffsetX, {
-        toValue: SCREEN_WIDTH / 2,
-        duration: 200,
-        useNativeDriver: false
-      }).start()
-    } else if (x < SCREEN_WIDTH / 2 && ref.current.currentGalleryTab === 2) {
-      ref.current.currentGalleryTab = 1
-      scrollTabRef.current?.scrollTo({
-        x: 0,
-        y: 0,
-        animated: true
-      })
-      Animated.timing(tabLineOffsetX, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: false
-      }).start()
-    } else if (x < SCREEN_WIDTH / 2 && ref.current.currentGalleryTab === 1) {
-      scrollTabRef.current?.scrollTo({
-        x: 0,
-        y: 0,
-        animated: true
-      })
-      Animated.timing(tabLineOffsetX, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: false
-      }).start()
-    } else if (x > SCREEN_WIDTH / 2 && ref.current.currentGalleryTab === 2) {
-      scrollTabRef.current?.scrollTo({
-        x: SCREEN_WIDTH,
-        y: 0,
-        animated: true
-      })
-      Animated.timing(tabLineOffsetX, {
-        toValue: SCREEN_WIDTH / 2,
-        duration: 200,
-        useNativeDriver: false
-      }).start()
-    }
+    setUserInfo({ user: userInfo.user, followType: tempFollowType })
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <PopupImage
-        selectedPhoto={selectedPhoto}
-        refProps={ref}
-        popupImageLocation={popupImageLocation}
-      />
-      <ScrollView
-        onScrollEndDrag={onScrollEndDragContainerScroll}
-        ref={scrollHRef}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        bounces={false}
-      >
+      {userInfo.user ? (
         <View style={styles.profileContainer}>
           <ScrollView
             ref={scrollVRef}
@@ -320,32 +311,94 @@ export default function ProfileScreen() {
             scrollEventThrottle={20}
             style={styles.w_full}
           >
-            <TouchableOpacity activeOpacity={1} onPress={onBackToMainScreen}>
+            <TouchableOpacity activeOpacity={1}>
               <View onLayout={onSetHeaderHeight}>
-                <ProfileExtraInfo curRef={ref} scrollVRef={scrollVRef} />
-                <ProfileInfo />
-                <TouchableOpacity
-                  // onPress={() => navigate('EditProfile')}
-                  activeOpacity={0.6}
-                  style={styles.btnEditProfile}
-                >
-                  <Text style={styles.font_medium}>Edit Profile</Text>
-                </TouchableOpacity>
+                <ProfileExtraInfo user={userInfo.user} />
+                <ProfileInfo user={userInfo.user} />
+                {userInfo.followType === 3 ? null : (
+                  <View
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      justifyContent: 'space-around'
+                    }}
+                  >
+                    <TouchableOpacity
+                      onPress={onClickFollow}
+                      activeOpacity={0.6}
+                      style={styles.btnEditProfile}
+                    >
+                      {userInfo.followType === 1 ? (
+                        <Text
+                          style={{
+                            fontWeight: '500',
+                            color: 'green'
+                          }}
+                        >
+                          Followed
+                        </Text>
+                      ) : (
+                        <Text
+                          style={{
+                            fontWeight: '500',
+                            color: 'black'
+                          }}
+                        >
+                          Following
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      /**
+                       * @todo do this
+                       */
+                      onPress={() => navigate(APP_SCREEN.EDIT_PROFILE)}
+                      activeOpacity={0.6}
+                      style={{ marginTop: 5 }}
+                    >
+                      <Icon width={28} height={28} name="message-circle-outline" fill="#000" />
+                    </TouchableOpacity>
+                  </View>
+                )}
+                <View style={styles.extraInfoWrapper}>
+                  <TouchableOpacity onPress={scrollToPosts} style={styles.touch_center}>
+                    <Text style={styles.text_extra_info}>{photos?.length}</Text>
+                    <Text>Posts</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigate(APP_SCREEN.FOLLOWING)
+                    }}
+                    style={styles.touch_center}
+                  >
+                    <Text style={styles.text_extra_info}>
+                      {userInfo.user?.followingIDs?.length}
+                    </Text>
+                    <Text>Following</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={{ backgroundColor: '#fff' }}>
+                  <FlatList
+                    data={photos}
+                    showsVerticalScrollIndicator={false}
+                    style={styles.posts}
+                    // TODO:
+                    // onRefresh
+                    // ListEmptyComponent={ListEmpty}
+                    keyExtractor={item => item?.id}
+                    ItemSeparatorComponent={StyledDivider}
+                    ListFooterComponent={renderFooter}
+                    onEndReachedThreshold={0.5}
+                    onEndReached={hasMoreToLoad ? handleLoadMore : null}
+                    renderItem={({ item }) => <PostCard post={item} />}
+                    ListHeaderComponent={loginUser.id === userInfo.user.id ? <AddPostCard /> : null}
+                  />
+                </View>
               </View>
-              <ProfileGallery
-                tabLineOffsetX={tabLineOffsetX}
-                scrollTabRef={scrollTabRef}
-                onToggleGalleryTab={onToggleGalleryTab}
-                onScrollEndDragGalleryTabScroll={onScrollEndDragGalleryTabScroll}
-                hidePopupImage={hidePopupImage}
-                showPopupImage={showPopupImage}
-                photos={photos}
-              />
-              <ProfileRecommend />
             </TouchableOpacity>
           </ScrollView>
         </View>
-      </ScrollView>
+      ) : null}
     </SafeAreaView>
   )
 }

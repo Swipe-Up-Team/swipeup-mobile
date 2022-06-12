@@ -1,12 +1,14 @@
-import { View } from 'react-native'
+import { View, Image, ActivityIndicator } from 'react-native'
 import { Text, Avatar, IconElement, Icon } from '@ui-kitten/components'
 import styles from './styles'
 import { formatDate, formatTime } from '@src/utils'
-import { useState } from 'react'
+import React, { Component, useState } from 'react'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import { LoadingView } from '../../loading-message'
 
 const ReceivedMessage = ({ message, date, displayTime, displayAvatar }: any) => {
   const [isShowTime, setIsShowTime] = useState(displayTime)
+  const [isLoadingImage, setIsLoadingImage] = useState(false)
 
   const getDisplayDateText = () => {
     const now = new Date()
@@ -27,13 +29,15 @@ const ReceivedMessage = ({ message, date, displayTime, displayAvatar }: any) => 
     }
   }
 
+  const changeLoadingState = () => {
+    setIsLoadingImage(!isLoadingImage)
+  }
+
   return (
     <>
       {date && (
         <View style={styles.dateContainer}>
-          <View style={styles.divider} />
           <Text style={styles.dateText}>{getDisplayDateText()}</Text>
-          <View style={styles.divider} />
         </View>
       )}
 
@@ -47,9 +51,21 @@ const ReceivedMessage = ({ message, date, displayTime, displayAvatar }: any) => 
 
         <View style={styles.mainContainer}>
           {isShowTime && <Text style={styles.timeText}>{formatTime(message.createdAt)}</Text>}
-          <TouchableOpacity style={styles.messageContainer} onPress={changeDisplayTime}>
-            <Text>{message.message}</Text>
-          </TouchableOpacity>
+          {message.message ? (
+            <TouchableOpacity style={styles.messageContainer} onPress={changeDisplayTime}>
+              <Text>{message.message}</Text>
+            </TouchableOpacity>
+          ) : (
+            <>
+              <Image
+                style={styles.imageMessage}
+                source={{ uri: message.image }}
+                onLoadStart={changeLoadingState}
+                onLoadEnd={changeLoadingState}
+              />
+              {isLoadingImage && <LoadingView />}
+            </>
+          )}
         </View>
       </View>
     </>

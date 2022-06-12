@@ -1,15 +1,16 @@
 export interface Message {
   id?: string
   senderId: string
-  // conversationId: string
   message: string
+  image: string
   createdAt: number
 }
 
 export interface Conversation {
-  id: string;
-  userIds: string;
-  messages: Message[] | any;
+  id: string
+  userIds: string
+  typingIds: string
+  messages: Message[] | any
   // title: string | null;
   // description: string | null;
   // background: string | null;

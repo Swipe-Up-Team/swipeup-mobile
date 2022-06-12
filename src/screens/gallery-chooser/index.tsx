@@ -4,7 +4,7 @@ import { RouteProp, useRoute } from '@react-navigation/native'
 import { dispatch, getState } from '@src/common'
 import { CloseIcon, NavigationBar } from '@src/components'
 import { goBack, navigate } from '@src/navigation/navigation-service'
-import { APP_SCREEN, RootStackParamList } from '@src/navigation/screen-types'
+import { APP_SCREEN, AuthorizeParamsList, RootStackParamList } from '@src/navigation/screen-types'
 import {
   onSetSelectedAssetIndexes,
   onSetSystemAsset
@@ -75,7 +75,7 @@ export function GalleryChooserScreen({ isMultiple = true }: { isMultiple: boolea
   // }
 
   const handleGoBack = () => {
-    return navigate(APP_SCREEN.ADD_POST, {
+    return navigate(route.params?.prevScreen!, {
       selectedAssetIndexes: selectedIndexes
     })
   }

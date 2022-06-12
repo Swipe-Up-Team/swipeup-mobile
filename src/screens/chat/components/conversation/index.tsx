@@ -8,7 +8,7 @@ import { navigate } from '@src/navigation/navigation-service'
 import { getState } from '@src/common'
 import { formatTime, shortenConversationText } from '@src/utils'
 import { Message, User } from '@src/models'
-import { USERIDS_DIVIDER } from '@src/constants'
+import { defaultUser, USERIDS_DIVIDER, defaultMessage } from '@src/constants'
 import { userService } from '@src/services'
 
 const SenderName = (prop: any) => <Text {...prop}>Sender Name</Text>
@@ -22,32 +22,6 @@ const RightSection = ({ time, ...props }: any) => (
   </View>
 )
 
-const defaultMessage: Message = {
-  id: '',
-  senderId: '',
-  message: '',
-  createdAt: 0
-}
-
-const defaultUser: User = {
-  id: '',
-  email: '',
-  name: '',
-  status: 1,
-  avatar: '',
-  bio: '',
-  birthDay: {
-    date: 0,
-    month: 0,
-    year: 0
-  },
-  gender: 0,
-  phone: '',
-  followingIDs: [],
-  createdAt: 0,
-  updatedAt: 0
-}
-
 const Conversation = ({ conversation, ...props }: any) => {
   const userId = getState('user').user?.id
 
@@ -57,7 +31,7 @@ const Conversation = ({ conversation, ...props }: any) => {
   const navigateToChatRoom = () => {
     navigate(APP_SCREEN.CHAT_ROOM, {
       conversationId: conversation.id,
-      friendName: friend.name,
+      friend: friend
     })
   }
 
@@ -85,11 +59,15 @@ const Conversation = ({ conversation, ...props }: any) => {
   return (
     <ListItem
       title={shortenConversationText(friend?.name!)}
-      description={
+      description={shortenConversationText(
         lastedMessage.senderId === userId
-          ? shortenConversationText('You: ' + lastedMessage!.message)
-          : shortenConversationText(lastedMessage!.message)
-      }
+          ? lastedMessage!.message
+            ? 'You: ' + lastedMessage!.message
+            : 'You: [image]'
+          : lastedMessage!.message
+          ? lastedMessage!.message
+          : '[image]'
+      )}
       accessoryLeft={<ChatAvatar />}
       accessoryRight={<RightSection time={lastedMessage!.createdAt} />}
       style={[props.style, { height: 80 }]}

@@ -2,9 +2,26 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { RouteProp, useRoute } from '@react-navigation/native'
-import { Avatar, Button, Text } from '@ui-kitten/components'
+import { dispatch, getState, useArray } from '@src/common'
+import {
+  CloseIcon,
+  NavigationBar,
+  PostPhotoBigIcon,
+  PostTagFriendBigIcon,
+  PostVideoBigIcon,
+  UserAvatarSquare
+} from '@src/components'
+import { FIREBASE_STORAGE_ENDPOINT } from '@src/constants'
+import { PostPayload } from '@src/models'
+import { goBack, navigate } from '@src/navigation/navigation-service'
+import { APP_SCREEN, RootStackParamList } from '@src/navigation/screen-types'
+import { storageService } from '@src/services'
+import { postService } from '@src/services/post-services'
+import { onEndProcess, onStartProcess } from '@src/store/reducers/app-reducer'
+import { Button, Text } from '@ui-kitten/components'
 import * as MediaLibrary from 'expo-media-library'
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
+import isEqual from 'react-fast-compare'
 import {
   Animated as RNAnimated,
   Dimensions,
@@ -26,31 +43,16 @@ import {
 } from 'react-native-gesture-handler'
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
-
-import { dispatch, getState, useArray } from '@src/common'
-import {
-  CloseIcon,
-  NavigationBar,
-  PostPhotoBigIcon,
-  PostTagFriendBigIcon,
-  PostVideoBigIcon,
-  UserAvatarSquare
-} from '@src/components'
-import { goBack, navigate } from '@src/navigation/navigation-service'
-import { APP_SCREEN, RootStackParamList } from '@src/navigation/screen-types'
 import { ChoseAsset } from './components'
 import styles from './styles'
-import { firebaseService } from '@src/services'
-import { Post } from '@src/models'
-import { postService } from '@src/services/post-services'
-import { onEndProcess, onStartProcess } from '@src/store/reducers/app-reducer'
 
 const screenWidth = Math.round(Dimensions.get('window').width)
 
-export function AddPostScreen() {
+// TODO: handle redirect to Unauthenticated screen if no user
+const AddPostScreenComponent = () => {
   const route = useRoute<RouteProp<RootStackParamList, APP_SCREEN.ADD_POST>>()
   const { systemAssets } = getState('systemAssets')
-  const { user: loggedUser } = getState('user')
+  const { user } = getState('user')
   const [selectedAssets, selectedAssetsActions] = useArray<MediaLibrary.Asset>([])
   const [textPost, setTextPost] = useState('')
 
@@ -72,7 +74,7 @@ export function AddPostScreen() {
   })
 
   const handleAddMediaPress = async () => {
-    navigate(APP_SCREEN.GALLERY_CHOOSER, { selectedAssets })
+    navigate(APP_SCREEN.GALLERY_CHOOSER, { selectedAssets, prevScreen: APP_SCREEN.ADD_POST })
   }
 
   const handleRemoveAsset = (idx: number) => {
@@ -90,12 +92,17 @@ export function AddPostScreen() {
   }, [route.params?.selectedAssetIndexes])
 
   const handleAddPostPress = async () => {
+    if (!user) return
+
     dispatch(onStartProcess())
 
     // upload images to firebase -> get storage url
-    const urls = await firebaseService.uploadMultipleFiles(selectedAssets)
+    const urls = await storageService.uploadMultipleFiles(
+      selectedAssets,
+      FIREBASE_STORAGE_ENDPOINT.FILES
+    )
 
-    const newPost: Post = {
+    const newPost: Partial<PostPayload> = {
       content: {
         images: urls,
         text: textPost
@@ -105,10 +112,10 @@ export function AddPostScreen() {
       reacts: [],
       shares: 0,
       type: '',
-      authorId: loggedUser?.id,
+      authorId: user?.id,
       comments: []
     }
-    const result = await postService.createNew(newPost)
+    const result = await postService.createNew(user, newPost)
 
     dispatch(onEndProcess())
     goBack()
@@ -239,11 +246,9 @@ export function AddPostScreen() {
 
         <View style={styles.infoWrapper}>
           {/* TODO: get user state */}
-          <UserAvatarSquare
-            uri={'https://konsept-client.vercel.app/dist/src/assets/images/sang.jpg'}
-          />
+          <UserAvatarSquare uri={user?.avatar} />
           <View style={styles.postInfoWrapper}>
-            <Text style={styles.name}>{'user.name'}</Text>
+            <Text style={styles.name}>{user?.name}</Text>
             <View style={styles.areaWrapper}>
               {/* FIXME: un-comment if has post status */}
               {/* <TouchableOpacity
@@ -417,3 +422,4 @@ export function AddPostScreen() {
     </KeyboardAvoidingView>
   )
 }
+export const AddPostScreen = memo(AddPostScreenComponent, isEqual)

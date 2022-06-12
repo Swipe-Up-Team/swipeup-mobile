@@ -1,22 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { dispatch } from '@src/common'
-import { AddPostCard, PostCard, StyledDivider } from '@src/components'
 import { FirebasePagination, Post } from '@src/models'
 import { postService } from '@src/services'
-import { onSetToken } from '@src/store/reducers/app-reducer'
-import { Spinner } from '@ui-kitten/components'
 import { Unsubscribe } from 'firebase/firestore'
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
-import { Dimensions, FlatList, Text, TouchableOpacity, View } from 'react-native'
-import styles from './styles'
-import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview'
+import React, { memo, useEffect, useState } from 'react'
 import isEqual from 'react-fast-compare'
+import { View } from 'react-native'
 import { PostFlatList } from './components/post-flat-list'
-
-let { width: screenWidth } = Dimensions.get('window')
+import styles from './styles'
 
 const HomeScreenComponent = () => {
   const [posts, setPosts] = useState<Post[]>([])
+  // TODO: add skeleton post
   const [loading, setLoading] = useState(true)
   const [hasMoreToLoad, setHasMoreToLoad] = useState(true)
   const [pagination, setPagination] = useState<FirebasePagination>({
