@@ -15,7 +15,7 @@ export interface Post {
   }
   type?: string
   authorId?: string
-  comments?: Comment[]
+  comments?: number
 }
 
 export interface PostPayload extends Omit<Post, 'creator'> {

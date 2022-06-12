@@ -4,7 +4,7 @@ import { postService } from '@src/services'
 import { Unsubscribe } from 'firebase/firestore'
 import React, { memo, useEffect, useState } from 'react'
 import isEqual from 'react-fast-compare'
-import { View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { PostFlatList } from './components/post-flat-list'
 import styles from './styles'
 
@@ -60,7 +60,7 @@ const HomeScreenComponent = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* <TouchableOpacity onPress={() => dispatch(onSetToken())}>
         <Text>Logout</Text>
       </TouchableOpacity> */}
@@ -71,7 +71,7 @@ const HomeScreenComponent = () => {
         onLoadMore={handleLoadMore}
         onRefresh={handleRefresh}
       />
-    </View>
+    </SafeAreaView>
   )
 }
 export const HomeScreen = memo(HomeScreenComponent, isEqual)

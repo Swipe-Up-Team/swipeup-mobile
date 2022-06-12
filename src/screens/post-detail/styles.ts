@@ -8,8 +8,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: getRealDimensionsHeight(),
-    width: '100%',
-    backgroundColor: 'red'
+    width: '100%'
   },
   keyboardAvoidingViewContainer: {
     position: 'relative',

@@ -106,11 +106,8 @@ const AddPostScreenComponent = () => {
       },
       createdAt: new Date().getTime(),
       updatedAt: new Date().getTime(),
-      reacts: [],
-      shares: 0,
       type: '',
-      authorId: user?.id,
-      comments: []
+      authorId: user?.id
     }
     const result = await postService.createNew(user, newPost)
 

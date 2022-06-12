@@ -1,6 +1,8 @@
 export const FIRESTORE_ENDPOINT = {
   USERS: 'users',
-  POSTS: 'posts'
+  POSTS: 'posts',
+  COMMENTS: 'comments',
+  REACTIONS: 'reacts'
 }
 
 export const REALTIMEDB_ENDPOINT = {

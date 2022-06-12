@@ -1,6 +1,5 @@
 import { View, StyleSheet, FlatList } from 'react-native'
 import React, { memo, useCallback, useMemo, useState } from 'react'
-import { BOTTOM_TAB_BAR_HEIGHT } from '@src/constants'
 import { AddPostCard, PostCard, StyledDivider } from '@src/components'
 import { Post } from '@src/models'
 import { Spinner, Text } from '@ui-kitten/components'
@@ -9,18 +8,19 @@ import isEqual from 'react-fast-compare'
 const styles = StyleSheet.create({
   posts: {
     flex: 1,
-    marginBottom: BOTTOM_TAB_BAR_HEIGHT + 50
+    marginBottom: 10
   },
   spinnerContainer: { height: 40, width: '100%', alignItems: 'center' },
   footerContainer: {
-    paddingBottom: 20,
+    paddingBottom: 30,
     alignItems: 'center',
     justifyContent: 'center'
   },
   footerText: {
-    fontWeight: '500'
+    fontWeight: '400'
   }
 })
+
 export interface PostFlatListComponentProps {
   posts: Post[]
   hasMoreToLoad: boolean

@@ -2,23 +2,23 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import { useRoute } from '@react-navigation/native'
-import { Post as PostType, Reaction } from '@src/models'
+import { getState } from '@src/common'
+import { Post as PostType } from '@src/models'
 import { navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN } from '@src/navigation/screen-types'
+import { postService } from '@src/services'
 import { Text } from '@ui-kitten/components'
-import React, { memo, useCallback, useRef, useState } from 'react'
+import { formatDistanceToNow } from 'date-fns'
+import debounce from 'lodash/debounce'
+import React, { memo, useRef, useState } from 'react'
+import isEqual from 'react-fast-compare'
 import { GestureResponderEvent, TouchableOpacity, View } from 'react-native'
 import { DotsHorizontal, ExportIcon, PostCommentIcon } from '../icons'
 import { ImageGrid } from '../image-grid'
+import { LikeButton } from '../like-button'
+import { UserAvatarSquare } from '../user-avatar-square'
 import { PostDescription, PostDescriptionType } from './post-description'
 import styles from './styles'
-import { formatDistanceToNow } from 'date-fns'
-import { UserAvatarSquare } from '../user-avatar-square'
-import isEqual from 'react-fast-compare'
-import { LikeButton } from '../like-button'
-import { getState } from '@src/common'
-import debounce from 'lodash/debounce'
-import { postService } from '@src/services'
 
 export interface PostCardProps {
   post: PostType
@@ -46,7 +46,6 @@ const PostCardComponent = ({ post, preview = false }: PostCardProps) => {
 
   const handleUpdateLikeOfPost = async (_isLiked: boolean) => {
     if (!user) return
-    if (_isLiked === isLiked) return
 
     await postService.likePost(post.id, _isLiked)
   }
@@ -143,7 +142,9 @@ const PostCardComponent = ({ post, preview = false }: PostCardProps) => {
           onPress={handleCommentPress}
         >
           <PostCommentIcon />
-          <Text style={styles.buttonText}>{comments ? comments.length : ''} Comments</Text>
+          <Text style={styles.buttonText}>
+            {comments && comments > 0 ? `${comments}` : ''} Comments
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity

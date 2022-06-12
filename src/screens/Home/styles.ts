@@ -6,13 +6,12 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: getRealDimensionsHeight(),
-    marginTop: 50,
     // FIXME: uncomment if finish home screen
     backgroundColor: '#fff'
   },
   posts: {
     flex: 1,
-    marginBottom: BOTTOM_TAB_BAR_HEIGHT + 50
+    marginBottom: BOTTOM_TAB_BAR_HEIGHT
   },
   spinnerContainer: { height: 40, width: '100%', alignItems: 'center' }
 })

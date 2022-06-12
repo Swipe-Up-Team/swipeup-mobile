@@ -4,25 +4,23 @@ import { FIRESTORE_ENDPOINT } from '@src/constants'
 import { FirebasePagination, Post, PostPayload, Reaction, User } from '@src/models'
 import {
   addDoc,
-  arrayRemove,
-  arrayUnion,
   collection,
+  deleteDoc,
   doc,
   getDoc,
+  getDocs,
   limit,
   onSnapshot,
   orderBy,
   query,
   startAfter,
-  updateDoc
+  where
 } from 'firebase/firestore'
 
 export const postService = {
   createNew: async (creator: User, post: Partial<PostPayload>) => {
     const editedPost: Partial<PostPayload> = {
       ...post,
-      comments: post.comments || [],
-      reacts: post.reacts || [],
       creator: doc(firestore, `${FIRESTORE_ENDPOINT.USERS}/${creator.id}`)
     }
     try {
@@ -37,24 +35,25 @@ export const postService = {
     const { user } = getState('user')
     if (!user) return
 
-    const postRef = doc(firestore, FIRESTORE_ENDPOINT.POSTS, postId)
-    const postSnap = await getDoc(postRef)
+    const reactionCollectionRef = collection(
+      firestore,
+      FIRESTORE_ENDPOINT.POSTS,
+      postId,
+      FIRESTORE_ENDPOINT.REACTIONS
+    )
 
-    if (!postSnap.exists()) throw new Error(`The post has ID ${postId} is not found.`)
+    const queryRef = query(reactionCollectionRef, where('userId', '==', user.id))
+    const reactionSnapshot = await getDocs(queryRef)
 
-    const reaction: Reaction = { userId: user?.id, type: 'like' }
-    try {
-      if (_isLiked) {
-        await updateDoc(postRef, {
-          reacts: arrayUnion(reaction)
-        })
-      } else {
-        await updateDoc(postRef, {
-          reacts: arrayRemove(reaction)
-        })
+    if (_isLiked) {
+      if (reactionSnapshot.size === 0) {
+        const reaction: Reaction = { userId: user?.id, type: 'like' }
+        await addDoc(reactionCollectionRef, reaction)
       }
-    } catch (error) {
-      console.log(error)
+    } else {
+      if (reactionSnapshot.size > 0) {
+        await deleteDoc(reactionSnapshot.docs[0].ref)
+      }
     }
   },
 
@@ -62,23 +61,25 @@ export const postService = {
     pagination: FirebasePagination,
     { onNext }: { onNext?: (result: any) => void }
   ) => {
-    console.log('get 1 time')
+    const { user } = getState('user')
+    if (!user) return
+
     try {
-      const postRef = collection(firestore, FIRESTORE_ENDPOINT.POSTS)
+      const postsRef = collection(firestore, FIRESTORE_ENDPOINT.POSTS)
 
       const queryRef = pagination.startAfter
         ? query(
-            postRef,
+            postsRef,
             // TODO: change to in [followingIDs]
-            // where('authorId', '==', 'Wx2OS5Iq2lWaQZV1ne6ob8qh3At2'),
+            where('authorId', '==', 'Wx2OS5Iq2lWaQZV1ne6ob8qh3At2'),
             orderBy('createdAt', 'desc'),
             limit(pagination?.limit || 10),
             startAfter(pagination.startAfter)
           )
         : query(
-            postRef,
+            postsRef,
             // TODO: change to in [followingIDs]
-            // where('authorId', '==', 'Wx2OS5Iq2lWaQZV1ne6ob8qh3At2'),
+            where('authorId', '==', 'Wx2OS5Iq2lWaQZV1ne6ob8qh3At2'),
             orderBy('createdAt', 'desc'),
             limit(pagination?.limit || 10)
           )
@@ -86,11 +87,29 @@ export const postService = {
       return onSnapshot(queryRef, async querySnapShot => {
         const promises = querySnapShot.docs.map(async _doc => {
           const creatorDocRef = _doc.data().creator
+          const commentsRef = collection(
+            firestore,
+            FIRESTORE_ENDPOINT.POSTS,
+            _doc.id,
+            FIRESTORE_ENDPOINT.COMMENTS
+          )
+          const reactsRef = collection(
+            firestore,
+            FIRESTORE_ENDPOINT.POSTS,
+            _doc.id,
+            FIRESTORE_ENDPOINT.REACTIONS
+          )
+
           const creator = await getDoc(creatorDocRef)
+          const commentDocs = await getDocs(query(commentsRef))
+          const reactDocs = await getDocs(query(reactsRef))
+
           return {
             id: _doc.id,
             ..._doc.data(),
+            comments: commentDocs.size,
             creator: creator.data(),
+            reacts: reactDocs.docs.map(_ => _.data()),
             createdAt:
               typeof _doc.data().createdAt === 'number'
                 ? _doc.data().createdAt

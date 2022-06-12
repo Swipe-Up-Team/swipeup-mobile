@@ -1,22 +1,47 @@
 import { Text } from '@ui-kitten/components'
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import { View } from 'react-native'
 
 import { CommentResponseData } from '@src/models'
 import styles from './styles'
-import { CommentReplyIcon, HeartIcon } from '../icons'
 import { TouchableOpacity } from 'react-native'
 import { UserAvatarSquare } from '../user-avatar-square'
 import { formatDistanceToNow } from 'date-fns'
+import { getState } from '@src/common'
+import { LikeButton } from '../like-button'
+import debounce from 'lodash/debounce'
 
 export const CommentCard = ({
   item,
-  onSharePress
+  onLikeComment
 }: {
   item: CommentResponseData
   onSharePress: () => void
+  onLikeComment: (commentId: string, isLiked: boolean) => void
 }) => {
   const { author, createdAt, text } = item
+  const { user } = getState('user')
+
+  const [isLiked, setIsLiked] = useState(() => {
+    let liked = false
+    item.reacts.forEach(react => {
+      if (react.userId === user?.id) liked = true
+    })
+    return liked
+  })
+
+  const debouncedLikePost = useRef(debounce(onLikeComment, 300)).current
+
+  const handleLikeCommentPress = async (commentId: string, _isLiked: boolean) => {
+    debouncedLikePost(commentId, _isLiked)
+  }
+
+  const handleLikePress = async () => {
+    const newLikes = !isLiked
+    setIsLiked(newLikes)
+    handleLikeCommentPress(item.id, newLikes)
+  }
+
   return (
     <View style={styles.commentContainer}>
       <View style={styles.row}>
@@ -31,17 +56,15 @@ export const CommentCard = ({
       <View style={styles.commentSection}>
         <Text style={styles.comment}>{text}</Text>
         <View style={styles.row}>
-          {/* <ReactionsCounter reactions={reacts} /> */}
-          <View style={[styles.row, styles.actionContainer]}>
-            <HeartIcon />
-            <Text style={styles.lightText}> 1.2K</Text>
-            <Text style={styles.lightText}> Likes</Text>
-          </View>
-          <TouchableOpacity onPress={onSharePress} style={[styles.row, styles.actionContainer]}>
+          <TouchableOpacity style={[styles.row, styles.actionContainer]} onPress={handleLikePress}>
+            <LikeButton isLiked={isLiked} />
+            <Text style={[styles.lightText, { marginLeft: -5 }]}> Like</Text>
+          </TouchableOpacity>
+          {/* <TouchableOpacity onPress={onSharePress} style={[styles.row, styles.actionContainer]}>
             <CommentReplyIcon />
             <Text style={styles.lightText}> 6</Text>
             <Text style={styles.lightText}> Replies</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
     </View>

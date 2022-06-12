@@ -46,10 +46,12 @@ const styles = StyleSheet.create({
     fontWeight: '600'
   },
   row: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   actionContainer: {
-    margin: 10
+    margin: 10,
+    marginLeft: -10
   }
 })
 export default styles

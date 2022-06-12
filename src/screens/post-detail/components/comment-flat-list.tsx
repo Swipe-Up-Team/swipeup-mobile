@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { CommentCard } from '@src/components'
 import { CommentResponseData } from '@src/models'
 import React, { forwardRef, memo, useCallback } from 'react'
@@ -8,15 +9,22 @@ import { EmptyComment } from './empty-comment'
 
 export interface CommentFlatListComponentProps {
   comments: CommentResponseData[]
-  hasMoreToLoad?: boolean
-  onLoadMore?: () => void
+  onLikeComment: (commentId: string, isLiked: boolean) => void
 }
 
 const CommentFlatListComponent = forwardRef(
-  ({ comments }: CommentFlatListComponentProps, ref: React.ForwardedRef<FlatList>) => {
+  (
+    { comments, onLikeComment }: CommentFlatListComponentProps,
+    ref: React.ForwardedRef<FlatList>
+  ) => {
     const renderItem = useCallback(
       ({ item }: { item: CommentResponseData }) => (
-        <CommentCard item={item} key={item.id} onSharePress={() => {}} />
+        <CommentCard
+          item={item}
+          key={item.id}
+          onLikeComment={onLikeComment}
+          onSharePress={() => {}}
+        />
       ),
       []
     )
@@ -27,7 +35,6 @@ const CommentFlatListComponent = forwardRef(
     return (
       <FlatList
         ref={ref}
-        // keyboardShouldPersistTaps={'always'}
         data={comments}
         showsVerticalScrollIndicator={true}
         contentContainerStyle={styles.commentsContentContainer}
@@ -35,7 +42,7 @@ const CommentFlatListComponent = forwardRef(
         keyExtractor={keyExtractor}
         ListEmptyComponent={ListEmptyComponent}
         renderItem={renderItem}
-        onContentSizeChange={() => ref?.current?.scrollToEnd()}
+        onContentSizeChange={() => ref?.current && ref?.current.scrollToEnd()}
       />
     )
   }

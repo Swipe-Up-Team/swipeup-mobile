@@ -42,6 +42,7 @@ export function PostDetailScreen() {
   const onLoadCommentsSuccess = (result: { comments: CommentResponseData[] }) => {
     const newComments = [...comments, ...result.comments]
     setComments(newComments)
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -54,13 +55,16 @@ export function PostDetailScreen() {
         onNext: onLoadCommentsSuccess
       })
       if (result) unsubscribe = result
-      setLoading(false)
     })()
 
     return () => {
       if (unsubscribe) unsubscribe()
     }
   }, [route.params.postId])
+
+  const handleLikeCommentPress = async (commentId: string, isLiked: boolean) => {
+    await commentService.likeComment(route.params.postId, commentId, isLiked)
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -74,7 +78,11 @@ export function PostDetailScreen() {
             <Spinner />
           </View>
         ) : (
-          <CommentFlatList ref={commentListRef} comments={comments} />
+          <CommentFlatList
+            ref={commentListRef}
+            comments={comments}
+            onLikeComment={handleLikeCommentPress}
+          />
         )}
         <CommentInput onSubmit={handleAddComment} />
       </KeyboardAvoidingView>
