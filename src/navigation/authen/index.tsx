@@ -22,7 +22,7 @@ import styles from './styles'
 import { NotificationsScreen } from '@src/screens'
 import ProfileScreen from '@src/screens/profile/profile'
 import EditProfile from '@src/screens/edt-profile'
-import Follow from '@src/screens/profile/components/follow'
+import FollowScreen from '@src/screens/profile/components/follow-screen'
 
 function getWidth() {
   let width = Dimensions.get('window').width

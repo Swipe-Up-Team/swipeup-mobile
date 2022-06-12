@@ -8,81 +8,13 @@ import { DEFAULT_BACKGROUND_URI, DEFAULT_PHOTO_URI } from '@src/constants'
 import { APP_SCREEN } from '@src/navigation/screen-types'
 import { goBack, navigate } from '@src/navigation/navigation-service'
 import { useSelector } from '@src/common'
-
-// interface Props {
-//   curRef: React.MutableRefObject<{
-//     currentTab: number
-//     currentGalleryTab: number
-//     headerHeight: number
-//     showHeaderTab: boolean
-//     prePopupImage: {
-//       pX: number
-//       pY: number
-//       w: number
-//       h: number
-//     }
-//   }>
-//   scrollVRef: React.RefObject<ScrollView>
-// }
-
-const styles = StyleSheet.create({
-  headerBtnContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
-  infoWrapper: {
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  avatarWrapper: {
-    // position: 'relative'
-  },
-  mainAvatar: {
-    height: 100,
-    width: 100,
-    borderRadius: 100
-  },
-  plusIcon: {
-    width: 24,
-    height: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 99,
-    backgroundColor: '#318bfb',
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    borderWidth: 2,
-    borderColor: '#fff'
-  },
-  btnEditProfile: {
-    width: 30,
-    height: 30,
-    marginTop: 50
-  },
-  font_medium: {
-    fontWeight: '500'
-  },
-  imageBackground: {
-    position: 'absolute',
-    height: 300,
-    top: 0,
-    left: 0,
-    right: 0
-    // overflow: 'hidden',
-    // borderRadius: 30,
-  },
-  backArrow: {
-    margin: 10
-  }
-})
+import styles from './styles'
 
 interface Props {
   user: User
 }
 
-export default function ProfileExtraInfo({ user }: Props) {
+export default function ProfileHeader({ user }: Props) {
   return (
     <View>
       {/* <ImageBackground
