@@ -27,7 +27,7 @@ import {
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-import { getState, useArray } from '@src/common'
+import { getState, useArray, useSelector } from '@src/common'
 import {
   CloseIcon,
   NavigationBar,
@@ -40,7 +40,8 @@ import { APP_SCREEN, RootStackParamList } from '@src/navigation/screen-types'
 import { ChoseAsset } from './components'
 import styles from './styles'
 import { storageService } from '@src/services'
-import { STORAGE_ENDPOINT } from '@src/constants'
+import { DEFAULT_PHOTO_URI, STORAGE_ENDPOINT } from '@src/constants'
+import { User } from '@src/models'
 
 const screenWidth = Math.round(Dimensions.get('window').width)
 
@@ -195,6 +196,8 @@ export function AddPostScreen() {
     height: editorWrapperHeight.value
   }))
 
+  const user = useSelector(state => state.user).user as User
+
   return (
     <KeyboardAvoidingView style={styles.parentContainer} enabled behavior="height">
       <SafeAreaView style={styles.container}>
@@ -215,10 +218,10 @@ export function AddPostScreen() {
           <Avatar
             shape="square"
             style={styles.avatar}
-            source={{ uri: 'https://konsept-client.vercel.app/dist/src/assets/images/sang.jpg' }}
+            source={{ uri: user.avatar || DEFAULT_PHOTO_URI }}
           />
           <View style={styles.postInfoWrapper}>
-            <Text style={styles.name}>{'user.name'}</Text>
+            <Text style={styles.name}>{user.name}</Text>
             <View style={styles.areaWrapper}>
               {/* FIXME: un-comment if has post status */}
               {/* <TouchableOpacity

@@ -365,7 +365,7 @@ export default function ProfileScreen() {
                     onEndReachedThreshold={0.5}
                     onEndReached={hasMoreToLoad ? handleLoadMore : null}
                     renderItem={({ item }) => <PostCard post={item} />}
-                    ListHeaderComponent={<AddPostCard />}
+                    ListHeaderComponent={loginUser.id === userInfo.user.id ? <AddPostCard /> : null}
                   />
                 </View>
               </View>

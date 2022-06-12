@@ -63,7 +63,9 @@ export type AuthorizeParamsList = {
     userId: string | null
   }
   [APP_SCREEN.EDIT_PROFILE]: undefined
-  [APP_SCREEN.FOLLOWING]: undefined
+  [APP_SCREEN.FOLLOWING]: {
+    userId: string | null
+  }
 }
 
 export type RootStackParamList = {

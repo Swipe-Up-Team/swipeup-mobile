@@ -7,6 +7,9 @@ import { APP_SCREEN } from '@src/navigation/screen-types'
 import { PostPhotoIcon, PostTagFriendIcon, PostVideoIcon } from '../icons'
 import styles from './styles'
 import { CommonActions, useNavigation } from '@react-navigation/native'
+import { useSelector } from '@src/common'
+import { User } from '@src/models'
+import { DEFAULT_PHOTO_URI } from '@src/constants'
 
 export function AddPostCard() {
   const navigation = useNavigation()
@@ -28,13 +31,15 @@ export function AddPostCard() {
     navigate(APP_SCREEN.ADD_POST, {})
   }
 
+  const user = useSelector(state => state.user).user as User
+
   return (
     <View style={styles.container}>
       <View style={styles.postToolWrapper}>
         <TouchableOpacity activeOpacity={0.5} style={styles.userAvatarWrapper}>
           <Avatar
             shape="square"
-            source={{ uri: 'https://konsept-client.vercel.app/dist/src/assets/images/sang.jpg' }}
+            source={{ uri: user.avatar || DEFAULT_PHOTO_URI }}
             style={styles.userAvatar}
           />
         </TouchableOpacity>
