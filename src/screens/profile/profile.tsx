@@ -1,11 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
-import { RouteProp, useNavigationState, useRoute } from '@react-navigation/native'
+import { RouteProp, useRoute } from '@react-navigation/native'
 import { useSelector } from '@src/common'
-import { AddPostCard, NavigationBar, PostCard, StyledDivider } from '@src/components'
+import { AddPostCard, PostCard, StyledDivider } from '@src/components'
 import { firestore } from '@src/config'
 import { BOTTOM_TAB_BAR_HEIGHT, SCREEN_WIDTH } from '@src/constants'
 import { Post, User } from '@src/models'
-import { goBack, navigate } from '@src/navigation/navigation-service'
+import { navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN, RootStackParamList } from '@src/navigation/screen-types'
 import { Icon, Spinner } from '@ui-kitten/components'
 import { collection, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore'
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   btnEditProfile: {
     marginVertical: 5,
-    width: SCREEN_WIDTH - 30,
+    width: SCREEN_WIDTH - 100,
     marginHorizontal: 5,
     backgroundColor: '#fff',
     borderRadius: 3,
@@ -71,6 +71,11 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  btnMessage: {
+    width: 30,
+    height: 30,
+    marginTop: 50
   }
 })
 
@@ -311,31 +316,49 @@ export default function ProfileScreen() {
                 <ProfileExtraInfo user={userInfo.user} />
                 <ProfileInfo user={userInfo.user} />
                 {userInfo.followType === 3 ? null : (
-                  <TouchableOpacity
-                    onPress={onClickFollow}
-                    activeOpacity={0.6}
-                    style={styles.btnEditProfile}
+                  <View
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      justifyContent: 'space-around'
+                    }}
                   >
-                    {userInfo.followType === 1 ? (
-                      <Text
-                        style={{
-                          fontWeight: '500',
-                          color: 'green'
-                        }}
-                      >
-                        Followed
-                      </Text>
-                    ) : (
-                      <Text
-                        style={{
-                          fontWeight: '500',
-                          color: 'black'
-                        }}
-                      >
-                        Following
-                      </Text>
-                    )}
-                  </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={onClickFollow}
+                      activeOpacity={0.6}
+                      style={styles.btnEditProfile}
+                    >
+                      {userInfo.followType === 1 ? (
+                        <Text
+                          style={{
+                            fontWeight: '500',
+                            color: 'green'
+                          }}
+                        >
+                          Followed
+                        </Text>
+                      ) : (
+                        <Text
+                          style={{
+                            fontWeight: '500',
+                            color: 'black'
+                          }}
+                        >
+                          Following
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      /**
+                       * @todo do this
+                       */
+                      onPress={() => navigate(APP_SCREEN.EDIT_PROFILE)}
+                      activeOpacity={0.6}
+                      style={{ marginTop: 5 }}
+                    >
+                      <Icon width={28} height={28} name="message-circle-outline" fill="#000" />
+                    </TouchableOpacity>
+                  </View>
                 )}
                 <View style={styles.extraInfoWrapper}>
                   <TouchableOpacity onPress={scrollToPosts} style={styles.touch_center}>
