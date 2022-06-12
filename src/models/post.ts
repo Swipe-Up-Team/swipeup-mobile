@@ -2,8 +2,8 @@ import { DocumentReference, DocumentData } from 'firebase/firestore'
 import { User } from './user'
 
 export interface Post {
-  id?: string
-  creator?: User
+  id: string
+  creator: User
   reacts?: Reaction[]
   shares?: number
   createdAt?: number

@@ -1,6 +1,6 @@
 import { firestore } from '@src/config'
 import { FIRESTORE_ENDPOINT } from '@src/constants'
-import { FirebasePagination, Post, PostPayload } from '@src/models'
+import { FirebasePagination, Post, PostPayload, User } from '@src/models'
 import {
   addDoc,
   collection,
@@ -14,8 +14,8 @@ import {
 } from 'firebase/firestore'
 
 export const postService = {
-  createNew: async (post: Post) => {
-    const editedPost: PostPayload = {
+  createNew: async (creator: User, post: Partial<PostPayload>) => {
+    const editedPost: Partial<PostPayload> = {
       ...post,
       comments: post.comments || [],
       reacts: post.reacts || [],
