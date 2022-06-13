@@ -7,6 +7,7 @@ import { APP_SCREEN, RootStackParamList } from './screen-types'
 import { UnAuthentication } from './un-authen'
 import EditProfile from '@src/screens/edt-profile'
 import FollowScreen from '@src/screens/profile/components/follow-screen'
+import ProfileScreen from '@src/screens/profile/profile'
 
 const RootStack = createStackNavigator<RootStackParamList>()
 
@@ -48,6 +49,7 @@ export const RootNavigation = ({ token }: { token?: string }) => {
           />
           <RootStack.Screen name={APP_SCREEN.EDIT_PROFILE} component={EditProfile} />
           <RootStack.Screen name={APP_SCREEN.FOLLOWING} component={FollowScreen} />
+          <RootStack.Screen name={APP_SCREEN.PROFILE} component={ProfileScreen} />
         </>
       )}
     </RootStack.Navigator>

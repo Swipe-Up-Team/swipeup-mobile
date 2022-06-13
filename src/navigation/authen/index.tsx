@@ -23,6 +23,7 @@ import { NotificationsScreen } from '@src/screens'
 import ProfileScreen from '@src/screens/profile/profile'
 import EditProfile from '@src/screens/edt-profile'
 import FollowScreen from '@src/screens/profile/components/follow-screen'
+import { SearchScreen } from '@src/screens/search'
 
 function getWidth() {
   let width = Dimensions.get('window').width
@@ -74,7 +75,7 @@ export const MainScreen = () => {
         />
         <Main.Screen
           name={APP_SCREEN.SEARCH}
-          component={HomeStack}
+          component={SearchScreen}
           options={{
             tabBarIcon: ({ focused }) => (
               <View style={styles.tabBarItemContainer}>

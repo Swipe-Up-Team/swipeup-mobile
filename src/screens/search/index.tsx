@@ -1,28 +1,41 @@
-import { ArrowBack } from '@src/components'
+import { ArrowBack, ChatSearchIcon, DismissKeyboardView } from '@src/components'
+import { User } from '@src/models'
 import { goBack } from '@src/navigation/navigation-service'
-import { Input } from '@ui-kitten/components'
-import React from 'react'
+import { APP_SCREEN } from '@src/navigation/screen-types'
+import { userService } from '@src/services'
+import { Input, Layout, List } from '@ui-kitten/components'
+import React, { useState } from 'react'
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { SearchItem } from './components/search-item'
 import styles from './styles'
 
-export function SearchScreen(): JSX.Element {
+export function SearchScreen({ navigation }: any): JSX.Element {
+  const [searchText, setSearchText] = useState('')
+  const [searchData, setSearchData] = useState<User[]>([])
+
+  const onSubmitSearch = async () => {
+    if (!searchText) return
+    const result = await userService.getUsersWithKeyWord(searchText)
+    setSearchData(result)
+  }
+
+  const renderSearchitem = ({ item }: any) => <SearchItem user={item} navigation={navigation} />
+
   return (
-    <SafeAreaView>
-      <View style={styles.navigationBar}>
-        <TouchableOpacity onPress={goBack} style={styles.btnBack}>
-          <ArrowBack />
-        </TouchableOpacity>
-        <View style={styles.searchBarContainer}>
-          <Input />
-        </View>
-      </View>
-      <ScrollView style={styles.mainContent}>
-        <View style={styles.recentSearchedContainer}>
-          <Text style={styles.title}>Recent searched</Text>
-        </View>
-        {/* Search input */}
-      </ScrollView>
-    </SafeAreaView>
+    <DismissKeyboardView>
+      <Layout style={styles.container}>
+        <Input
+          style={styles.input}
+          placeholder="Find your friends"
+          accessoryLeft={<ChatSearchIcon />}
+          value={searchText}
+          onChangeText={nextValue => setSearchText(nextValue)}
+          onSubmitEditing={onSubmitSearch}
+        />
+
+        <List style={styles.searchList} data={searchData} renderItem={renderSearchitem} />
+      </Layout>
+    </DismissKeyboardView>
   )
 }

@@ -37,9 +37,9 @@ export default function ProfileHeader({ user }: Props) {
           <Icon name="arrow-back" width={24} height={24} fill="#000" />
         </TouchableOpacity>
 
-        <TouchableOpacity activeOpacity={0.6} onPress={() => goBack()} style={styles.backArrow}>
+        {/* <TouchableOpacity activeOpacity={0.6} onPress={() => {}} style={styles.backArrow}>
           <Icon name="more-vertical-outline" width={24} height={24} fill="#000" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <View style={styles.infoWrapper}>
         <TouchableOpacity style={styles.avatarWrapper}>

@@ -15,7 +15,7 @@ import {
   signInWithCredential,
   signInWithEmailAndPassword
 } from 'firebase/auth'
-import { doc, getDoc, setDoc } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore'
 import Toast from 'react-native-toast-message'
 
 const createNewUser = (uid: string, username: string) => {
@@ -139,5 +139,25 @@ export const userService = {
     }
 
     return snapshot.data() as User
+  },
+
+  getUsersWithKeyWord: async (keyword: string) => {
+    //TODO: temp solution, will remake later
+    const allUser: User[] = []
+
+    const q = query(collection(firestore, FIRESTORE_ENDPOINT.USERS))
+
+    const querySnapshot = await getDocs(q)
+    querySnapshot.forEach(doc => {
+      const user = doc.data() as User
+      if (
+        user.name.toLowerCase().includes(keyword.toLowerCase()) ||
+        user.email.toLowerCase().includes(keyword.toLowerCase())
+      ) {
+        allUser.push(user)
+      }
+    })
+
+    return allUser
   }
 }
