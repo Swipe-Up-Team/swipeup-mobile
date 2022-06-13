@@ -3,7 +3,15 @@ import { RouteProp, useRoute } from '@react-navigation/native'
 import { APP_SCREEN, AuthorizeParamsList } from '@src/navigation/screen-types'
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './styles'
-import { BackIcon, ChatActionIcon, DismissKeyboardView, MicIcon, PaperPlaneIcon, PlusIcon, XIcon } from '@src/components'
+import {
+  BackIcon,
+  ChatActionIcon,
+  DismissKeyboardView,
+  MicIcon,
+  PaperPlaneIcon,
+  PlusIcon,
+  XIcon
+} from '@src/components'
 import { KeyboardAvoidingView, Platform, View } from 'react-native'
 import { Input, List, ListItem, Button } from '@ui-kitten/components'
 import { shortenConversationText } from '@src/utils'
@@ -106,7 +114,12 @@ export const ChatRoomScreen = (props: any) => {
       createdAt: new Date().getTime()
     }
 
-    await chatService.sendTextMessage(message, conversationId)
+    if (conversation) {
+      await chatService.sendTextMessage(message, conversationId)
+    } else {
+      await chatService.createNewConversation(message, userId!, friend.id)
+    }
+
     setinputMessage('')
   }
 
@@ -148,7 +161,7 @@ export const ChatRoomScreen = (props: any) => {
   )
 
   useEffect(() => {
-    setMessageList(conversation?.messages)
+    if (conversation) setMessageList(conversation?.messages)
     setTypingList(typingIds ? typingIds.split(USERIDS_DIVIDER) : [])
   }, [conversation])
 
@@ -170,8 +183,8 @@ export const ChatRoomScreen = (props: any) => {
           disabled
           style={{ width: '95%' }}
           title={shortenConversationText(friend.name)}
-          description="Last seen 10:35"
-          accessoryLeft={<ChatAvatar />}
+          // description="Last seen 10:35"
+          accessoryLeft={<ChatAvatar avatar={friend.avatar} />}
           accessoryRight={<RightSection />}
         />
       </View>
@@ -226,8 +239,8 @@ export const ChatRoomScreen = (props: any) => {
                 value={inputMessage}
                 accessoryRight={MicIcon}
                 onChangeText={setinputMessage}
-                // onFocus={sendTypingAction}
-                // onBlur={removeTypingAction}
+                onFocus={sendTypingAction}
+                onBlur={removeTypingAction}
                 disabled={selectedAssets.length > 0}
               />
               <Button

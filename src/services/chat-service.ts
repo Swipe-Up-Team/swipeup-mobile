@@ -14,6 +14,21 @@ export const chatService = {
       : push(ref(database, REALTIMEDB_ENDPOINT.CONVERSATIONS)).key || undefined
   },
 
+  createNewConversation: async (message: Message, myId: string, friendId: string) => {
+    const key = chatService.getKeyPush(undefined)
+
+    await update(ref(database, `${REALTIMEDB_ENDPOINT.CONVERSATIONS}/${key}`), {
+      id: key!,
+      messages: [],
+      userIds: myId + USERIDS_DIVIDER + friendId,
+      typingIds: ''
+    })
+
+    await chatService.sendTextMessage(message, key)
+
+    await chatService.getConversations(myId)
+  },
+
   sendTextMessage: async (message: Message, conversationId: string | undefined) => {
     const key = chatService.getKeyPush(conversationId)
 

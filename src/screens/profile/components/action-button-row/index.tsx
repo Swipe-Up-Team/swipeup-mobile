@@ -7,8 +7,9 @@ import { useSelector } from '@src/common'
 import { userService } from '@src/services'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { cloneDeep } from 'lodash'
+import { APP_SCREEN } from '@src/navigation/screen-types'
 
-export const ActionButtonRow = ({ currentUser }: any) => {
+export const ActionButtonRow = ({ navigation, currentUser }: any) => {
   const { user } = useSelector(x => x.user)
 
   const handleToggleFollowBtn = async () => {
@@ -23,6 +24,13 @@ export const ActionButtonRow = ({ currentUser }: any) => {
     }
 
     await userService.updateFollowingList(user?.id!, newFollowingList)
+  }
+
+  const handleSendMessage = () => {
+    navigation.push(APP_SCREEN.CHAT_ROOM, {
+      conversationId: undefined,
+      friend: currentUser
+    })
   }
 
   return (
@@ -42,7 +50,7 @@ export const ActionButtonRow = ({ currentUser }: any) => {
         appearance="outline"
         accessoryLeft={<MessageProfileIcon />}
         style={styles.messageBtn}
-        onPress={() => {console.log('abcd')}}
+        onPress={handleSendMessage}
       >
         <Text>Message</Text>
       </Button>

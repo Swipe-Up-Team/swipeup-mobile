@@ -16,9 +16,9 @@ const SenderName = (prop: any) => <Text {...prop}>Sender Name</Text>
 const RightSection = ({ time, ...props }: any) => (
   <View style={styles.rightContainer}>
     <Text style={styles.timeText}>{formatTime(time)}</Text>
-    <View style={styles.unSeenContainer}>
+    {/* <View style={styles.unSeenContainer}>
       <Text style={styles.unSeenText}>15</Text>
-    </View>
+    </View> */}
   </View>
 )
 
@@ -68,7 +68,7 @@ const Conversation = ({ conversation, ...props }: any) => {
           ? lastedMessage!.message
           : '[image]'
       )}
-      accessoryLeft={<ChatAvatar />}
+      accessoryLeft={<ChatAvatar avatar={friend.avatar} />}
       accessoryRight={<RightSection time={lastedMessage!.createdAt} />}
       style={[props.style, { height: 80 }]}
       onPress={navigateToChatRoom}

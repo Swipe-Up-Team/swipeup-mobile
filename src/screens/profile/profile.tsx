@@ -16,7 +16,7 @@ import { ActionButtonRow } from './components/action-button-row'
 import ProfileHeader from './components/profile-header'
 import styles from './styles'
 
-export default function ProfileScreen() {
+export default function ProfileScreen({ navigation }: any) {
   const route = useRoute<RouteProp<AuthorizeParamsList, APP_SCREEN.PROFILE>>()
   const friendUserId = route.params?.userId
 
@@ -89,7 +89,7 @@ export default function ProfileScreen() {
               <Text style={styles.emailText}>{currentUser.email}</Text>
             </View>
 
-            {friendUserId && <ActionButtonRow currentUser={currentUser} />}
+            {friendUserId && <ActionButtonRow currentUser={currentUser} navigation={navigation} />}
 
             <View style={styles.extraInfoWrapper}>
               <TouchableOpacity style={styles.touch_center}>
