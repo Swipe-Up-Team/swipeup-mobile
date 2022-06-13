@@ -81,50 +81,48 @@ export default function ProfileScreen() {
           style={styles.w_full}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
         >
-          <TouchableOpacity activeOpacity={1}>
-            <View>
-              <ProfileHeader user={currentUser} />
+          <View>
+            <ProfileHeader user={currentUser} />
 
-              <View style={styles.bioWrapper}>
-                <Text style={styles.nameText}>{currentUser.name}</Text>
-                <Text style={styles.emailText}>{currentUser.email}</Text>
-              </View>
-
-              {friendUserId && <ActionButtonRow />}
-
-              <View style={styles.extraInfoWrapper}>
-                <TouchableOpacity style={styles.touch_center}>
-                  <Text style={styles.text_extra_info}>{allPost.length}</Text>
-                  <Text>Posts</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigate(APP_SCREEN.FOLLOWING, {})
-                  }}
-                  style={styles.touch_center}
-                >
-                  <Text style={styles.text_extra_info}>{currentUser.followingIDs?.length}</Text>
-                  <Text>Following</Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={{ backgroundColor: '#fff' }}>
-                <FlatList
-                  data={allPost}
-                  showsVerticalScrollIndicator={false}
-                  style={styles.posts}
-                  keyExtractor={item => item?.id}
-                  ItemSeparatorComponent={StyledDivider}
-                  ListFooterComponent={renderFooter}
-                  onEndReachedThreshold={0.5}
-                  renderItem={renderPostItem}
-                  // ListEmptyComponent={ListEmpty}
-                  // onEndReached={hasMoreToLoad ? handleLoadMore : null}
-                  // ListHeaderComponent={loginUser.id === userInfo.user.id ? <AddPostCard /> : null}
-                />
-              </View>
+            <View style={styles.bioWrapper}>
+              <Text style={styles.nameText}>{currentUser.name}</Text>
+              <Text style={styles.emailText}>{currentUser.email}</Text>
             </View>
-          </TouchableOpacity>
+
+            {friendUserId && <ActionButtonRow currentUser={currentUser} />}
+
+            <View style={styles.extraInfoWrapper}>
+              <TouchableOpacity style={styles.touch_center}>
+                <Text style={styles.text_extra_info}>{allPost.length}</Text>
+                <Text>Posts</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                // onPress={() => {
+                //   navigate(APP_SCREEN.FOLLOWING, {})
+                // }}
+                style={styles.touch_center}
+              >
+                <Text style={styles.text_extra_info}>{currentUser.followingIDs?.length}</Text>
+                <Text>Following</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={{ backgroundColor: '#fff' }}>
+              <FlatList
+                data={allPost}
+                showsVerticalScrollIndicator={false}
+                style={styles.posts}
+                keyExtractor={item => item?.id}
+                ItemSeparatorComponent={StyledDivider}
+                ListFooterComponent={renderFooter}
+                onEndReachedThreshold={0.5}
+                renderItem={renderPostItem}
+                // ListEmptyComponent={ListEmpty}
+                // onEndReached={hasMoreToLoad ? handleLoadMore : null}
+                // ListHeaderComponent={loginUser.id === userInfo.user.id ? <AddPostCard /> : null}
+              />
+            </View>
+          </View>
         </ScrollView>
       </View>
     </SafeAreaView>

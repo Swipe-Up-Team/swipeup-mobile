@@ -7,7 +7,7 @@ import { authentication } from '@src/config/firebase-config'
 import { FIREBASE_ERROR_CODE, FIRESTORE_ENDPOINT } from '@src/constants'
 import { User, UserGender, UserStatus } from '@src/models'
 import { onSetToken } from '@src/store/reducers/app-reducer'
-import { onSetUser } from '@src/store/reducers/user-reducer'
+import { onSetFollowingUsers, onSetUser } from '@src/store/reducers/user-reducer'
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -15,7 +15,7 @@ import {
   signInWithCredential,
   signInWithEmailAndPassword
 } from 'firebase/auth'
-import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc } from 'firebase/firestore'
 import Toast from 'react-native-toast-message'
 
 const createNewUser = (uid: string, username: string) => {
@@ -159,5 +159,29 @@ export const userService = {
     })
 
     return allUser
+  },
+
+  updateFollowingList: async (userId: string, followingList: string[]) => {
+    await updateDoc(doc(firestore, `/${FIRESTORE_ENDPOINT.USERS}/${userId}`), {
+      followingIDs: followingList
+    })
+    const newUserState = await userService.getUser(userId)
+    if (newUserState) dispatch(onSetUser(newUserState))
   }
+
+  // getAllFollowingUser: async (followingIds: string[]) => {
+  //   if (followingIds.length === 0) return
+
+  //   const followingList: User[] = []
+  //   for(const followingId in followingIds) {
+  //     const user = await userService.getUser(followingId)
+  //     if (user) {
+  //       followingList.push(user)
+  //     }
+  //   }
+
+  //   console.log(followingList)
+
+  //   dispatch(onSetFollowingUsers(followingList))
+  // }
 }

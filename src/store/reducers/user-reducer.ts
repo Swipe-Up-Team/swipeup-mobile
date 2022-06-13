@@ -5,11 +5,13 @@ import { User } from '@src/models'
 import { doc, getDoc } from 'firebase/firestore'
 
 export interface UserState {
-  user?: User
+  user?: User,
+  followingUsers?: User[]
 }
 
 const initialState: UserState = {
-  user: undefined
+  user: undefined,
+  followingUsers: undefined
 }
 
 export const reloadUser = createAsyncThunk('user/reloadUser', async (userId: string) => {
@@ -27,7 +29,10 @@ const user = createSlice({
   reducers: {
     onSetUser: (state, { payload }: PayloadAction<User>) => {
       state.user = payload
-    }
+    },
+    onSetFollowingUsers: (state, { payload }: PayloadAction<User[]>) => {
+      state.followingUsers = payload
+    },
   },
   extraReducers: builder => {
     builder.addCase(reloadUser.fulfilled, (state, action) => {
@@ -40,4 +45,4 @@ const userReducer = user.reducer
 
 export default userReducer
 
-export const { onSetUser } = user.actions
+export const { onSetUser, onSetFollowingUsers } = user.actions
