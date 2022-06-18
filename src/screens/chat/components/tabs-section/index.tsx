@@ -1,4 +1,5 @@
 import { getState, useSelector } from '@src/common'
+import { USERIDS_DIVIDER } from '@src/constants'
 import { chatService } from '@src/services/chat-service'
 import { Text, Layout, TabView, Tab, List } from '@ui-kitten/components'
 import React, { useEffect, useState } from 'react'
@@ -19,6 +20,24 @@ const TabViewSection = () => {
 
   const renderItem = ({ item }: any) => <Conversation conversation={item} />
 
+  const getDirectMessageList = () => {
+    const list = []
+    for (const conversation of conversations) {
+      if (
+        conversation.userIds.split(USERIDS_DIVIDER).length === 2 &&
+        conversation.messages.length !== 0
+      ) {
+        list.push(conversation)
+      }
+    }
+
+    const sortedList = list.sort(
+      (a, b) =>
+        b.messages[b.messages.length - 1].createdAt - a.messages[a.messages.length - 1].createdAt
+    )
+    return sortedList
+  }
+
   useEffect(() => {
     chatService.getConversations(userId!)
   }, [])
@@ -30,16 +49,14 @@ const TabViewSection = () => {
       onSelect={index => setSelectedIndex(index)}
     >
       <Tab title={<TabTitle text="Direct Message" />}>
-        <List
-          data={conversations.filter(conver => conver.messages.length !== 0)}
-          renderItem={renderItem}
-        />
+        <List data={getDirectMessageList()} renderItem={renderItem} />
       </Tab>
       <Tab title={<TabTitle text="Group Chat" />}>
-        <List
+        <></>
+        {/* <List
           data={conversations.filter(conver => conver.messages.length !== 0)}
           renderItem={renderItem}
-        />
+        /> */}
       </Tab>
     </TabView>
   )

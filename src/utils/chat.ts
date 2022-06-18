@@ -1,4 +1,4 @@
-import { CONVERSATION_MAX_CHARACTERS } from "@src/constants"
+import { CONVERSATION_MAX_CHARACTERS } from '@src/constants'
 
 export const formatTime = (time: number) => {
   const date = new Date(time)

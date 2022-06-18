@@ -19,7 +19,7 @@ export const ChatScreen = () => {
           value={searchText}
           onChangeText={nextValue => setSearchText(nextValue)}
         />
-        <View style={styles.friendOnlineContainer}></View>
+        <View style={styles.friendOnlineContainer} />
         <View style={styles.mainChatContainer}>
           <TabViewSection />
         </View>
