@@ -17,7 +17,7 @@ const TabViewSection = () => {
 
   const [selectedIndex, setSelectedIndex] = useState(0)
 
-  const renderItem = ({ item, index }: any) => <Conversation conversation={item} />
+  const renderItem = ({ item }: any) => <Conversation conversation={item} />
 
   useEffect(() => {
     chatService.getConversations(userId!)
@@ -30,10 +30,16 @@ const TabViewSection = () => {
       onSelect={index => setSelectedIndex(index)}
     >
       <Tab title={<TabTitle text="Direct Message" />}>
-        <List data={conversations} renderItem={renderItem} />
+        <List
+          data={conversations.filter(conver => conver.messages.length !== 0)}
+          renderItem={renderItem}
+        />
       </Tab>
       <Tab title={<TabTitle text="Group Chat" />}>
-        <List data={conversations} renderItem={renderItem} />
+        <List
+          data={conversations.filter(conver => conver.messages.length !== 0)}
+          renderItem={renderItem}
+        />
       </Tab>
     </TabView>
   )

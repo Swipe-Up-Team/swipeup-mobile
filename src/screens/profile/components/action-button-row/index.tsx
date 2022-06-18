@@ -5,12 +5,15 @@ import { MessageProfileIcon, PersonAddIcon, PersonDoneIcon } from '@src/componen
 import styles from './styles'
 import { useSelector } from '@src/common'
 import { userService } from '@src/services'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import { cloneDeep } from 'lodash'
 import { APP_SCREEN } from '@src/navigation/screen-types'
+import { chatService } from '@src/services/chat-service'
 
 export const ActionButtonRow = ({ navigation, currentUser }: any) => {
   const { user } = useSelector(x => x.user)
+  const conversationId = useSelector(
+    x => x.chat.conversations.find(x => x.userIds.includes(currentUser.id))?.id
+  )
 
   const handleToggleFollowBtn = async () => {
     let newFollowingList: string[] = []
@@ -26,9 +29,15 @@ export const ActionButtonRow = ({ navigation, currentUser }: any) => {
     await userService.updateFollowingList(user?.id!, newFollowingList)
   }
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
+    let key = conversationId
+
+    if (!key) {
+      key = await chatService.createNewConversation(user?.id!, currentUser.id)
+    }
+
     navigation.push(APP_SCREEN.CHAT_ROOM, {
-      conversationId: undefined,
+      conversationId: key,
       friend: currentUser
     })
   }

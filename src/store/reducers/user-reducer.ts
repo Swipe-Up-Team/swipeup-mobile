@@ -5,7 +5,7 @@ import { User } from '@src/models'
 import { doc, getDoc } from 'firebase/firestore'
 
 export interface UserState {
-  user?: User,
+  user?: User
   followingUsers?: User[]
 }
 
@@ -32,7 +32,7 @@ const user = createSlice({
     },
     onSetFollowingUsers: (state, { payload }: PayloadAction<User[]>) => {
       state.followingUsers = payload
-    },
+    }
   },
   extraReducers: builder => {
     builder.addCase(reloadUser.fulfilled, (state, action) => {

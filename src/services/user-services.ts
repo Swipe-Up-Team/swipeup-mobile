@@ -7,7 +7,7 @@ import { authentication } from '@src/config/firebase-config'
 import { FIREBASE_ERROR_CODE, FIRESTORE_ENDPOINT } from '@src/constants'
 import { User, UserGender, UserStatus } from '@src/models'
 import { onSetToken } from '@src/store/reducers/app-reducer'
-import { onSetFollowingUsers, onSetUser } from '@src/store/reducers/user-reducer'
+import { onSetUser } from '@src/store/reducers/user-reducer'
 import {
   createUserWithEmailAndPassword,
   getAuth,

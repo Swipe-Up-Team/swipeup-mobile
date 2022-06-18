@@ -1,18 +1,18 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { SLICE_NAME } from "@src/constants/enums";
-import { Conversation, Message } from "@src/models";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { SLICE_NAME } from '@src/constants/enums'
+import { Conversation } from '@src/models'
 
 export interface ListConversationState {
   // loading: boolean;
   // error: string;
-  conversations: Conversation[];
+  conversations: Conversation[]
   // loaded: boolean;
 }
 
 const initialState: ListConversationState = {
   // loading: false,
   // error: '',
-  conversations: [],
+  conversations: []
   // loaded: false,
 }
 
