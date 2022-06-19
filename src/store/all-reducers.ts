@@ -5,6 +5,7 @@ import { persistReducer } from 'redux-persist'
 import systemAssetsReducer from './reducers/system-assets-reducer'
 import userReducer from './reducers/user-reducer'
 import chatReducer from './reducers/chat-reducer'
+import notificationReducer from './reducers/notification-reducer'
 
 const appPersistConfig = {
   key: 'app',
@@ -17,6 +18,7 @@ export const allReducer = combineReducers({
   user: userReducer,
   chat: chatReducer,
   systemAssets: systemAssetsReducer,
+  expoToken: notificationReducer
 })
 
 export type RootState = ReturnType<typeof allReducer>

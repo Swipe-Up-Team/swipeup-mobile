@@ -37,6 +37,16 @@ export const customMapping: CustomSchemaType = {
                 borderRadius: 6,
                 textFontWeight: '600'
               }
+            },
+            status: {
+              primary: {
+                state: {
+                  disabled: {
+                    backgroundColor: 'color-primary-500',
+                    textColor: '#fff'
+                  }
+                }
+              }
             }
           }
         }

@@ -1,18 +1,20 @@
-import { View, Text } from 'react-native'
-import { Button } from '@ui-kitten/components'
-import React from 'react'
-import { MessageProfileIcon, PersonAddIcon, PersonDoneIcon } from '@src/components'
-import styles from './styles'
 import { useSelector } from '@src/common'
-import { userService } from '@src/services'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import { cloneDeep } from 'lodash'
+import { MessageProfileIcon, PersonAddIcon, PersonDoneIcon } from '@src/components'
 import { APP_SCREEN } from '@src/navigation/screen-types'
+import { userService } from '@src/services'
+import { Button, Spinner } from '@ui-kitten/components'
+import { cloneDeep } from 'lodash'
+import React, { useState } from 'react'
+import { Text, View } from 'react-native'
+import styles from './styles'
 
 export const ActionButtonRow = ({ navigation, currentUser }: any) => {
   const { user } = useSelector(x => x.user)
+  const [loading, setLoading] = useState(false)
 
   const handleToggleFollowBtn = async () => {
+    setLoading(true)
+
     let newFollowingList: string[] = []
 
     if (user?.followingIDs?.includes(currentUser.id)) {
@@ -24,6 +26,8 @@ export const ActionButtonRow = ({ navigation, currentUser }: any) => {
     }
 
     await userService.updateFollowingList(user?.id!, newFollowingList)
+
+    setLoading(false)
   }
 
   const handleSendMessage = () => {
@@ -33,17 +37,36 @@ export const ActionButtonRow = ({ navigation, currentUser }: any) => {
     })
   }
 
+  const renderAccessoryLeftFollowButton = () => {
+    if (loading) return <></>
+
+    if (!user?.followingIDs) return
+
+    if (user.followingIDs.includes(currentUser.id)) return <PersonDoneIcon />
+
+    return <PersonAddIcon />
+  }
+
+  const renderFollowButtonText = () => {
+    if (loading) return 'Loading...'
+
+    if (!user?.followingIDs) return
+
+    if (user.followingIDs.includes(currentUser.id)) return 'Following'
+
+    return 'Follow'
+  }
+
   return (
     <View style={styles.container}>
       <Button
         size="small"
         style={styles.followBtn}
-        accessoryLeft={
-          user?.followingIDs?.includes(currentUser.id) ? <PersonDoneIcon /> : <PersonAddIcon />
-        }
+        accessoryLeft={renderAccessoryLeftFollowButton()}
         onPress={handleToggleFollowBtn}
+        disabled={loading}
       >
-        {user?.followingIDs?.includes(currentUser.id) ? 'Following' : 'Follow'}
+        {renderFollowButtonText()}
       </Button>
       <Button
         size="small"

@@ -1,12 +1,17 @@
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export enum NOTIFICATION_TYPES {
-  LIKE_MY_POST = 1,
-  COMMENT_MY_POST = 2,
-  REPLY_MY_COMMENT = 3,
-  LIKE_MY_COMMENT = 4,
-  LIKE_MY_REPLY = 5,
-  FOLLOW_ME = 6,
-  SOMEONE_POSTS = 7,
-  SOMEONE_LIKE_SOMEONE_POST = 8,
-  SOMEONE_COMMENT_SOMEONE_POST = 9
+export enum NotificationTypes {
+  SomeoneReactYourPost = 1,
+  SomeoneReactYourComment = 2,
+  SomeoneCommentToYourPost = 3,
+  SomeoneReplyYourComment = 4,
+  SomeoneAcceptYourFollowRequest = 5,
+  SomeoneFollowYou = 6,
+  SomeoneCommentPostSomeoneToo = 7,
+  SomeoneTagYouOnPostOfSomeone = 8
+}
+export enum NotificationParentTypes {
+  Post
+}
+export enum NotificationSeenType {
+  No,
+  Yes
 }

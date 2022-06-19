@@ -1,3 +1,4 @@
+import { getRealDimensionsHeight } from '@src/utils'
 import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
@@ -6,15 +7,31 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#fff'
   },
-  container: {
-    width: '100%',
-    paddingHorizontal: 15
-  },
   notiTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     margin: 10,
     marginHorizontal: 20
+  },
+  listContainer: {},
+  contentContainer: {},
+
+  footerContainer: {
+    marginBottom: 30,
+    marginTop: 10,
+    paddingHorizontal: 30,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  footerText: {
+    fontWeight: '400'
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: getRealDimensionsHeight(),
+    width: '100%'
   }
 })
 

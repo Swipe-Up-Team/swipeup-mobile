@@ -1,7 +1,7 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 
-import { HomeScreen, PostDetailScreen } from '@src/screens'
+import { HomeScreen } from '@src/screens'
 import { APP_SCREEN } from '../screen-types'
 
 const Stack = createStackNavigator()
@@ -14,6 +14,6 @@ export const HomeStack = () => (
     }}
   >
     <Stack.Screen name={APP_SCREEN.HOME} component={HomeScreen} />
-    <Stack.Screen name={APP_SCREEN.POST_DETAILS} component={PostDetailScreen} />
+    {/* <Stack.Screen name={APP_SCREEN.POST_DETAILS} component={PostDetailScreen} /> */}
   </Stack.Navigator>
 )

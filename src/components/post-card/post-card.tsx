@@ -3,10 +3,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import { useRoute } from '@react-navigation/native'
 import { getState } from '@src/common'
-import { Post as PostType } from '@src/models'
+import { NotificationParentTypes, NotificationSeenType, NotificationTypes } from '@src/constants'
+import { Notification, Post as PostType } from '@src/models'
 import { navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN } from '@src/navigation/screen-types'
-import { postService } from '@src/services'
+import { notificationService, postService } from '@src/services'
+import { countReaction } from '@src/utils'
 import { Text } from '@ui-kitten/components'
 import { formatDistanceToNow } from 'date-fns'
 import debounce from 'lodash/debounce'
@@ -43,17 +45,36 @@ const PostCardComponent = ({ post, preview = false }: PostCardProps) => {
     })
     return liked
   })
+  const [totalReaction, setTotalReaction] = useState(countReaction(reacts || [], 'like'))
+
+  const saveNoti = async () => {
+    if (!user) return
+
+    const noti: Notification = {
+      userId: user.id,
+      activityType: NotificationTypes.SomeoneReactYourPost,
+      sourceId: post.id,
+      parentId: user.id,
+      parentType: NotificationParentTypes.Post,
+      seen: NotificationSeenType.No,
+      createdAt: new Date().getTime()
+    }
+    await notificationService.saveNotificationToFirestore(noti)
+    await notificationService.sendPushNotification(noti)
+  }
 
   const handleUpdateLikeOfPost = async (_isLiked: boolean) => {
     if (!user) return
 
     await postService.likePost(post.id, _isLiked)
+    if (_isLiked) saveNoti()
   }
   const debouncedLikePost = useRef(debounce(handleUpdateLikeOfPost, 300)).current
 
   const handleLikePress = async () => {
     const _isLiked = !isLiked
     setIsLiked(_isLiked)
+    setTotalReaction(_isLiked ? totalReaction + 1 : totalReaction - 1)
     debouncedLikePost(_isLiked)
   }
 
@@ -133,7 +154,9 @@ const PostCardComponent = ({ post, preview = false }: PostCardProps) => {
           onPress={handleLikePress}
         >
           <LikeButton isLiked={isLiked} />
-          <Text style={[styles.buttonText, { marginLeft: -5 }]}>Like</Text>
+          <Text style={[styles.buttonText, { marginLeft: -5 }]}>
+            {totalReaction > 0 ? totalReaction : ' '} Like
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity

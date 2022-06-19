@@ -1,20 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { FirebasePagination, Post } from '@src/models'
-import { postService, userService } from '@src/services'
+import { postService } from '@src/services'
 import { Unsubscribe } from 'firebase/firestore'
 import React, { memo, useEffect, useState } from 'react'
 import isEqual from 'react-fast-compare'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useSelector } from '@src/common/hooks'
 import { PostFlatList } from './components/post-flat-list'
 import styles from './styles'
-import { TouchableOpacity, Text } from 'react-native'
-import { dispatch } from '@src/common'
-import { onSetToken } from '@src/store/reducers/app-reducer'
 
 const HomeScreenComponent = () => {
-  const { user } = useSelector(x => x.user)
-
   const [posts, setPosts] = useState<Post[]>([])
   // TODO: add skeleton post
   const [loading, setLoading] = useState(true)

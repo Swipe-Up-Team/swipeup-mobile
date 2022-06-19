@@ -1,19 +1,34 @@
-import { NOTIFICATION_TYPES } from '@src/constants'
-import { ExtraNotification } from '@src/models/notification'
+import { UserAvatarSquare } from '@src/components'
+import { NotificationSeenType, NotificationTypes } from '@src/constants'
+import { User } from '@src/models'
+import { Notification } from '@src/models/notification'
 import { navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN } from '@src/navigation/screen-types'
-import React from 'react'
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { Image } from 'react-native-expo-image-cache'
+import { notificationService, userService } from '@src/services'
+import { Text } from '@ui-kitten/components'
+import { formatDistanceToNow } from 'date-fns'
+import React, { useEffect, useState } from 'react'
+import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native'
 
 const styles = StyleSheet.create({
   rootContainer: {
     width: '100%',
-    padding: 15
+    paddingVertical: 15,
+    paddingHorizontal: 15
+  },
+  notSeen: {
+    backgroundColor: '#f7f7f7'
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center'
+    // backgroundColor: 'red'
   },
   fromPreviewWrapper: {
     height: 50,
-    width: 50
+    width: 50,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   avatar: {
     height: 38,
@@ -23,200 +38,139 @@ const styles = StyleSheet.create({
     borderWidth: 2
   },
   contentWrapper: {
-    paddingHorizontal: 10
+    paddingHorizontal: 15
   }
 })
 
-export function NotificationCard({ notification }: { notification: ExtraNotification }) {
-  const froms = [...(notification.froms || [])]
+export function NotificationCard({ notification }: { notification: Notification }) {
+  const [preview, setPreview] = useState<User>()
+  const [loading, setLoading] = useState(true)
+
   let content = ''
 
-  switch (notification.type) {
-    case NOTIFICATION_TYPES.LIKE_MY_COMMENT:
-      content = 'liked your comment.'
+  switch (notification.activityType) {
+    case NotificationTypes.SomeoneReplyYourComment:
+      content = 'replied your comment.'
       break
-    case NOTIFICATION_TYPES.LIKE_MY_POST:
-      content = 'liked your photo.'
+    case NotificationTypes.SomeoneReactYourPost:
+      content = 'reacted your post.'
       break
-    case NOTIFICATION_TYPES.COMMENT_MY_POST:
-      content = `commented: ${notification.commentInfo?.text}`
+    case NotificationTypes.SomeoneCommentToYourPost:
+      content = `commented on your post`
       break
-    case NOTIFICATION_TYPES.FOLLOW_ME:
+    case NotificationTypes.SomeoneFollowYou:
       content = `started following you.`
       break
-    case NOTIFICATION_TYPES.LIKE_MY_REPLY:
+    case NotificationTypes.SomeoneReactYourComment:
       content = `like your comment.`
       break
-    case NOTIFICATION_TYPES.REPLY_MY_COMMENT:
-      content = `commented: ${notification.replyInfo?.text}`
-      break
-    case NOTIFICATION_TYPES.SOMEONE_POSTS:
-      content = `${notification.postInfo?.creator?.name} posted new photo.`
-      break
-    case NOTIFICATION_TYPES.SOMEONE_LIKE_SOMEONE_POST:
-      content = `liked your following post.`
-      break
-    case NOTIFICATION_TYPES.SOMEONE_COMMENT_SOMEONE_POST:
-      content = `commented: ${notification.commentInfo?.text}`
+    default:
+      content = ''
       break
   }
 
   const handleViewNotificationPress = () => {
-    switch (notification.type) {
-      case NOTIFICATION_TYPES.LIKE_MY_COMMENT:
-        if (notification.postId) {
+    notificationService.changeNotiSeenMode(notification.id, NotificationSeenType.Yes)
+
+    switch (notification.activityType) {
+      case NotificationTypes.SomeoneReactYourComment:
+        if (notification.sourceId) {
           navigate(APP_SCREEN.POST_DETAILS, {
-            postId: notification.postId
+            postId: notification.sourceId
           })
         }
         break
-      case NOTIFICATION_TYPES.LIKE_MY_POST:
-        // navigate('PostDetail', {
-        //   postId: notification.postId
-        // })
+      case NotificationTypes.SomeoneReactYourPost:
+        if (notification.sourceId) {
+          navigate(APP_SCREEN.POST_DETAILS, {
+            postId: notification.sourceId
+          })
+        }
         break
-      case NOTIFICATION_TYPES.COMMENT_MY_POST:
-        // navigate('Comment', {
-        //   postId: notification.postId,
-        //   showFullPost: true,
-        //   postData: notification.postInfo
-        // })
+      case NotificationTypes.SomeoneCommentToYourPost:
+        if (notification.sourceId) {
+          navigate(APP_SCREEN.POST_DETAILS, {
+            postId: notification.sourceId
+          })
+        }
         break
-      case NOTIFICATION_TYPES.FOLLOW_ME:
-        // navigate('ActiviyFollow', { type: 1 })
+      case NotificationTypes.SomeoneFollowYou:
+        navigate(APP_SCREEN.FOLLOWING, { userId: notification.sourceId })
         break
-      case NOTIFICATION_TYPES.LIKE_MY_REPLY:
-        // navigate('Comment', {
-        //   postId: notification.postId,
-        //   postData: notification.postInfo
-        // })
+      case NotificationTypes.SomeoneTagYouOnPostOfSomeone:
+        if (notification.sourceId) {
+          navigate(APP_SCREEN.POST_DETAILS, {
+            postId: notification.sourceId
+          })
+        }
         break
-      case NOTIFICATION_TYPES.REPLY_MY_COMMENT:
-        // navigate('Comment', {
-        //   postId: notification.postId
-        // })
-        break
-      case NOTIFICATION_TYPES.SOMEONE_POSTS:
-        // navigate('PostDetail', {
-        //   postId: notification.postId,
-        //   postData: notification.postInfo
-        // })
-        break
-      case NOTIFICATION_TYPES.SOMEONE_LIKE_SOMEONE_POST:
-        // navigate('PostDetail', {
-        //   postId: notification.postId
-        // })
-        break
-      case NOTIFICATION_TYPES.SOMEONE_COMMENT_SOMEONE_POST:
-        // navigate('Comment', {
-        //   postId: notification.postId,
-        //   showFullPost: true,
-        //   postData: notification.postInfo
-        // })
+      default:
         break
     }
   }
 
+  useEffect(() => {
+    ;(async () => {
+      setLoading(true)
+      let previewObj: User
+      switch (notification.activityType) {
+        case NotificationTypes.SomeoneReactYourPost:
+          previewObj = (await userService.getUser(notification.parentId)) as User
+          if (previewObj) {
+            setPreview(previewObj)
+          }
+          break
+        case NotificationTypes.SomeoneReactYourComment:
+          previewObj = (await userService.getUser(notification.parentId)) as User
+          if (previewObj) {
+            setPreview(previewObj)
+          }
+          break
+        case NotificationTypes.SomeoneCommentToYourPost:
+          previewObj = (await userService.getUser(notification.parentId)) as User
+          if (previewObj) {
+            setPreview(previewObj)
+          }
+          break
+
+        default:
+          break
+      }
+
+      setLoading(false)
+    })()
+  }, [notification])
+
   return (
-    <TouchableOpacity onPress={handleViewNotificationPress} style={styles.rootContainer}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center'
-        }}
-      >
+    <TouchableOpacity
+      onPress={handleViewNotificationPress}
+      style={[
+        styles.rootContainer,
+        notification.seen === NotificationSeenType.No ? styles.notSeen : null
+      ]}
+    >
+      <View style={styles.row}>
         <View style={styles.fromPreviewWrapper}>
-          {notification.previewFroms && (
-            <>
-              {notification.previewFroms.length > 1 && (
-                <>
-                  <Image style={styles.avatar} uri={notification.previewFroms[1].avatar || ''} />
-                  <Image
-                    style={{
-                      ...styles.avatar,
-                      transform: [
-                        {
-                          translateX: 10
-                        },
-                        {
-                          translateY: -30
-                        }
-                      ]
-                    }}
-                    uri={notification.previewFroms[0].avatar || ''}
-                  />
-                </>
-              )}
-              {notification.previewFroms.length === 1 && (
-                <>
-                  <Image
-                    style={{
-                      ...styles.avatar,
-                      height: 50,
-                      width: 50
-                    }}
-                    uri={notification.previewFroms[0].avatar || ''}
-                  />
-                </>
-              )}
-            </>
-          )}
+          {preview?.avatar && <UserAvatarSquare uri={preview?.avatar} />}
         </View>
+
         <View
           style={{
             ...styles.contentWrapper,
-            width: Dimensions.get('screen').width - 50 - 30 - (notification.postInfo ? 50 : 0)
+            width: Dimensions.get('screen').width - 50 - 30
           }}
         >
           <Text numberOfLines={3}>
-            <Text
-              style={{
-                fontWeight: '600'
-              }}
-            >
-              {froms.splice(0, 2).join(', ')}{' '}
-            </Text>
-            {froms.length > 0 && (
-              <Text>
-                {' '}
-                and {froms.length} {froms.length > 1 ? 'others' : 'other'}{' '}
-              </Text>
-            )}
+            <Text category="s1">{`${preview?.name} `}</Text>
             <Text>{content} </Text>
-            {notification.createdAt && (
-              <Text
-                style={{
-                  color: '#666'
-                }}
-              >
-                {notification.createdAt}
-              </Text>
-            )}
           </Text>
+          {notification.createdAt && (
+            <Text appearance="hint" category="c1">
+              {formatDistanceToNow(notification.createdAt, { addSuffix: true })}
+            </Text>
+          )}
         </View>
       </View>
-      {notification.postInfo && notification.postInfo.content.images && (
-        <TouchableOpacity
-          onPress={() =>
-            notification.postId &&
-            navigate(APP_SCREEN.POST_DETAILS, {
-              postId: notification.postId
-            })
-          }
-          style={{
-            borderColor: '#ddd',
-            borderWidth: 0.3
-          }}
-        >
-          <Image
-            uri={notification.postInfo.content.images[0] || ''}
-            style={{
-              width: 50,
-              height: 50
-            }}
-          />
-        </TouchableOpacity>
-      )}
     </TouchableOpacity>
   )
 }

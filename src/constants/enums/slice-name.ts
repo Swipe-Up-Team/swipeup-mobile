@@ -4,5 +4,6 @@ export enum SLICE_NAME {
   LOGIN = 'LOGIN_',
   CHAT = 'CHAT_',
   SYSTEM_ASSETS = 'SYSTEM_ASSETS_',
-  USER = 'USER_'
+  USER = 'USER_',
+  NOTIFICATION = 'NOTIFICATION_'
 }

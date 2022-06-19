@@ -8,7 +8,7 @@ import {
   RESULT_CODE_PUSH_OUT,
   STATUS_TIME_OUT
 } from '@src/constants'
-import { ParamsNetwork, ResponseBase } from '@src/models'
+import { ParamsNetwork, Reaction, ReactionType, ResponseBase } from '@src/models'
 import { onLogout } from '@src/store/reducers/app-reducer'
 import { AxiosError, AxiosRequestConfig, AxiosResponse, Method } from 'axios'
 import * as MediaLibrary from 'expo-media-library'
@@ -123,4 +123,31 @@ export const fetchSystemImages = async (page?: number) => {
         })
     }
   })
+}
+
+export const counterFormatter = (counter: number, digits?: number) => {
+  const lookup = [
+    { value: 1, symbol: '' },
+    { value: 1e3, symbol: 'k' },
+    { value: 1e6, symbol: 'M' },
+    { value: 1e9, symbol: 'G' },
+    { value: 1e12, symbol: 'T' },
+    { value: 1e15, symbol: 'P' },
+    { value: 1e18, symbol: 'E' }
+  ]
+  const rx = /\.0+$|(\.[0-9]*[1-9])0+$/
+  const item = lookup
+    .slice()
+    .reverse()
+    .find(item => counter >= item.value)
+  return item ? (counter / item.value).toFixed(digits ?? 1).replace(rx, '$1') + item.symbol : '0'
+}
+
+export const countReaction = (reactions: Reaction[], type?: ReactionType) => {
+  const reactionType = type || 'like'
+  let numberOfReaction = 0
+
+  reactions.forEach(reaction => reaction.type === reactionType && numberOfReaction++)
+
+  return numberOfReaction
 }

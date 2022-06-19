@@ -1,22 +1,24 @@
-import { Comment, Post } from './post'
-import { User } from './user'
+import { AuthorizeParamsList } from '@src/navigation/screen-types'
 
 export type Notification = {
-  userId?: string[]
-  uid?: number
-  type?: number
-  froms?: string[]
-  postId?: string
-  commentId?: number
-  replyId?: number
-  storyId?: number
-  createdAt?: string
-  seen?: number
+  id: string
+  userId: string
+  activityType: number
+  sourceId: string
+  parentId: string
+  parentType: number
+  seen: number
+  createdAt: number
 }
-
-export type ExtraNotification = Notification & {
-  postInfo?: Post
-  commentInfo?: Comment
-  previewFroms?: User[]
-  replyInfo?: Comment
+export interface NotificationPayload<K extends keyof AuthorizeParamsList> {
+  to: string
+  sound: 'default'
+  title: string
+  body: string
+  data: {
+    navigation?: {
+      route: K
+      params: AuthorizeParamsList[K]
+    }
+  }
 }

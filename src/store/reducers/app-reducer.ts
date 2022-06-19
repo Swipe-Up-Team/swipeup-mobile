@@ -56,7 +56,7 @@ const app = createSlice({
       state.token = undefined
       state.profile = {}
     }
-  },
+  }
   // extraReducers: builder => {
   //   builder
   //     .addMatcher(

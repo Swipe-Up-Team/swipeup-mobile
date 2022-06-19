@@ -1,77 +1,82 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { dispatch } from '@src/common'
 import { NavigationBar } from '@src/components'
-import { ExtraNotification } from '@src/models/notification'
-import React from 'react'
-import { FlatList, Text, View } from 'react-native'
+import { Notification } from '@src/models'
+import { notificationService } from '@src/services'
+import { onSetLastSeenNotification } from '@src/store/reducers/notification-reducer'
+import { Spinner, Text } from '@ui-kitten/components'
+import { Unsubscribe } from 'firebase/firestore'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { FlatList, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NotificationCard } from './components'
 import styles from './styles'
 
-const NOTIFICATIONS: ExtraNotification[] = [
-  {
-    userId: ['1', '2'],
-    uid: 123,
-    type: 1,
-    froms: ['1', '2'],
-    postId: 'post1',
-    commentId: 34,
-    replyId: 1,
-    storyId: 2,
-    createdAt: '2017-10-10',
-    seen: 1
-  },
-  {
-    userId: ['1', '2'],
-    uid: 13,
-    type: 1,
-    froms: ['1', '2'],
-    postId: 'post1',
-    commentId: 34,
-    replyId: 1,
-    storyId: 2,
-    createdAt: '2017-10-10',
-    seen: 1
-  },
-  {
-    userId: ['1', '2'],
-    uid: 12,
-    type: 1,
-    froms: ['1', '2'],
-    postId: 'post1',
-    commentId: 34,
-    replyId: 1,
-    storyId: 2,
-    createdAt: '2017-10-10',
-    seen: 1
-  },
-  {
-    userId: ['1', '2'],
-    uid: 23,
-    type: 1,
-    froms: ['1', '2'],
-    postId: 'post1',
-    commentId: 34,
-    replyId: 1,
-    storyId: 2,
-    createdAt: '2017-10-10',
-    seen: 1
-  }
-]
-
 export function NotificationsScreen() {
+  const [loading, setLoading] = useState(false)
+  const [notificationList, setNotificationList] = useState<Notification[]>([])
+
+  useEffect(() => {
+    dispatch(onSetLastSeenNotification(new Date().getTime()))
+  }, [])
+
+  const onLoadNotificationsSuccess = (result: { notifications: Notification[] }) => {
+    const newNotifications = [...notificationList, ...result.notifications]
+    setNotificationList(newNotifications)
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    let unsubscribe: Unsubscribe
+    ;(async () => {
+      setLoading(true)
+      const result = await notificationService.getList({
+        onNext: onLoadNotificationsSuccess
+      })
+      if (result) unsubscribe = result
+    })()
+
+    return () => {
+      if (unsubscribe) unsubscribe()
+    }
+  }, [])
+
+  const renderFooter = useMemo(
+    () => (
+      <View style={styles.footerContainer}>
+        <Text style={styles.footerText} appearance={'hint'}>
+          No notifications yet
+        </Text>
+      </View>
+    ),
+    []
+  )
+  const keyExtractor = useCallback(data => `${data.id}`, [])
+  const renderItem = useCallback(
+    ({ item }: { item: Notification }) => <NotificationCard notification={item} />,
+    []
+  )
+
   return (
     <SafeAreaView style={styles.rootContainer}>
-      <View style={styles.container}>
-        <NavigationBar showLeftIcon={false} title="Notifications" />
+      <NavigationBar showLeftIcon={false} title="Notifications" />
+      {loading ? (
+        <View style={styles.emptyContainer}>
+          <Spinner />
+        </View>
+      ) : (
         <FlatList
-          data={NOTIFICATIONS}
-          bounces={false}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => <NotificationCard key={item.uid} notification={item} />}
+          data={notificationList}
+          style={styles.listContainer}
+          contentContainerStyle={styles.contentContainer}
+          ListFooterComponent={renderFooter}
+          showsVerticalScrollIndicator={true}
+          keyExtractor={keyExtractor}
+          renderItem={renderItem}
         />
-        <Text style={styles.notiTitle}>New</Text>
-
-        <Text style={styles.notiTitle}>Earlier</Text>
-      </View>
+      )}
+      {/* <Text style={styles.notiTitle}>New</Text>
+        <Text style={styles.notiTitle}>Earlier</Text> */}
     </SafeAreaView>
   )
 }

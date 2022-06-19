@@ -3,10 +3,11 @@ import { RouteProp, useRoute } from '@react-navigation/native'
 import { getState } from '@src/common'
 import { NavigationBar } from '@src/components'
 import { CommentInput } from '@src/components/comment-input'
-import { CommentPayload, CommentResponseData } from '@src/models'
+import { NotificationParentTypes, NotificationSeenType, NotificationTypes } from '@src/constants'
+import { CommentPayload, CommentResponseData, Notification } from '@src/models'
 import { goBack } from '@src/navigation/navigation-service'
 import { APP_SCREEN, RootStackParamList } from '@src/navigation/screen-types'
-import { commentService } from '@src/services'
+import { commentService, notificationService } from '@src/services'
 import { Spinner } from '@ui-kitten/components'
 import { Unsubscribe } from 'firebase/firestore'
 import React, { useEffect, useRef, useState } from 'react'
@@ -19,9 +20,25 @@ export function PostDetailScreen() {
   const commentListRef = useRef<FlatList<CommentResponseData>>(null)
 
   const route = useRoute<RouteProp<RootStackParamList, APP_SCREEN.POST_DETAILS>>()
-  const { user } = getState('user')
   const [loading, setLoading] = useState(true)
   const [comments, setComments] = useState<CommentResponseData[]>([])
+  const { user } = getState('user')
+
+  const saveNoti = async () => {
+    if (!user) return
+
+    const noti: Notification = {
+      userId: user.id,
+      activityType: NotificationTypes.SomeoneCommentToYourPost,
+      sourceId: route.params.postId,
+      parentId: user.id,
+      parentType: NotificationParentTypes.Post,
+      seen: NotificationSeenType.No,
+      createdAt: new Date().getTime()
+    }
+    await notificationService.saveNotificationToFirestore(noti)
+    await notificationService.sendPushNotification(noti)
+  }
 
   const handleAddComment = async (text: string) => {
     try {
@@ -37,6 +54,8 @@ export function PostDetailScreen() {
     } catch (error) {
       console.log(error)
     }
+
+    saveNoti()
   }
 
   const onLoadCommentsSuccess = (result: { comments: CommentResponseData[] }) => {

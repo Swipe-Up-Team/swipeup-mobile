@@ -21,7 +21,8 @@ export const postService = {
   createNew: async (creator: User, post: Partial<PostPayload>) => {
     const editedPost: Partial<PostPayload> = {
       ...post,
-      creator: doc(firestore, `${FIRESTORE_ENDPOINT.USERS}/${creator.id}`)
+      creator: doc(firestore, `${FIRESTORE_ENDPOINT.USERS}/${creator.id}`),
+      authorId: creator.id
     }
     try {
       const result = await addDoc(collection(firestore, FIRESTORE_ENDPOINT.POSTS), editedPost)
@@ -70,16 +71,14 @@ export const postService = {
       const queryRef = pagination.startAfter
         ? query(
             postsRef,
-            // TODO: change to in [followingIDs]
-            where('authorId', '==', 'Wx2OS5Iq2lWaQZV1ne6ob8qh3At2'),
+            where('authorId', 'in', (user.followingIDs || []).concat([user.id])),
             orderBy('createdAt', 'desc'),
             limit(pagination?.limit || 10),
             startAfter(pagination.startAfter)
           )
         : query(
             postsRef,
-            // TODO: change to in [followingIDs]
-            where('authorId', '==', 'Wx2OS5Iq2lWaQZV1ne6ob8qh3At2'),
+            where('authorId', 'in', (user.followingIDs || []).concat([user.id])),
             orderBy('createdAt', 'desc'),
             limit(pagination?.limit || 10)
           )
