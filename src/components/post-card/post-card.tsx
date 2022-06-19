@@ -50,7 +50,7 @@ const PostCardComponent = ({ post, preview = false }: PostCardProps) => {
   const saveNoti = async () => {
     if (!user) return
 
-    const noti: Notification = {
+    const noti: Omit<Notification, 'id'> = {
       userId: user.id,
       activityType: NotificationTypes.SomeoneReactYourPost,
       sourceId: post.id,
@@ -69,7 +69,7 @@ const PostCardComponent = ({ post, preview = false }: PostCardProps) => {
     await postService.likePost(post.id, _isLiked)
     if (_isLiked) saveNoti()
   }
-  const debouncedLikePost = useRef(debounce(handleUpdateLikeOfPost, 300)).current
+  const debouncedLikePost = useRef(debounce(handleUpdateLikeOfPost, 500)).current
 
   const handleLikePress = async () => {
     const _isLiked = !isLiked

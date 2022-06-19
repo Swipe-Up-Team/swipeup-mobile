@@ -54,6 +54,15 @@ export const AppContainer = () => {
   }, [showDialog])
 
   useEffect(() => {
+    if (firstAccess && !canAccess) {
+      return
+    }
+
+    if (firstAccess) {
+      setFirstAccess(false)
+      return
+    }
+
     if (canAccess && !firstAccess) {
       Toast.show({
         type: 'success',
@@ -65,8 +74,6 @@ export const AppContainer = () => {
         text1: 'You are currently offline.'
       })
     }
-
-    if (firstAccess) setFirstAccess(false)
   }, [canAccess])
 
   const notificationListener = useRef<Subscription>()

@@ -65,10 +65,6 @@ const HomeScreenComponent = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity onPress={() => dispatch(onSetToken())}>
-        <Text>Logout</Text>
-      </TouchableOpacity>
-
       <PostFlatList
         posts={posts}
         hasMoreToLoad={hasMoreToLoad}
