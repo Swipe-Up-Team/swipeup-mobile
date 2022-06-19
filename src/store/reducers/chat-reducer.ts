@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { SLICE_NAME } from '@src/constants/enums'
-import { Conversation, Message } from '@src/models'
+import { Conversation } from '@src/models'
 
 export interface ListConversationState {
   // loading: boolean;

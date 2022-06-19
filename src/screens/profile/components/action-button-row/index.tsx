@@ -2,7 +2,8 @@ import { useSelector } from '@src/common'
 import { MessageProfileIcon, PersonAddIcon, PersonDoneIcon } from '@src/components'
 import { APP_SCREEN } from '@src/navigation/screen-types'
 import { userService } from '@src/services'
-import { Button, Spinner } from '@ui-kitten/components'
+import { chatService } from '@src/services/chat-service'
+import { Button } from '@ui-kitten/components'
 import { cloneDeep } from 'lodash'
 import React, { useState } from 'react'
 import { Text, View } from 'react-native'
@@ -11,6 +12,9 @@ import styles from './styles'
 export const ActionButtonRow = ({ navigation, currentUser }: any) => {
   const { user } = useSelector(x => x.user)
   const [loading, setLoading] = useState(false)
+  const conversationId = useSelector(
+    x => x.chat.conversations.find(x => x.userIds.includes(currentUser.id))?.id
+  )
 
   const handleToggleFollowBtn = async () => {
     setLoading(true)
@@ -30,9 +34,15 @@ export const ActionButtonRow = ({ navigation, currentUser }: any) => {
     setLoading(false)
   }
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
+    let key = conversationId
+
+    if (!key) {
+      key = await chatService.createNewConversation(user?.id!, currentUser.id)
+    }
+
     navigation.push(APP_SCREEN.CHAT_ROOM, {
-      conversationId: undefined,
+      conversationId: key,
       friend: currentUser
     })
   }

@@ -11,7 +11,7 @@ import { Message, User } from '@src/models'
 import { defaultUser, USERIDS_DIVIDER, defaultMessage } from '@src/constants'
 import { userService } from '@src/services'
 
-const SenderName = (prop: any) => <Text {...prop}>Sender Name</Text>
+// const SenderName = (prop: any) => <Text {...prop}>Sender Name</Text>
 
 const RightSection = ({ time, ...props }: any) => (
   <View style={styles.rightContainer}>
@@ -27,6 +27,8 @@ const Conversation = ({ conversation, ...props }: any) => {
 
   const [friend, setFriend] = useState<User>(defaultUser)
   const [lastedMessage, setLastedMessage] = useState<Message>(defaultMessage)
+
+  // console.log('conversation: ', conversation.messages.length)
 
   const navigateToChatRoom = () => {
     navigate(APP_SCREEN.CHAT_ROOM, {
@@ -54,7 +56,7 @@ const Conversation = ({ conversation, ...props }: any) => {
 
     getConversationInfo()
     getLastedMessage()
-  }, [])
+  }, [conversation])
 
   return (
     <ListItem

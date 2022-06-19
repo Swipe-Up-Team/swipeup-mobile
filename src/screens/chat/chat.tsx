@@ -1,8 +1,8 @@
-import {ChatSearchIcon} from '@components/icons'
+import { ChatSearchIcon } from '@components/icons'
 import { DismissKeyboardView } from '@src/components/HOCs'
-import { Icon, Input, Layout, TabView, Tab } from '@ui-kitten/components'
-import React, { useEffect, useRef, useState } from 'react'
-import { View, Text } from 'react-native'
+import { Input, Layout } from '@ui-kitten/components'
+import React, { useState } from 'react'
+import { View } from 'react-native'
 import TabViewSection from './components/tabs-section'
 import styles from './styles'
 
@@ -19,7 +19,7 @@ export const ChatScreen = () => {
           value={searchText}
           onChangeText={nextValue => setSearchText(nextValue)}
         />
-        <View style={styles.friendOnlineContainer}></View>
+        <View style={styles.friendOnlineContainer} />
         <View style={styles.mainChatContainer}>
           <TabViewSection />
         </View>

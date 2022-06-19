@@ -3,29 +3,20 @@ import { RouteProp, useRoute } from '@react-navigation/native'
 import { APP_SCREEN, AuthorizeParamsList } from '@src/navigation/screen-types'
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './styles'
-import {
-  BackIcon,
-  ChatActionIcon,
-  DismissKeyboardView,
-  MicIcon,
-  PaperPlaneIcon,
-  PlusIcon,
-  XIcon
-} from '@src/components'
+import { BackIcon, ChatActionIcon, MicIcon, PaperPlaneIcon, PlusIcon, XIcon } from '@src/components'
 import { KeyboardAvoidingView, Platform, View } from 'react-native'
 import { Input, List, ListItem, Button } from '@ui-kitten/components'
 import { shortenConversationText } from '@src/utils'
 import ChatAvatar from '../chat/components/chat-avatar'
 import { ChoseAsset } from '../add-post/components'
 import { getState, useArray, useSelector } from '@src/common'
-import { Conversation, Message, User } from '@src/models'
+import { Message, User } from '@src/models'
 import * as MediaLibrary from 'expo-media-library'
 import SentMessage from './components/message/sent-message'
 import ReceivedMessage from './components/message/received-message'
 import { chatService } from '@src/services/chat-service'
 import { navigate } from '@src/navigation/navigation-service'
-import { defaultUser, USERIDS_DIVIDER } from '@src/constants'
-import { storageService } from '@src/services'
+import { USERIDS_DIVIDER } from '@src/constants'
 import TypingMessage from './components/message/typing-message'
 
 const RightSection = () => (
@@ -95,15 +86,6 @@ export const ChatRoomScreen = (props: any) => {
     }
   }
 
-  const sendMessage = async () => {
-    // send
-    if (selectedAssets.length > 0) {
-      sendImageMessage()
-    } else {
-      sendTextMessage()
-    }
-  }
-
   const sendTextMessage = async () => {
     if (inputMessage.length === 0) return
 
@@ -116,8 +98,6 @@ export const ChatRoomScreen = (props: any) => {
 
     if (conversation) {
       await chatService.sendTextMessage(message, conversationId)
-    } else {
-      await chatService.createNewConversation(message, userId!, friend.id)
     }
 
     setinputMessage('')
@@ -126,6 +106,15 @@ export const ChatRoomScreen = (props: any) => {
   const sendImageMessage = async () => {
     await chatService.sendImageMessage(selectedAssets, userId!, conversationId)
     selectedAssetsActions.clear()
+  }
+
+  const sendMessage = async () => {
+    // send
+    if (selectedAssets.length > 0) {
+      sendImageMessage()
+    } else {
+      sendTextMessage()
+    }
   }
 
   const sendTypingAction = async () => {

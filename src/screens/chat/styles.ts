@@ -9,20 +9,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     paddingTop: StatusBar.currentHeight ?? 60,
-    paddingBottom: 30,
+    paddingBottom: 30
   },
   friendOnlineContainer: {
     width: '100%',
     flexDirection: 'row',
-    padding: 10,
+    padding: 10
   },
   mainChatContainer: {
     flex: 1,
-    width: '100%',
+    width: '100%'
   },
   input: {
-    width: '80%',
-  },
+    width: '80%'
+  }
 })
 
 export default styles
