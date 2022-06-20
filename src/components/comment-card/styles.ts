@@ -14,8 +14,8 @@ const styles = StyleSheet.create({
     padding: 10
   },
   commentContainer: {
-    marginVertical: 5,
-    paddingHorizontal: 5
+    marginVertical: 5
+    // paddingHorizontal: 5
   },
   commentSection: {
     marginLeft: 55

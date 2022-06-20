@@ -17,7 +17,8 @@ export const SearchItem = ({ user, navigation }: any) => {
       <ExpoFastImage
         style={styles.mainAvatar}
         source={{
-          uri: user.avatar || DEFAULT_PHOTO_URI
+          uri: user.avatar || DEFAULT_PHOTO_URI,
+          cache: 'force-cache'
         }}
       />
       <Text style={styles.nameText}>{user.name}</Text>

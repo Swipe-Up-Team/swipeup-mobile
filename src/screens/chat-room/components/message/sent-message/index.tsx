@@ -1,5 +1,5 @@
 import { View, Image } from 'react-native'
-import { Text, Avatar, IconElement, Icon } from '@ui-kitten/components'
+import { Text, IconElement, Icon } from '@ui-kitten/components'
 import styles from './styles'
 import { formatDate, formatTime } from '@src/utils'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -19,7 +19,7 @@ const SentMessage = ({ message, displayDate, displayTime }: any) => {
     } else if (inputDate.getDate() === now.getDate() - 1) {
       return 'Yesterday'
     } else {
-      return formatDate(displayDate)
+      return formatDate(message.createdAt)
     }
   }
 

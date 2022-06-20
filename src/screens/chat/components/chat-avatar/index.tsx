@@ -1,7 +1,7 @@
 import { DEFAULT_PHOTO_URI } from '@src/constants'
-import { Avatar, Layout } from '@ui-kitten/components'
+import { Avatar } from '@ui-kitten/components'
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
 import styles from './styles'
 
 const ChatAvatar = ({ avatar }: any) => {
@@ -11,7 +11,7 @@ const ChatAvatar = ({ avatar }: any) => {
         style={styles.avatar}
         size="giant"
         shape="rounded"
-        source={{uri: avatar || DEFAULT_PHOTO_URI}}
+        source={{ uri: avatar || DEFAULT_PHOTO_URI, cache: 'force-cache' }}
       />
       <View style={styles.circleStatus} />
     </View>

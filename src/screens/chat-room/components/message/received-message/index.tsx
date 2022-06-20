@@ -1,12 +1,13 @@
-import { View, Image, ActivityIndicator } from 'react-native'
-import { Text, Avatar, IconElement, Icon } from '@ui-kitten/components'
+import { View, Image } from 'react-native'
+import { Text, Avatar } from '@ui-kitten/components'
 import styles from './styles'
 import { formatDate, formatTime } from '@src/utils'
-import React, { Component, useState } from 'react'
+import React, { useState } from 'react'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { LoadingView } from '../../loading-message'
+import { DEFAULT_PHOTO_URI } from '@src/constants'
 
-const ReceivedMessage = ({ message, date, displayTime, displayAvatar }: any) => {
+const ReceivedMessage = ({ message, date, displayTime, displayAvatar, friend }: any) => {
   const [isShowTime, setIsShowTime] = useState(displayTime)
   const [isLoadingImage, setIsLoadingImage] = useState(false)
 
@@ -46,7 +47,10 @@ const ReceivedMessage = ({ message, date, displayTime, displayAvatar }: any) => 
           style={displayAvatar ? styles.avatar : [styles.avatar, { opacity: 0 }]}
           size="medium"
           borderRadius={4}
-          source={require('@assets/image/img-avatar.jpg')}
+          source={{
+            uri: friend.avatar || DEFAULT_PHOTO_URI,
+            cache: 'force-cache'
+          }}
         />
 
         <View style={styles.mainContainer}>

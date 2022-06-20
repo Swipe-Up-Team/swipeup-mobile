@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { getState } from '@src/common'
 import { ChatSearchIcon } from '@src/components'
 import { User } from '@src/models'
 import { userService } from '@src/services'
@@ -10,6 +11,8 @@ import { SearchItem } from './components/search-item'
 import styles from './styles'
 
 export function SearchScreen({ navigation }: any) {
+  const userId = getState('user').user?.id
+
   const [searchText, setSearchText] = useState('')
   const [searchData, setSearchData] = useState<User[]>([])
   const [loading, setLoading] = useState(false)
@@ -17,8 +20,9 @@ export function SearchScreen({ navigation }: any) {
 
   const onSubmitSearch = async () => {
     if (!searchText) return
+
     setLoading(true)
-    const result = await userService.getUsersWithKeyWord(searchText)
+    const result = await userService.getUsersWithKeyWord(userId!, searchText)
 
     if (firstAccess) setFirstAccess(false)
 
@@ -61,7 +65,7 @@ export function SearchScreen({ navigation }: any) {
         ListEmptyComponent={ListEmptyComponent}
       />
     )
-  }, [firstAccess, loading])
+  }, [firstAccess, loading, searchData])
 
   return (
     <SafeAreaView style={styles.container}>

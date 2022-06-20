@@ -2,8 +2,7 @@ import { Dimensions, StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
-    paddingHorizontal: 5
+    justifyContent: 'center'
     // shadowColor: '#171717',
     // shadowOffset: { width: -2, height: -4 },
     // shadowOpacity: 0.08,

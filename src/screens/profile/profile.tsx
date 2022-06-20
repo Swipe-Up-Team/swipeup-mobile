@@ -23,7 +23,7 @@ export default function ProfileScreen({ navigation }: any) {
   const [allPost, setAllPost] = useState<Post[]>([])
   const [refreshing, setRefreshing] = useState(false)
 
-  const handleLoadMore = async () => {}
+  // const handleLoadMore = async () => {}
 
   const renderFooter = () => {
     // if (!loading || !hasMoreToLoad) return null
@@ -35,11 +35,11 @@ export default function ProfileScreen({ navigation }: any) {
     return null
   }
 
-  const onFollow = () => {}
+  // const onFollow = () => {}
 
-  const onUnfollow = () => {}
+  // const onUnfollow = () => {}
 
-  const onClickFollow = () => {}
+  // const onClickFollow = () => {}
 
   const getFriendUser = async () => {
     const friend = await userService.getUser(friendUserId!)
@@ -87,7 +87,9 @@ export default function ProfileScreen({ navigation }: any) {
               <Text style={styles.emailText}>{currentUser.email}</Text>
             </View>
 
-            {friendUserId && <ActionButtonRow currentUser={currentUser} navigation={navigation} />}
+            {friendUserId && friendUserId !== user?.id && (
+              <ActionButtonRow currentUser={currentUser} navigation={navigation} />
+            )}
 
             <View style={styles.extraInfoWrapper}>
               <TouchableOpacity style={styles.touch_center}>

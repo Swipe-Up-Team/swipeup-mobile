@@ -1,13 +1,11 @@
 import { User } from '@src/models'
 import { Icon } from '@ui-kitten/components'
 import React from 'react'
-import { ImageBackground, StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import ExpoFastImage from 'expo-fast-image'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { DEFAULT_BACKGROUND_URI, DEFAULT_PHOTO_URI } from '@src/constants'
-import { APP_SCREEN } from '@src/navigation/screen-types'
-import { goBack, navigate } from '@src/navigation/navigation-service'
-import { useSelector } from '@src/common'
+import { DEFAULT_PHOTO_URI } from '@src/constants'
+import { goBack } from '@src/navigation/navigation-service'
 import styles from './styles'
 
 interface Props {
@@ -46,7 +44,8 @@ export default function ProfileHeader({ user }: Props) {
           <ExpoFastImage
             style={styles.mainAvatar}
             source={{
-              uri: user?.avatar || DEFAULT_PHOTO_URI
+              uri: user?.avatar || DEFAULT_PHOTO_URI,
+              cache: 'force-cache'
             }}
           />
           {/* <View style={styles.plusIcon}>

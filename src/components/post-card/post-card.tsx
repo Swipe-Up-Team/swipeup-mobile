@@ -85,6 +85,8 @@ const PostCardComponent = ({ post, preview = false }: PostCardProps) => {
       : navigate(APP_SCREEN.POST_DETAILS, { postId: post.id }) //index is passed to scroll to the specific image on mount
 
   const handleCommentPress = () => {
+    if (route.name === APP_SCREEN.POST_DETAILS) return
+
     navigate(APP_SCREEN.POST_DETAILS, { postId: post.id })
   }
 
