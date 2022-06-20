@@ -1,7 +1,7 @@
 import { getState, useSelector } from '@src/common'
 import { USERIDS_DIVIDER } from '@src/constants'
 import { chatService } from '@src/services/chat-service'
-import { Text, Layout, TabView, Tab, List } from '@ui-kitten/components'
+import { Text, TabView, Tab, List } from '@ui-kitten/components'
 import React, { useEffect, useState } from 'react'
 import Conversation from '../conversation'
 import styles from './styles'

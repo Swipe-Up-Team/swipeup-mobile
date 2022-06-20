@@ -141,7 +141,7 @@ export const userService = {
     return snapshot.data() as User
   },
 
-  getUsersWithKeyWord: async (keyword: string) => {
+  getUsersWithKeyWord: async (currentUserId: string, keyword: string) => {
     //TODO: temp solution, will remake later
     const allUser: User[] = []
 
@@ -150,10 +150,7 @@ export const userService = {
     const querySnapshot = await getDocs(q)
     querySnapshot.forEach(doc => {
       const user = doc.data() as User
-      if (
-        user.name.toLowerCase().includes(keyword.toLowerCase()) ||
-        user.email.toLowerCase().includes(keyword.toLowerCase())
-      ) {
+      if (user.name.toLowerCase().includes(keyword.toLowerCase()) && user.id !== currentUserId) {
         allUser.push(user)
       }
     })

@@ -254,7 +254,8 @@ const FollowScreen = () => {
             <ExpoFastImage
               style={styles.avatar}
               source={{
-                uri: follwingsRenderList[selectedUnfollowIndex].avatar || DEFAULT_PHOTO_URI
+                uri: follwingsRenderList[selectedUnfollowIndex].avatar || DEFAULT_PHOTO_URI,
+                cache: 'force-cache'
               }}
             />
             <Text
@@ -441,7 +442,8 @@ const FollowScreen = () => {
                       borderWidth: 0.3
                     }}
                     source={{
-                      uri: item.avatar || DEFAULT_PHOTO_URI
+                      uri: item.avatar || DEFAULT_PHOTO_URI,
+                      cache: 'force-cache'
                     }}
                   />
                   <Text

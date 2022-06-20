@@ -36,7 +36,7 @@ export const ChatRoomScreen = (props: any) => {
 
   const [conversationId, setConversationId] = useState(route.params?.conversationId)
   const [friend, setFriend] = useState<User>(route.params?.friend)
-  const [inputMessage, setinputMessage] = useState('')
+  const [inputMessage, setInputMessage] = useState('')
   const [messageList, setMessageList] = useState<Message[]>([])
   const [typingList, setTypingList] = useState<string[]>([])
   const [attachmentsMenuVisible, setAttachmentsMenuVisible] = useState<boolean>(false)
@@ -56,6 +56,12 @@ export const ChatRoomScreen = (props: any) => {
         new Date(messageList[index].createdAt).getDay() !==
           new Date(messageList[index - 1].createdAt).getDay()
       ) {
+        if (
+          index !== messageList.length - 1 &&
+          messageList[index].senderId === messageList[index + 1].senderId
+        ) {
+          return <SentMessage message={item} displayDate />
+        }
         return <SentMessage message={item} displayDate displayTime />
       } else if (index === messageList.length - 1) {
         return <SentMessage message={item} displayTime />
@@ -73,21 +79,25 @@ export const ChatRoomScreen = (props: any) => {
         return (
           <ReceivedMessage
             message={item}
+            friend={friend}
             date={messageList[index].createdAt}
             displayTime
             displayAvatar
           />
         )
       } else if (messageList[index].senderId !== messageList[index - 1].senderId) {
-        return <ReceivedMessage message={item} displayTime displayAvatar />
+        return <ReceivedMessage message={item} friend={friend} displayTime displayAvatar />
       } else {
-        return <ReceivedMessage message={item} />
+        return <ReceivedMessage message={item} friend={friend} />
       }
     }
   }
 
   const sendTextMessage = async () => {
-    if (inputMessage.length === 0) return
+    if (inputMessage.trim().length === 0) {
+      setInputMessage('')
+      return
+    }
 
     const message: Message = {
       senderId: userId!,
@@ -100,7 +110,7 @@ export const ChatRoomScreen = (props: any) => {
       await chatService.sendTextMessage(message, conversationId)
     }
 
-    setinputMessage('')
+    setInputMessage('')
   }
 
   const sendImageMessage = async () => {
@@ -227,7 +237,7 @@ export const ChatRoomScreen = (props: any) => {
                 placeholder="Message..."
                 value={inputMessage}
                 accessoryRight={MicIcon}
-                onChangeText={setinputMessage}
+                onChangeText={setInputMessage}
                 onFocus={sendTypingAction}
                 onBlur={removeTypingAction}
                 disabled={selectedAssets.length > 0}
