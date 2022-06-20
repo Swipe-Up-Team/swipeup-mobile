@@ -48,10 +48,10 @@ const PostCardComponent = ({ post, preview = false }: PostCardProps) => {
   const [totalReaction, setTotalReaction] = useState(countReaction(reacts || [], 'like'))
 
   const saveNoti = async () => {
-    if (!user) return
+    if (!user || user.id === post.authorId) return
 
     const noti: Omit<Notification, 'id'> = {
-      userId: user.id,
+      userId: post.authorId!,
       activityType: NotificationTypes.SomeoneReactYourPost,
       sourceId: post.id,
       parentId: user.id,
@@ -96,6 +96,12 @@ const PostCardComponent = ({ post, preview = false }: PostCardProps) => {
     navigate(APP_SCREEN.PROFILE, { userId: post.creator.id })
   }
 
+  const renderCommentText = () => {
+    if (!comments) return 'Comment'
+    if (comments > 1) return `${comments} Comments`
+    return '1 Comment'
+  }
+
   return (
     <View style={styles.post}>
       {post.creator ? (
@@ -132,15 +138,15 @@ const PostCardComponent = ({ post, preview = false }: PostCardProps) => {
           <PostDescription
             ref={descRef}
             desc={text}
-            showFull={route.name === 'FacebookFeedPostDetails'}
+            showFull={route.name === APP_SCREEN.POST_DETAILS}
           />
         </TouchableOpacity>
       ) : null}
 
       {images && images.length > 0 && (
-        <View style={{ height: 270 }}>
+        <View style={{ height: 300 }}>
           <ImageGrid
-            style={{ height: 270, paddingHorizontal: 15 }}
+            style={{ height: 300, paddingBottom: 10 }}
             images={images}
             onPress={onPressImage}
           />
@@ -155,7 +161,7 @@ const PostCardComponent = ({ post, preview = false }: PostCardProps) => {
         >
           <LikeButton isLiked={isLiked} />
           <Text style={[styles.buttonText, { marginLeft: -5 }]}>
-            {totalReaction > 0 ? totalReaction : ' '} Like
+            {totalReaction > 0 ? totalReaction : ' '} {totalReaction > 1 ? 'Likes' : 'Like'}
           </Text>
         </TouchableOpacity>
 
@@ -165,9 +171,7 @@ const PostCardComponent = ({ post, preview = false }: PostCardProps) => {
           onPress={handleCommentPress}
         >
           <PostCommentIcon />
-          <Text style={styles.buttonText}>
-            {comments && comments > 0 ? `${comments}` : ''} Comments
-          </Text>
+          <Text style={styles.buttonText}>{renderCommentText()}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity

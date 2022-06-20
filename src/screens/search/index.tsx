@@ -4,7 +4,7 @@ import { User } from '@src/models'
 import { userService } from '@src/services'
 import { Input, List, Spinner, Text } from '@ui-kitten/components'
 import React, { useCallback, useState } from 'react'
-import { Image, View } from 'react-native'
+import { Image, KeyboardAvoidingView, Platform, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { SearchItem } from './components/search-item'
 import styles from './styles'
@@ -65,19 +65,24 @@ export function SearchScreen({ navigation }: any) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.container}>
-        <Input
-          autoFocus
-          style={styles.input}
-          placeholder="Find your friends"
-          accessoryLeft={<ChatSearchIcon />}
-          value={searchText}
-          onChangeText={nextValue => setSearchText(nextValue)}
-          onSubmitEditing={onSubmitSearch}
-        />
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoidingViewContainer}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <View style={styles.container}>
+          <Input
+            autoFocus
+            style={styles.input}
+            placeholder="Find your friends"
+            accessoryLeft={<ChatSearchIcon />}
+            value={searchText}
+            onChangeText={nextValue => setSearchText(nextValue)}
+            onSubmitEditing={onSubmitSearch}
+          />
 
-        {renderMainContent()}
-      </View>
+          {renderMainContent()}
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }

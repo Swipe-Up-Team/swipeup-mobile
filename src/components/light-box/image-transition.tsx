@@ -9,6 +9,8 @@ import { Measure } from '.'
 
 import { GestureHOC } from './gesture-hoc'
 import { styles } from './styles'
+import { dispatch } from '@src/common'
+import { onEndProcess, onStartProcess } from '@src/store/reducers/app-reducer'
 
 export interface ImageTransitionProps {
   image: Measure
@@ -23,6 +25,7 @@ const ImageTransitionComponent = forwardRef((props, ref) => {
     ref,
     () => ({
       show: (data: ImageTransitionProps) => {
+        dispatch(onStartProcess())
         setImage(data)
       }
     }),
@@ -39,6 +42,7 @@ const ImageTransitionComponent = forwardRef((props, ref) => {
 
   // function
   const onClose = () => {
+    dispatch(onEndProcess())
     setImage(null)
   }
 

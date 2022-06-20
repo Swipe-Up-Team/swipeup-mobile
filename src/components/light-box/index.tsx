@@ -3,6 +3,7 @@ import {
   Image,
   ImageLoadEventData,
   ImageSourcePropType,
+  ImageStyle,
   NativeSyntheticEvent,
   TouchableOpacity,
   useWindowDimensions,
@@ -10,7 +11,6 @@ import {
 } from 'react-native'
 
 import isEqual from 'react-fast-compare'
-// import { OnLoadEvent, Source } from 'react-native-fast-image'
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 
 import { imageTransitionRef } from './image-transition'
@@ -18,6 +18,7 @@ import { styles } from './styles'
 
 interface LightBoxProps {
   source: ImageSourcePropType | number
+  style?: ImageStyle
 }
 
 export type Measure = {
@@ -32,7 +33,7 @@ export type Measure = {
   imageOpacity: Animated.SharedValue<number>
 }
 
-const LightBoxComponent = ({ source }: LightBoxProps) => {
+const LightBoxComponent = ({ source, style }: LightBoxProps) => {
   // state
   const refRoot = useRef<View>(null)
   const [disableButton, setDisableButton] = useState<boolean>(true)
@@ -86,10 +87,22 @@ const LightBoxComponent = ({ source }: LightBoxProps) => {
           <Animated.View style={imageStyle}>
             <Image
               onLoad={onLoadedImage}
-              style={[styles.img]}
+              style={[styles.img, style]}
               source={source}
               resizeMode={'cover'}
             />
+            {/* <CachedImage
+              onLoad={onLoadedImage}
+              style={[styles.img, style]}
+              source={source}
+              resizeMode={'cover'}
+            /> */}
+            {/* <ExpoFastImage
+              onLoad={onLoadedImage}
+              style={[styles.img, style]}
+              uri={source.uri}
+              resizeMode={'cover'}
+            /> */}
           </Animated.View>
         </TouchableOpacity>
       </View>

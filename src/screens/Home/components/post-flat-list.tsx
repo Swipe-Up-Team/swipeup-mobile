@@ -8,7 +8,8 @@ import isEqual from 'react-fast-compare'
 const styles = StyleSheet.create({
   posts: {
     flex: 1,
-    marginBottom: 10
+    marginBottom: 10,
+    paddingHorizontal: 15
   },
   spinnerContainer: { height: 40, width: '100%', alignItems: 'center' },
   footerContainer: {
@@ -78,10 +79,10 @@ const PostFlatListComponent = ({
       ListHeaderComponent={<AddPostCard />}
       // try to optimize performance
       // removeClippedSubviews={true}
-      initialNumToRender={5}
-      maxToRenderPerBatch={1}
-      updateCellsBatchingPeriod={100}
-      windowSize={10}
+      // initialNumToRender={5}
+      // maxToRenderPerBatch={1}
+      // updateCellsBatchingPeriod={100}
+      // windowSize={10}
     />
   )
 }

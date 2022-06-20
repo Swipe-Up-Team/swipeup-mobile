@@ -1,15 +1,15 @@
 import { Text } from '@ui-kitten/components'
 import React, { useRef, useState } from 'react'
-import { View } from 'react-native'
-
-import { CommentResponseData } from '@src/models'
-import styles from './styles'
-import { TouchableOpacity } from 'react-native'
-import { UserAvatarSquare } from '../user-avatar-square'
+import { View, TouchableOpacity } from 'react-native'
 import { formatDistanceToNow } from 'date-fns'
-import { getState } from '@src/common'
-import { LikeButton } from '../like-button'
 import debounce from 'lodash/debounce'
+
+import { getState } from '@src/common'
+import { CommentResponseData } from '@src/models'
+import { countReaction } from '@src/utils'
+import { LikeButton } from '../like-button'
+import { UserAvatarSquare } from '../user-avatar-square'
+import styles from './styles'
 
 export const CommentCard = ({
   item,
@@ -29,6 +29,7 @@ export const CommentCard = ({
     })
     return liked
   })
+  const [totalReaction, setTotalReaction] = useState(countReaction(item.reacts || [], 'like'))
 
   const debouncedLikePost = useRef(debounce(onLikeComment, 300)).current
 
@@ -39,6 +40,7 @@ export const CommentCard = ({
   const handleLikePress = async () => {
     const newLikes = !isLiked
     setIsLiked(newLikes)
+    setTotalReaction(newLikes ? totalReaction + 1 : totalReaction - 1)
     handleLikeCommentPress(item.id, newLikes)
   }
 
@@ -58,7 +60,9 @@ export const CommentCard = ({
         <View style={styles.row}>
           <TouchableOpacity style={[styles.row, styles.actionContainer]} onPress={handleLikePress}>
             <LikeButton isLiked={isLiked} />
-            <Text style={[styles.lightText, { marginLeft: -5 }]}> Like</Text>
+            <Text style={[styles.lightText, { marginLeft: -5 }]}>
+              {totalReaction > 0 ? totalReaction : ' '} {totalReaction > 1 ? 'Likes' : 'Like'}
+            </Text>
           </TouchableOpacity>
           {/* <TouchableOpacity onPress={onSharePress} style={[styles.row, styles.actionContainer]}>
             <CommentReplyIcon />

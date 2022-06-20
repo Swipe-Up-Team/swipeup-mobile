@@ -1,6 +1,6 @@
 import { getState } from '@src/common'
 import { firestore } from '@src/config'
-import { FIRESTORE_ENDPOINT, NotificationTypes } from '@src/constants'
+import { FIRESTORE_ENDPOINT, NotificationParentTypes, NotificationTypes } from '@src/constants'
 import { Notification, NotificationPayload } from '@src/models'
 import { APP_SCREEN, AuthorizeParamsList } from '@src/navigation/screen-types'
 import * as Device from 'expo-device'
@@ -109,9 +109,13 @@ export const notificationService = {
     return onSnapshot(queryRef, async docSnapshot => {
       const promises = docSnapshot.docs.map(async _doc => {
         const parentType = _doc.data().parentType
+        console.log(
+          '🚀 ~ file: notification-services.ts ~ line 112 ~ getList: ~ parentType',
+          parentType
+        )
 
         switch (parentType) {
-          case 'post':
+          case NotificationParentTypes.Post:
             const post = await getDoc(
               doc(firestore, FIRESTORE_ENDPOINT.USERS, _doc.data().parentId)
             )
@@ -119,6 +123,21 @@ export const notificationService = {
               ..._doc.data(),
               id: _doc.id,
               postInfo: post
+            }
+          case NotificationParentTypes.Comment:
+            const comment = await getDoc(
+              doc(
+                firestore,
+                FIRESTORE_ENDPOINT.USERS,
+                _doc.data().sourceId,
+                FIRESTORE_ENDPOINT.COMMENTS,
+                _doc.data().parentId
+              )
+            )
+            return {
+              ..._doc.data(),
+              id: _doc.id
+              // postInfo: post
             }
 
           default:

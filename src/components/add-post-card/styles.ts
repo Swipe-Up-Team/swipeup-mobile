@@ -7,8 +7,7 @@ const styles = StyleSheet.create({
     borderColor: '#F5F2F2',
     borderStyle: 'solid',
     backgroundColor: '#fff',
-    marginTop: 40,
-    marginHorizontal: 15
+    marginTop: 40
   },
   postToolWrapper: {
     padding: 10,

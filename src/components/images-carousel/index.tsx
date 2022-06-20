@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 import { Dimensions, View } from 'react-native'
 import { Image } from 'react-native-expo-image-cache'
 import Carousel, { AdditionalParallaxProps, Pagination } from 'react-native-snap-carousel'
+import { LightBox } from '../light-box'
 
 import styles from './styles'
 

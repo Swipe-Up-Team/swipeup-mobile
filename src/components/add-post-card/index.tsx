@@ -42,7 +42,7 @@ const AddPostCardComponent = () => {
           <View style={styles.postInput}>
             {/* TODO: change to user's name */}
             <Text appearance="hint" style={styles.postInputPlaceholder}>
-              What's on your mind, Khoa?
+              What's on your mind?
             </Text>
           </View>
         </TouchableOpacity>

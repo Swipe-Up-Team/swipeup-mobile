@@ -17,6 +17,7 @@ import { dispatch, RXStore } from '@src/common/redux'
 import { hideLoading, ProgressDialog, showLoading } from '@src/components/progress-dialog'
 import { notificationService } from '@src/services'
 import { onSetExpoPushToken } from '@src/store/reducers/notification-reducer'
+import { ImageTransition } from '@src/components/light-box/image-transition'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -119,7 +120,7 @@ export const AppContainer = () => {
             <RootNavigation token={token} />
             <ProgressDialog />
             <Toast position="bottom" bottomOffset={80} />
-            {/* <ImageTransition /> */}
+            <ImageTransition />
           </>
         )}
         <RXStore />

@@ -14,7 +14,8 @@ const styles = StyleSheet.create({
     padding: 10
   },
   commentContainer: {
-    marginVertical: 5
+    marginVertical: 5,
+    paddingHorizontal: 5
   },
   commentSection: {
     marginLeft: 55
@@ -50,7 +51,6 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   actionContainer: {
-    margin: 10,
     marginLeft: -10
   }
 })
