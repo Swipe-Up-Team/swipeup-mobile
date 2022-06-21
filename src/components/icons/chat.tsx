@@ -19,6 +19,10 @@ export const PinIcon = (style: ImageStyle): IconElement => <Icon {...style} name
 
 export const PlusIcon = (style: any): IconElement => <Icon {...style} name="plus" />
 
+export const SentIcon = (style: any): IconElement => (
+  <Icon {...style} style={{ width: 15, height: 15 }} name="done-all-outline" fill="#000" />
+)
+
 export const XIcon = ({ onPress, ...style }: any): IconElement => (
   <TouchableOpacity onPress={onPress}>
     <Icon {...style} name="close-outline" />
