@@ -121,7 +121,7 @@ export function NotificationCard({ notification }: { notification: Notification 
           }
           break
         case NotificationTypes.SomeoneReactYourComment:
-          previewObj = (await userService.getUser(notification.parentId)) as User
+          previewObj = (await userService.getUser(notification.userId)) as User
           if (previewObj) {
             setPreview(previewObj)
           }

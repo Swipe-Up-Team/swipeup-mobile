@@ -9,7 +9,8 @@ export enum NotificationTypes {
   SomeoneTagYouOnPostOfSomeone = 8
 }
 export enum NotificationParentTypes {
-  Post
+  Post,
+  Comment
 }
 export enum NotificationSeenType {
   No,

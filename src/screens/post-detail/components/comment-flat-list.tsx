@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { CommentCard } from '@src/components'
-import { CommentResponseData } from '@src/models'
+import { CommentCard, PostCard } from '@src/components'
+import { CommentResponseData, Post } from '@src/models'
 import React, { forwardRef, memo, useCallback } from 'react'
 import isEqual from 'react-fast-compare'
 import { FlatList } from 'react-native'
@@ -9,12 +9,13 @@ import { EmptyComment } from './empty-comment'
 
 export interface CommentFlatListComponentProps {
   comments: CommentResponseData[]
+  postDetails?: Post
   onLikeComment: (commentId: string, isLiked: boolean) => void
 }
 
 const CommentFlatListComponent = forwardRef(
   (
-    { comments, onLikeComment }: CommentFlatListComponentProps,
+    { comments, onLikeComment, postDetails }: CommentFlatListComponentProps,
     ref: React.ForwardedRef<FlatList>
   ) => {
     const renderItem = useCallback(
@@ -40,6 +41,7 @@ const CommentFlatListComponent = forwardRef(
         contentContainerStyle={styles.commentsContentContainer}
         style={styles.commentListContainer}
         keyExtractor={keyExtractor}
+        ListHeaderComponent={postDetails ? <PostCard post={postDetails} /> : null}
         ListEmptyComponent={ListEmptyComponent}
         renderItem={renderItem}
         onContentSizeChange={() => ref?.current && ref?.current.scrollToEnd()}

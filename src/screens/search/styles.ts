@@ -10,6 +10,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingBottom: 30
   },
+  keyboardAvoidingViewContainer: {
+    height: getRealDimensionsHeight(),
+    width: '100%'
+  },
   spinnerContainer: {
     alignItems: 'center',
     justifyContent: 'center',

@@ -8,7 +8,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   header: {
-    padding: 15,
     paddingVertical: 8,
     backgroundColor: '#fff',
     justifyContent: 'space-between'
@@ -39,7 +38,6 @@ const styles = StyleSheet.create({
   },
   descriptionContainer: {
     marginBottom: 15,
-    paddingHorizontal: 15,
     backgroundColor: '#fff'
   },
   image: {
@@ -47,7 +45,6 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   reactionsContainer: {
-    top: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -68,11 +65,9 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginHorizontal: 15
+    justifyContent: 'space-between'
   },
   buttonContainer: {
-    padding: 10,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'

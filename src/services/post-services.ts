@@ -32,6 +32,29 @@ export const postService = {
     }
   },
 
+  getSinglePostById: async (id: string) => {
+    const docRef = doc(firestore, FIRESTORE_ENDPOINT.POSTS, id)
+    const docSnapshot = await getDoc(docRef)
+
+    const commentsRef = collection(
+      firestore,
+      FIRESTORE_ENDPOINT.POSTS,
+      docSnapshot.id,
+      FIRESTORE_ENDPOINT.COMMENTS
+    )
+    const creatorDocRef = docSnapshot.data()?.creator
+
+    const commentDocs = await getDocs(query(commentsRef))
+    const creator = await getDoc(creatorDocRef)
+
+    return {
+      id: docSnapshot.id,
+      ...docSnapshot.data(),
+      comments: commentDocs.size,
+      creator: creator.data()
+    } as unknown as Post
+  },
+
   likePost: async (postId: string, _isLiked: boolean) => {
     const { user } = getState('user')
     if (!user) return

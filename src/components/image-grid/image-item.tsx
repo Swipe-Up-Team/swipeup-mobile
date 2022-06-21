@@ -16,6 +16,7 @@ export const ImageItem = ({ image, index, onPress }: ImageItemProps) => {
       onPress={event => onPress(image, index, event)}
     >
       <Image style={styles.image} uri={image} />
+      {/* <LightBox source={{ uri: image }} style={styles.image} /> */}
     </TouchableOpacity>
   ) : (
     <View />

@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
     width: 44,
     justifyContent: 'center',
     alignItems: 'center'
-    // backgroundColor: 'red'
   },
   titleContainer: {
     position: 'absolute',

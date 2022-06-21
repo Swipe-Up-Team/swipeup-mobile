@@ -15,7 +15,7 @@ const HomeScreenComponent = () => {
   const [hasMoreToLoad, setHasMoreToLoad] = useState(true)
   const [pagination, setPagination] = useState<FirebasePagination>({
     page: 1,
-    limit: 4
+    limit: 10
   })
 
   const onLoadPostsSuccess = (result: { posts: any; lastDoc: any; isLast: any }) => {
@@ -65,10 +65,6 @@ const HomeScreenComponent = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* <TouchableOpacity onPress={() => dispatch(onSetToken())}>
-        <Text>Logout</Text>
-      </TouchableOpacity> */}
-
       <PostFlatList
         posts={posts}
         hasMoreToLoad={hasMoreToLoad}

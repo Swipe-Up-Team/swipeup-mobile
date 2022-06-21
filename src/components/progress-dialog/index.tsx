@@ -8,11 +8,14 @@ import { useTheme } from '@src/themes'
 
 import { styles } from './styles'
 
+import { Spinner as KTSpinner } from '@ui-kitten/components'
+
 const Spinner = memo(() => {
   // state
   const theme = useTheme()
   // render
-  return <ActivityIndicator color={theme.colors.background} size={'large'} />
+  // return <ActivityIndicator color={theme.colors.background} size={'large'} />
+  return <KTSpinner status="control" size={'medium'} />
 }, isEqual)
 
 const ProgressDialogComponent = forwardRef((_, ref) => {

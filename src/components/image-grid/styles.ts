@@ -12,8 +12,7 @@ const styles = StyleSheet.create({
   },
 
   image_view: {
-    flex: 1,
-    margin: 1
+    flex: 1
   },
 
   image: {

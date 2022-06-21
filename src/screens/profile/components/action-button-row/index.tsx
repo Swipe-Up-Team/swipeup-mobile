@@ -1,7 +1,7 @@
 import { useSelector } from '@src/common'
 import { MessageProfileIcon, PersonAddIcon, PersonDoneIcon } from '@src/components'
 import { APP_SCREEN } from '@src/navigation/screen-types'
-import { userService } from '@src/services'
+import { notificationService, userService } from '@src/services'
 import { chatService } from '@src/services/chat-service'
 import { Button } from '@ui-kitten/components'
 import { cloneDeep } from 'lodash'
