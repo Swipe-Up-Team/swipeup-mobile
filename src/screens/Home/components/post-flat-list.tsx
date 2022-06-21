@@ -25,17 +25,22 @@ const styles = StyleSheet.create({
 export interface PostFlatListComponentProps {
   posts: Post[]
   hasMoreToLoad: boolean
+  navigation: any
   onLoadMore: () => void
   onRefresh: () => void
 }
 const PostFlatListComponent = ({
   posts,
   hasMoreToLoad,
+  navigation,
   onLoadMore,
   onRefresh
 }: PostFlatListComponentProps) => {
   const [refreshing, setRefreshing] = useState(false)
-  const renderItem = useCallback(({ item }: { item: Post }) => <PostCard post={item} />, [])
+  const renderItem = useCallback(
+    ({ item }: { item: Post }) => <PostCard post={item} navigation={navigation} />,
+    [navigation]
+  )
   const keyExtractor = useCallback(data => `${data.id}`, [])
 
   const renderFooter = useMemo(() => {

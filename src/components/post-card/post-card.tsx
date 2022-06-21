@@ -25,9 +25,10 @@ import styles from './styles'
 export interface PostCardProps {
   post: PostType
   preview?: boolean
+  navigation: any
 }
 
-const PostCardComponent = ({ post, preview = false }: PostCardProps) => {
+const PostCardComponent = ({ post, preview = false, navigation }: PostCardProps) => {
   const {
     comments,
     content: { text, images },
@@ -95,7 +96,11 @@ const PostCardComponent = ({ post, preview = false }: PostCardProps) => {
   }
 
   const onPressPost = () => {
-    navigate(APP_SCREEN.PROFILE, { userId: post.creator.id })
+    if (post.creator.id === user?.id) {
+      navigate(APP_SCREEN.PROFILE, { userId: post.creator.id })
+    } else {
+      navigation.push(APP_SCREEN.PROFILE, { userId: post.creator.id })
+    }
   }
 
   const renderCommentText = () => {
