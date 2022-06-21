@@ -64,7 +64,7 @@ export type AuthorizeParamsList = {
   }
   [APP_SCREEN.EDIT_PROFILE]: undefined
   [APP_SCREEN.FOLLOWING]: {
-    userId?: string
+    user: User
   }
 }
 

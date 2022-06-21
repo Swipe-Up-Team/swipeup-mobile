@@ -3,8 +3,6 @@ import ExpoFastImage from 'expo-fast-image'
 import { DEFAULT_PHOTO_URI } from '@src/constants'
 import { TouchableOpacity, Text } from 'react-native'
 import styles from './styles'
-import { User } from '@src/models'
-import { navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN } from '@src/navigation/screen-types'
 
 export const SearchItem = ({ user, navigation }: any) => {

@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import Conversation from '../conversation'
 import styles from './styles'
 
-const TabTitle = ({ text, ...props }: any) => (
+export const TabTitle = ({ text, ...props }: any) => (
   <Text {...props} style={[props!.style, { marginTop: 10 }]}>
     {text}
   </Text>

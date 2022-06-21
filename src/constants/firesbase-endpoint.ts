@@ -4,7 +4,8 @@ export const FIRESTORE_ENDPOINT = {
   COMMENTS: 'comments',
   REACTIONS: 'reacts',
   NOTIFICATIONS: 'notifications',
-  EXPO_PUSH_TOKEN: 'expo_push_token'
+  EXPO_PUSH_TOKEN: 'expo_push_token',
+  USER_FOLLOWINGIDS: 'followingIDs'
 }
 
 export const REALTIMEDB_ENDPOINT = {
