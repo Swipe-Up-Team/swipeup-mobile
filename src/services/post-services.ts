@@ -14,6 +14,7 @@ import {
   orderBy,
   query,
   startAfter,
+  updateDoc,
   where
 } from 'firebase/firestore'
 
@@ -21,11 +22,33 @@ export const postService = {
   createNew: async (creator: User, post: Partial<PostPayload>) => {
     const editedPost: Partial<PostPayload> = {
       ...post,
+      createdAt: new Date().getTime(),
+      updatedAt: new Date().getTime(),
       creator: doc(firestore, `${FIRESTORE_ENDPOINT.USERS}/${creator.id}`),
       authorId: creator.id
     }
     try {
       const result = await addDoc(collection(firestore, FIRESTORE_ENDPOINT.POSTS), editedPost)
+      return result
+    } catch (error) {
+      console.log(error)
+    }
+  },
+  updatePost: async (post: Partial<PostPayload>) => {
+    const editedPost: Partial<PostPayload> = {
+      ...post,
+      updatedAt: new Date().getTime()
+    }
+    try {
+      const result = await updateDoc(doc(firestore, FIRESTORE_ENDPOINT.POSTS, post.id!), editedPost)
+      return result
+    } catch (error) {
+      console.log(error)
+    }
+  },
+  deletePost: async (postId: string) => {
+    try {
+      const result = await deleteDoc(doc(firestore, FIRESTORE_ENDPOINT.POSTS, postId))
       return result
     } catch (error) {
       console.log(error)

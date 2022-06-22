@@ -17,18 +17,20 @@ const styles = StyleSheet.create({
     marginVertical: 5
     // paddingHorizontal: 5
   },
-  commentSection: {
-    marginLeft: 55
+  innerContainer: {
+    flexDirection: 'row'
   },
-  imageContainer: {
-    height: 40,
-    width: 40,
-    borderRadius: 5,
-    overflow: 'hidden'
+  commentSection: {
+    backgroundColor: '#fafafa',
+    marginLeft: 8,
+    paddingLeft: 8,
+    paddingRight: 28,
+    paddingBottom: 8,
+    borderRadius: 6
   },
   userInfo: {
-    marginLeft: 15,
-    marginTop: 5
+    height: 40,
+    justifyContent: 'center'
   },
   creatorName: {
     fontSize: 13,
@@ -40,7 +42,8 @@ const styles = StyleSheet.create({
   },
   comment: {
     fontSize: 13,
-    lineHeight: 16
+    lineHeight: 16,
+    marginRight: 20
   },
   lightText: {
     fontSize: 13,
@@ -51,7 +54,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   actionContainer: {
-    marginLeft: -10
+    paddingLeft: 40
   }
 })
 export default styles

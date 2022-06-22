@@ -94,7 +94,13 @@ const PostCardComponent = ({ post, preview = false }: PostCardProps) => {
     alert('Share')
   }
 
-  const onPressPost = () => {
+  const handleOptionsPress = () => {
+    navigate(APP_SCREEN.POST_OPTIONS_MODAL, {
+      post
+    })
+  }
+
+  const handleProfilePress = () => {
     navigate(APP_SCREEN.PROFILE, { userId: post.creator.id })
   }
 
@@ -108,7 +114,7 @@ const PostCardComponent = ({ post, preview = false }: PostCardProps) => {
     <View style={styles.post}>
       {post.creator ? (
         <View style={[styles.header, styles.row]}>
-          <TouchableOpacity onPress={onPressPost} style={styles.row}>
+          <TouchableOpacity onPress={handleProfilePress} style={styles.row}>
             <UserAvatarSquare uri={post.creator.avatar} />
             <View style={{ marginHorizontal: 10 }}>
               <View style={styles.row}>
@@ -125,7 +131,7 @@ const PostCardComponent = ({ post, preview = false }: PostCardProps) => {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => alert('Options')} style={styles.dots}>
+          <TouchableOpacity onPress={handleOptionsPress} style={styles.dots}>
             <DotsHorizontal width={28} height={28} />
           </TouchableOpacity>
         </View>

@@ -1,12 +1,5 @@
 import React, { useRef } from 'react'
-import {
-  Animated,
-  LayoutChangeEvent,
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-  View
-} from 'react-native'
+import { Animated, LayoutChangeEvent, SafeAreaView, TouchableOpacity, View } from 'react-native'
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
@@ -15,9 +8,10 @@ import {
 
 import { goBack } from '@src/navigation/navigation-service'
 import styles from './styles'
+import { Text } from '@ui-kitten/components'
 
 interface BottomSheetProps {
-  title: React.ReactNode
+  title: string
   children: React.ReactNode
 }
 

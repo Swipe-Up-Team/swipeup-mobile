@@ -2,7 +2,9 @@ import { Dimensions, StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center'
+    justifyContent: 'center',
+    backgroundColor: '#fafafa',
+    marginHorizontal: -5
     // shadowColor: '#171717',
     // shadowOffset: { width: -2, height: -4 },
     // shadowOpacity: 0.08,
@@ -12,19 +14,17 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     alignItems: 'center',
-    flexDirection: 'row'
-  },
-  imageContainer: {
-    height: 40,
-    width: 40,
-    borderRadius: 5,
-    overflow: 'hidden'
+    flexDirection: 'row',
+    paddingHorizontal: 5
   },
   input: {
     marginLeft: 5,
     alignItems: 'center',
     justifyContent: 'center',
     width: Dimensions.get('screen').width - 100
+  },
+  textInput: {
+    width: '100%'
   },
   sendButton: {
     opacity: 1,

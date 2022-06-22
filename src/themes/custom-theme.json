@@ -56,5 +56,7 @@
   "color-basic-900": "#1A2138",
   "color-basic-1000": "#151A30",
 
+  "text-danger-color": "#CC251C",
+
   "border-radius": 16
 }

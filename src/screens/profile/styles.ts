@@ -16,7 +16,8 @@ const styles = StyleSheet.create({
   },
   posts: {
     flex: 1,
-    marginBottom: BOTTOM_TAB_BAR_HEIGHT + 50
+    marginBottom: BOTTOM_TAB_BAR_HEIGHT + 50,
+    paddingHorizontal: 15
   },
   spinnerContainer: {
     height: 40,

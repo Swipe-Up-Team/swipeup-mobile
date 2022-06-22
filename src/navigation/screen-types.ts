@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { User } from '@src/models'
+import { Post, User } from '@src/models'
 import * as MediaLibrary from 'expo-media-library'
 
 export enum APP_SCREEN {
@@ -18,6 +18,7 @@ export enum APP_SCREEN {
 
   GALLERY_CHOOSER = 'GALLERY_CHOOSER',
   POST_STATUS_OPTIONS_MODAL = 'POST_STATUS_OPTIONS_MODAL',
+  POST_OPTIONS_MODAL = 'POST_OPTIONS_MODAL',
 
   SEARCH = 'SEARCH',
   NOTIFICATIONS = 'NOTIFICATIONS',
@@ -53,6 +54,9 @@ export type AuthorizeParamsList = {
     prevScreen?: APP_SCREEN.ADD_POST | APP_SCREEN.CHAT_ROOM
   }
   [APP_SCREEN.POST_STATUS_OPTIONS_MODAL]: undefined
+  [APP_SCREEN.POST_OPTIONS_MODAL]: {
+    post: Post
+  }
   [APP_SCREEN.CHAT]: undefined
   [APP_SCREEN.CHAT_ROOM]: {
     conversationId: string

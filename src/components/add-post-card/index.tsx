@@ -8,12 +8,12 @@ import { APP_SCREEN } from '@src/navigation/screen-types'
 import { PostPhotoIcon, PostTagFriendIcon, PostVideoIcon } from '../icons'
 import styles from './styles'
 import { UserAvatarSquare } from '../user-avatar-square'
-import { getState } from '@src/common'
+import { useSelector } from '@src/common'
 import isEqual from 'react-fast-compare'
 
 const AddPostCardComponent = () => {
   const navigation = useNavigation()
-  const { user } = getState('user')
+  const { user } = useSelector(x => x.user)
 
   const handlePhotoUploadPress = () => {
     navigation.dispatch(
@@ -40,7 +40,6 @@ const AddPostCardComponent = () => {
         </TouchableOpacity>
         <TouchableOpacity onPress={handleAddPostPress} style={styles.postInputWrapper}>
           <View style={styles.postInput}>
-            {/* TODO: change to user's name */}
             <Text appearance="hint" style={styles.postInputPlaceholder}>
               What's on your mind?
             </Text>

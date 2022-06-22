@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   titleText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '500'
   },
   titleWrapper: {
@@ -44,15 +44,19 @@ const styles = StyleSheet.create({
   },
   optionItem: {
     flexDirection: 'row',
-    height: 44,
-    justifyContent: 'space-between',
+    paddingVertical: 10,
     paddingHorizontal: 15,
     alignItems: 'center'
   },
+  optionItemIcon: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10
+  },
+  optionItemContent: {},
   optionItemText: { fontSize: 16 },
+  optionItemTextDanger: {},
   smallDescription: {
-    margin: 15,
-    color: '#666',
     fontSize: 12
   }
 })

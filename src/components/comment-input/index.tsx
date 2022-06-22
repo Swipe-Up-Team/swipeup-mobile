@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { getState } from '@src/common'
-import { Input, Spinner } from '@ui-kitten/components'
+import { Spinner } from '@ui-kitten/components'
 import React, { memo, useEffect, useState } from 'react'
 import isEqual from 'react-fast-compare'
-import { Dimensions, TouchableOpacity, View } from 'react-native'
+import { TextInput, Dimensions, TouchableOpacity, View } from 'react-native'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -46,7 +46,7 @@ const CommentInputComponent = ({ reply, onSubmit }: CommentInputComponentProps) 
     if (reply) {
       height.value = withTiming(130)
     } else {
-      height.value = withSpring(60)
+      height.value = withSpring(50)
     }
   }, [reply])
 
@@ -85,12 +85,12 @@ const CommentInputComponent = ({ reply, onSubmit }: CommentInputComponentProps) 
           <UserAvatarSquare uri={user?.avatar} />
         </TouchableOpacity>
         <Animated.View style={[styles.input, widthInputAnimatedStyle]}>
-          <Input
+          <TextInput
             multiline
             placeholder={'Add a comment...'}
             value={message}
             onChangeText={text => setMessage(text)}
-            size="medium"
+            style={styles.textInput}
           />
         </Animated.View>
         <Animated.View style={[opacitySendButtonStyle]}>

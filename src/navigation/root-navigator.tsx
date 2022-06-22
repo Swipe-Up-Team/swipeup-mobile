@@ -1,5 +1,11 @@
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
-import { AddPostScreen, ChatRoomScreen, GalleryChooserScreen, PostDetailScreen } from '@src/screens'
+import {
+  AddPostScreen,
+  ChatRoomScreen,
+  GalleryChooserScreen,
+  PostDetailScreen,
+  PostOptionsScreen
+} from '@src/screens'
 import { PostStatusOptionsScreen } from '@src/screens/post-status-options'
 import React from 'react'
 import { MainScreen } from './authen'
@@ -30,12 +36,12 @@ export const RootNavigation = ({ token }: { token?: string }) => {
           />
           <RootStack.Screen name={APP_SCREEN.CHAT_ROOM} component={ChatRoomScreen} />
           <RootStack.Screen
-            options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
+            options={{ ...TransitionPresets.ModalSlideFromBottomIOS, gestureEnabled: false }}
             name={APP_SCREEN.ADD_POST}
             component={AddPostScreen}
           />
           <RootStack.Screen
-            options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
+            options={{ ...TransitionPresets.ModalSlideFromBottomIOS, gestureEnabled: false }}
             name={APP_SCREEN.GALLERY_CHOOSER}
             component={GalleryChooserScreen}
           />
@@ -46,6 +52,14 @@ export const RootNavigation = ({ token }: { token?: string }) => {
             }}
             name={APP_SCREEN.POST_STATUS_OPTIONS_MODAL}
             component={PostStatusOptionsScreen}
+          />
+          <RootStack.Screen
+            options={{
+              ...TransitionPresets.ModalTransition,
+              cardStyle: { backgroundColor: 'transparent' }
+            }}
+            name={APP_SCREEN.POST_OPTIONS_MODAL}
+            component={PostOptionsScreen}
           />
           <RootStack.Screen name={APP_SCREEN.EDIT_PROFILE} component={EditProfile} />
           <RootStack.Screen name={APP_SCREEN.FOLLOWING} component={FollowScreen} />

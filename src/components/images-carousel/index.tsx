@@ -2,25 +2,25 @@ import React, { useRef, useState } from 'react'
 import { Dimensions, View } from 'react-native'
 import { Image } from 'react-native-expo-image-cache'
 import Carousel, { AdditionalParallaxProps, Pagination } from 'react-native-snap-carousel'
-import { LightBox } from '../light-box'
 
 import styles from './styles'
+import * as MediaLibrary from 'expo-media-library'
 
 const { width: screenWidth } = Dimensions.get('window')
 
-export const ImagesCarousel = ({ images }: { images: string[] }) => {
+export const ImagesCarousel = ({ images }: { images: MediaLibrary.Asset[] }) => {
   const [activeSlide, setActiveSlide] = useState(0)
   const carouselRef = useRef<Carousel<string>>(null)
 
   const renderItem = (
-    { item }: { item: string; index: number },
+    { item }: { item: MediaLibrary.Asset; index: number },
     parallaxProps?: AdditionalParallaxProps
   ) => {
     return (
       <View style={styles.imageContainer}>
         <Image
           // source={{ uri: item }}
-          uri={item}
+          uri={item.uri}
           // containerStyle={styles.imageContainer}
           style={styles.image}
           // parallaxFactor={0.4}
