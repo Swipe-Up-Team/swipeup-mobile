@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { RouteProp, useRoute } from '@react-navigation/native'
-import { dispatch, getState, useArray } from '@src/common'
+import { dispatch, getState, useArray, useSelector } from '@src/common'
 import {
   CloseIcon,
   NavigationBar,
@@ -12,17 +12,19 @@ import {
   UserAvatarSquare
 } from '@src/components'
 import { STORAGE_ENDPOINT } from '@src/constants'
-import { PostPayload } from '@src/models'
+import { Post, PostPayload } from '@src/models'
 import { goBack, navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN, RootStackParamList } from '@src/navigation/screen-types'
 import { storageService } from '@src/services'
 import { postService } from '@src/services/post-services'
 import { onEndProcess, onStartProcess } from '@src/store/reducers/app-reducer'
+import { clearDraftPost, onEditPostEnd, saveDraftPost } from '@src/store/reducers/post-reducer'
 import { Button, Text } from '@ui-kitten/components'
 import * as MediaLibrary from 'expo-media-library'
 import React, { memo, useEffect, useState } from 'react'
 import isEqual from 'react-fast-compare'
 import {
+  Alert,
   Animated as RNAnimated,
   Dimensions,
   FlatList,
@@ -52,9 +54,11 @@ const screenWidth = Math.round(Dimensions.get('window').width)
 const AddPostScreenComponent = () => {
   const route = useRoute<RouteProp<RootStackParamList, APP_SCREEN.ADD_POST>>()
   const { systemAssets } = getState('systemAssets')
+  const { editingId, draftPost } = useSelector(x => x.post)
   const { user } = getState('user')
   const [selectedAssets, selectedAssetsActions] = useArray<MediaLibrary.Asset>([])
   const [textPost, setTextPost] = useState('')
+  const [mode, setMode] = useState<'add' | 'edit'>()
 
   // ANIMATION VARS
   const editorWrapperHeight = useSharedValue(100)
@@ -72,6 +76,39 @@ const AddPostScreenComponent = () => {
     inputRange: [-660, 0, 660],
     outputRange: [710, 0, -610]
   })
+
+  // Change to edit mode if has postId
+  useEffect(() => {
+    console.log('🚀 ~ file: index.tsx ~ line 84 ~ ; ~ editingId', editingId)
+    ;(async () => {
+      if (editingId) {
+        setMode('edit')
+        dispatch(onStartProcess())
+
+        const postDetails = await postService.getSinglePostById(editingId)
+        const images = postDetails.content.images || []
+        selectedAssetsActions.setValue(images)
+        setTextPost(postDetails.content.text)
+
+        dispatch(onEndProcess())
+      } else {
+        setMode('add')
+
+        if (draftPost) {
+          if (draftPost.content?.text) setTextPost(draftPost.content?.text)
+          if (draftPost.content?.images) selectedAssetsActions.setValue(draftPost.content?.images)
+        }
+      }
+    })()
+  }, [editingId])
+
+  // useEffect(() => {
+  //   if (draftPost && mode === 'add') {
+  //     console.log('has draft', draftPost)
+  //     if (draftPost.content?.text) setTextPost(draftPost.content?.text)
+  //     if (draftPost.content?.images) selectedAssetsActions.setValue(draftPost.content?.images)
+  //   }
+  // }, [draftPost])
 
   const handleAddMediaPress = async () => {
     navigate(APP_SCREEN.GALLERY_CHOOSER, { selectedAssets, prevScreen: APP_SCREEN.ADD_POST })
@@ -91,34 +128,44 @@ const AddPostScreenComponent = () => {
     }
   }, [route.params?.selectedAssetIndexes])
 
-  const handleAddPostPress = async () => {
+  const handleSubmitPostPress = async () => {
     if (!user) return
 
     dispatch(onStartProcess())
 
     // upload images to firebase -> get storage url
-    const urls = await storageService.uploadMultipleFiles(selectedAssets, STORAGE_ENDPOINT.FILES)
+    const files = await storageService.uploadMultipleFiles(selectedAssets, STORAGE_ENDPOINT.FILES)
 
-    const newPost: Partial<PostPayload> = {
-      content: {
-        images: urls,
-        text: textPost.trim()
-      },
-      createdAt: new Date().getTime(),
-      updatedAt: new Date().getTime(),
-      type: '',
-      authorId: user?.id
+    if (mode === 'add') {
+      const newPost: Partial<PostPayload> = {
+        content: {
+          images: files,
+          text: textPost.trim()
+        },
+        authorId: user?.id
+      }
+      const result = await postService.createNew(user, newPost)
+
+      if (draftPost) dispatch(clearDraftPost())
+
+      if (result && route.params.onSuccess) route.params.onSuccess(result.id)
+    } else {
+      const updatedPost: Partial<PostPayload> = {
+        id: editingId,
+        content: {
+          images: files,
+          text: textPost.trim()
+        }
+      }
+      await postService.updatePost(updatedPost)
+      dispatch(onEditPostEnd())
     }
-    const result = await postService.createNew(user, newPost)
 
     dispatch(onEndProcess())
     goBack()
-
-    if (result && route.params.onSuccess) route.params.onSuccess(result.id)
   }
 
   // ANIMATION FUNCTIONS
-
   const keyboardWillShow = () => {
     _distanceTopOption.setValue(0)
     _prevTranslationY = 0
@@ -222,17 +269,52 @@ const AddPostScreenComponent = () => {
     height: editorWrapperHeight.value
   }))
 
+  // handle go back click
+  const savePostAsDraft = () => {
+    const _draftPost: Partial<Post> = {
+      content: {
+        text: textPost,
+        images: selectedAssets
+      }
+    }
+
+    dispatch(saveDraftPost(_draftPost))
+    goBack()
+  }
+
+  const handleDiscardPost = () => {
+    if (draftPost) dispatch(clearDraftPost())
+    return goBack()
+  }
+  const confirmGoBack = () => {
+    if (mode === 'edit') {
+      dispatch(onEditPostEnd())
+      return goBack()
+    }
+
+    if (!textPost && selectedAssets.length === 0) return goBack()
+
+    Alert.alert('Save this post as a draft?', "If you discard now, you'll lose this post.", [
+      { text: 'Save Draft', onPress: savePostAsDraft },
+      { text: 'Discard Post', onPress: handleDiscardPost, style: 'destructive' },
+      {
+        text: 'Keep Editing',
+        style: 'cancel'
+      }
+    ])
+  }
+
   return (
     <KeyboardAvoidingView style={styles.parentContainer} enabled behavior="height">
       <SafeAreaView style={styles.container}>
         <NavigationBar
-          title="Create Post"
-          callback={goBack}
+          title={mode === 'add' ? 'Create Post' : 'Edit Post'}
+          callback={confirmGoBack}
           iconLeft={<CloseIcon />}
           accessoryRight={
-            <TouchableOpacity style={styles.accessoryRightNavigationBar} onPress={() => {}}>
-              <Button size="small" onPress={handleAddPostPress}>
-                Post
+            <TouchableOpacity style={styles.accessoryRightNavigationBar}>
+              <Button size="small" onPress={handleSubmitPostPress}>
+                {mode === 'add' ? 'Post' : 'Edit'}
               </Button>
             </TouchableOpacity>
           }
@@ -330,82 +412,41 @@ const AddPostScreenComponent = () => {
               </TouchableOpacity>
               <TouchableOpacity onPress={() => console.log('do not thing')}>
                 <View style={styles.optionContainer}>
-                  {/* <Image
-                    style={{ ...styles.optionImage, width: 30, marginRight: 15 }}
-                    source={require('../../assets/icons/emoji.png')}
-                  ></Image> */}
                   <Text style={styles.optionText}>Emotion/Activity</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => console.log('do not thing')}>
                 <View style={styles.optionContainer}>
-                  {/* <Image
-                    style={{ ...styles.optionImage, width: 30, marginRight: 15 }}
-                    source={require('../../assets/icons/gps.png')}
-                  ></Image> */}
                   <Text style={styles.optionText}>Check in</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => console.log('do not thing')}>
                 <View style={styles.optionContainer}>
-                  {/* <Image
-                    style={{ ...styles.optionImage, width: 30, marginRight: 15 }}
-                    source={require('../../assets/icons/live-news.png')}
-                  ></Image> */}
                   <Text style={styles.optionText}>Live Stream</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => console.log('do not thing')}>
                 <View style={styles.optionContainer}>
-                  {/* <Image
-                    style={{ ...styles.optionImage, width: 30, marginRight: 15 }}
-                    source={require('../../assets/icons/photograph.png')}
-                  ></Image> */}
                   <Text style={styles.optionText}>Camera</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => console.log('do not thing')}>
                 <View style={styles.optionContainer}>
-                  {/* <Image
-                    style={{ ...styles.optionImage, width: 30, marginRight: 15 }}
-                    source={require('../../assets/icons/letter-a.png')}
-                  ></Image> */}
-                  <Text style={styles.optionText}>Background</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => console.log('do not thing')}>
-                <View style={styles.optionContainer}>
-                  {/* <Image
-                    style={{ ...styles.optionImage, width: 30, marginRight: 15 }}
-                    source={require('../../assets/icons/360-view.png')}
-                  ></Image> */}
                   <Text style={styles.optionText}>3D Image</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => console.log('do not thing')}>
                 <View style={styles.optionContainer}>
-                  {/* <Image
-                    style={{ ...styles.optionImage, width: 30, marginRight: 15 }}
-                    source={require('../../assets/icons/gif.png')}
-                  ></Image> */}
                   <Text style={styles.optionText}>File GIF</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => console.log('do not thing')}>
                 <View style={styles.optionContainer}>
-                  {/* <Image
-                    style={{ ...styles.optionImage, width: 30, marginRight: 15 }}
-                    source={require('../../assets/icons/popcorn.png')}
-                  ></Image> */}
                   <Text style={styles.optionText}>Watch together</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => console.log('do not thing')}>
                 <View style={styles.optionContainer}>
-                  {/* <Image
-                    style={{ ...styles.optionImage, width: 30, marginRight: 15 }}
-                    source={require('../../assets/icons/like.png')}
-                  ></Image> */}
                   <Text style={styles.optionText}>Request recommends</Text>
                 </View>
               </TouchableOpacity>

@@ -25,7 +25,7 @@ import styles from './styles'
 export interface PostCardProps {
   post: PostType
   preview?: boolean
-  navigation: any
+  navigation?: any
 }
 
 const PostCardComponent = ({ post, preview = false, navigation }: PostCardProps) => {
@@ -95,7 +95,13 @@ const PostCardComponent = ({ post, preview = false, navigation }: PostCardProps)
     alert('Share')
   }
 
-  const onPressPost = () => {
+  const handleOptionsPress = () => {
+    navigate(APP_SCREEN.POST_OPTIONS_MODAL, {
+      post
+    })
+  }
+
+  const handleProfilePress = () => {
     if (post.creator.id === user?.id) {
       navigate(APP_SCREEN.PROFILE, { userId: post.creator.id })
     } else {
@@ -113,7 +119,7 @@ const PostCardComponent = ({ post, preview = false, navigation }: PostCardProps)
     <View style={styles.post}>
       {post.creator ? (
         <View style={[styles.header, styles.row]}>
-          <TouchableOpacity onPress={onPressPost} style={styles.row}>
+          <TouchableOpacity onPress={handleProfilePress} style={styles.row}>
             <UserAvatarSquare uri={post.creator.avatar} />
             <View style={{ marginHorizontal: 10 }}>
               <View style={styles.row}>
@@ -130,7 +136,7 @@ const PostCardComponent = ({ post, preview = false, navigation }: PostCardProps)
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => alert('Options')} style={styles.dots}>
+          <TouchableOpacity onPress={handleOptionsPress} style={styles.dots}>
             <DotsHorizontal width={28} height={28} />
           </TouchableOpacity>
         </View>

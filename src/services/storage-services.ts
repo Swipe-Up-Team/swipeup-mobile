@@ -16,7 +16,7 @@ export const storageService = {
     file: MediaLibrary.AssetInfo,
     path: string,
     { onProgress }: { onProgress?: (progress: number) => void }
-  ) => {
+  ): Promise<MediaLibrary.AssetInfo> => {
     const storageRef = ref(storage, `${path}/${nanoid(8)}`)
     const blobFile = await getBlobFromUri(file.uri)
     const uploadTask = uploadBytesResumable(storageRef, blobFile)
@@ -53,6 +53,9 @@ export const storageService = {
 
     const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref)
 
-    return downloadUrl
+    return {
+      ...file,
+      uri: downloadUrl
+    } as MediaLibrary.Asset
   }
 }

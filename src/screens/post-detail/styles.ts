@@ -1,4 +1,3 @@
-import { BOTTOM_TAB_BAR_HEIGHT } from '@src/constants'
 import { getRealDimensionsHeight } from '@src/utils'
 import { StatusBar, StyleSheet } from 'react-native'
 
@@ -12,8 +11,7 @@ const styles = StyleSheet.create({
   },
   keyboardAvoidingViewContainer: {
     position: 'relative',
-    height:
-      getRealDimensionsHeight() - 44 - (StatusBar.currentHeight ?? 30) - BOTTOM_TAB_BAR_HEIGHT - 20
+    height: getRealDimensionsHeight() - 44 - (StatusBar.currentHeight ?? 30) - 40
   },
   container: {
     height: '100%',
@@ -23,7 +21,7 @@ const styles = StyleSheet.create({
   },
   commentListContainer: {
     // height
-    height: getRealDimensionsHeight() - 44 - (StatusBar.currentHeight ?? 60) - BOTTOM_TAB_BAR_HEIGHT
+    height: getRealDimensionsHeight() - 44 - (StatusBar.currentHeight ?? 60)
   },
   commentsContentContainer: {}
 })

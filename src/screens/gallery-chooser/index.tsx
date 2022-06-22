@@ -75,7 +75,7 @@ export function GalleryChooserScreen({ isMultiple = true }: { isMultiple: boolea
   // }
 
   const handleGoBack = () => {
-    return navigate(route.params?.prevScreen!, {
+    return navigate(route.params?.prevScreen || APP_SCREEN.ADD_POST, {
       selectedAssetIndexes: selectedIndexes
     })
   }

@@ -28,10 +28,6 @@ const HomeScreenComponent = ({ navigation }: any) => {
     if (result.isLast) setHasMoreToLoad(false)
   }
 
-  // useEffect(() => {
-  //   userService.getAllFollowingUser(user?.followingIDs!)
-  // }, [])
-
   useEffect(() => {
     let unsubscribe: Unsubscribe
     ;(async () => {

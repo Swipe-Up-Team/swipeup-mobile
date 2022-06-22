@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   infoWrapper: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     paddingVertical: 10,
     flexDirection: 'row',
     alignItems: 'center',
@@ -37,7 +37,8 @@ const styles = StyleSheet.create({
   postInfoWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    flex: 1
+    flex: 1,
+    marginLeft: 5
   },
   avatar: {
     marginRight: 10,

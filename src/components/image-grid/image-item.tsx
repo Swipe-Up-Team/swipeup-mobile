@@ -2,9 +2,10 @@ import React from 'react'
 import { GestureResponderEvent, TouchableOpacity, View } from 'react-native'
 import styles from './styles'
 import { Image } from 'react-native-expo-image-cache'
+import * as MediaLibrary from 'expo-media-library'
 
 interface ImageItemProps {
-  image: string
+  image: MediaLibrary.Asset
   index: number
   onPress: (image: string, index: number, event: GestureResponderEvent) => void
 }
@@ -15,7 +16,7 @@ export const ImageItem = ({ image, index, onPress }: ImageItemProps) => {
       style={styles.image_view}
       onPress={event => onPress(image, index, event)}
     >
-      <Image style={styles.image} uri={image} />
+      <Image style={styles.image} uri={image.uri} />
       {/* <LightBox source={{ uri: image }} style={styles.image} /> */}
     </TouchableOpacity>
   ) : (

@@ -109,10 +109,6 @@ export const notificationService = {
     return onSnapshot(queryRef, async docSnapshot => {
       const promises = docSnapshot.docs.map(async _doc => {
         const parentType = _doc.data().parentType
-        console.log(
-          '🚀 ~ file: notification-services.ts ~ line 112 ~ getList: ~ parentType',
-          parentType
-        )
 
         switch (parentType) {
           case NotificationParentTypes.Post:

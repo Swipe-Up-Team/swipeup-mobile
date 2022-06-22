@@ -1,5 +1,6 @@
 import { DocumentReference, DocumentData } from 'firebase/firestore'
 import { User } from './user'
+import * as MediaLibrary from 'expo-media-library'
 
 export interface Post {
   id: string
@@ -11,7 +12,7 @@ export interface Post {
   content: {
     sharedPostId?: string
     text: string
-    images?: string[]
+    images?: MediaLibrary.Asset[]
   }
   type?: string
   authorId?: string
