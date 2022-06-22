@@ -8,6 +8,7 @@ import { UnAuthentication } from './un-authen'
 import EditProfile from '@src/screens/edt-profile'
 import FollowScreen from '@src/screens/profile/components/follow-screen'
 import ProfileScreen from '@src/screens/profile/profile'
+import { InfoBottomSheet } from '@src/screens/chat-room/components/bottom-sheet'
 
 const RootStack = createStackNavigator<RootStackParamList>()
 
@@ -46,6 +47,14 @@ export const RootNavigation = ({ token }: { token?: string }) => {
             }}
             name={APP_SCREEN.POST_STATUS_OPTIONS_MODAL}
             component={PostStatusOptionsScreen}
+          />
+          <RootStack.Screen
+            options={{
+              ...TransitionPresets.ModalTransition,
+              cardStyle: { backgroundColor: 'transparent' }
+            }}
+            name={APP_SCREEN.CHAT_USER_INFO_MODAL}
+            component={InfoBottomSheet}
           />
           <RootStack.Screen name={APP_SCREEN.EDIT_PROFILE} component={EditProfile} />
           <RootStack.Screen name={APP_SCREEN.FOLLOWING} component={FollowScreen} />

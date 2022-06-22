@@ -6,8 +6,9 @@ export const ColorDefault = {
   border: 'rgb(216, 216, 216)',
   notification: 'rgb(255, 59, 48)',
   error: 'rgb(255, 59, 48)',
-  info: '#ffd700',
-};
+  info: '#ffd700'
+}
+
 export const ColorDark = {
   primary: 'rgb(10, 132, 255)',
   background: 'rgb(1, 1, 1)',
@@ -16,5 +17,5 @@ export const ColorDark = {
   border: 'rgb(39, 39, 41)',
   notification: 'rgb(255, 69, 58)',
   error: 'rgb(255, 59, 48)',
-  info: '#ffd700',
-};
+  info: '#ffd700'
+}

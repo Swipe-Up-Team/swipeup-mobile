@@ -1,5 +1,4 @@
 import { getState, useSelector } from '@src/common'
-import { USERIDS_DIVIDER } from '@src/constants'
 import { CONVERSATION_TYPE } from '@src/models'
 import { chatService } from '@src/services/chat-service'
 import { Text, TabView, Tab, List } from '@ui-kitten/components'

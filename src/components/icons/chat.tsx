@@ -19,6 +19,14 @@ export const PinIcon = (style: ImageStyle): IconElement => <Icon {...style} name
 
 export const PlusIcon = (style: any): IconElement => <Icon {...style} name="plus" />
 
+export const ShareIcon = (props: ImageStyle): IconElement => (
+  <Icon {...props} name="share-outline" width={24} height={24} fill={'#1d63d1'} />
+)
+
+export const MoreIcon = (props: ImageStyle): IconElement => (
+  <Icon {...props} name="more-horizontal-outline" width={24} height={24} fill={'#cacfd7'} />
+)
+
 export const SentIcon = (style: any): IconElement => (
   <Icon {...style} style={{ width: 15, height: 15 }} name="done-all-outline" fill="#000" />
 )

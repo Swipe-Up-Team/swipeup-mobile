@@ -160,6 +160,12 @@ export const ChatRoomScreen = (props: any) => {
     />
   )
 
+  const showInfoBottomSheet = () => {
+    navigate(APP_SCREEN.CHAT_USER_INFO_MODAL, {
+      user: friend
+    })
+  }
+
   useEffect(() => {
     if (conversation) setMessageList(conversation?.messages)
     setTypingList(typingIds ? typingIds.split(USERIDS_DIVIDER) : [])
@@ -184,7 +190,7 @@ export const ChatRoomScreen = (props: any) => {
           style={{ width: '95%' }}
           title={shortenConversationText(friend.name)}
           // description="Last seen 10:35"
-          accessoryLeft={<ChatAvatar avatar={friend.avatar} />}
+          accessoryLeft={<ChatAvatar avatar={friend.avatar} onPress={showInfoBottomSheet} />}
           accessoryRight={<RightSection />}
         />
       </View>
