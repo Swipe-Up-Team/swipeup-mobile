@@ -57,6 +57,7 @@ export type AuthorizeParamsList = {
   [APP_SCREEN.POST_STATUS_OPTIONS_MODAL]: undefined
   [APP_SCREEN.CHAT_USER_INFO_MODAL]: {
     user: User
+  }
   [APP_SCREEN.POST_OPTIONS_MODAL]: {
     post: Post
   }
