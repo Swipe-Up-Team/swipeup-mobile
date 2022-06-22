@@ -84,7 +84,6 @@ export function PostDetailScreen() {
   const onLoadCommentsSuccess = (result: { comments: CommentResponseData[] }) => {
     const newComments = [...comments, ...result.comments]
     setComments(newComments)
-    setLoading(false)
   }
 
   useEffect(() => {
@@ -97,10 +96,11 @@ export function PostDetailScreen() {
         onNext: onLoadCommentsSuccess
       })
       if (result) unsubscribe = result
-    })()
-    ;(async () => {
-      const result = await postService.getSinglePostById(route.params.postId)
-      if (result) setPostDetails(result)
+
+      const postResult = await postService.getSinglePostById(route.params.postId)
+      if (postResult) setPostDetails(postResult)
+
+      setLoading(false)
     })()
 
     return () => {
