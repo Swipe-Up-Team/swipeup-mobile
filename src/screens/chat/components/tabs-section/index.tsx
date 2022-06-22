@@ -1,12 +1,13 @@
 import { getState, useSelector } from '@src/common'
 import { USERIDS_DIVIDER } from '@src/constants'
+import { CONVERSATION_TYPE } from '@src/models'
 import { chatService } from '@src/services/chat-service'
 import { Text, TabView, Tab, List } from '@ui-kitten/components'
 import React, { useEffect, useState } from 'react'
 import Conversation from '../conversation'
 import styles from './styles'
 
-const TabTitle = ({ text, ...props }: any) => (
+export const TabTitle = ({ text, ...props }: any) => (
   <Text {...props} style={[props!.style, { marginTop: 10 }]}>
     {text}
   </Text>
@@ -23,10 +24,7 @@ const TabViewSection = () => {
   const getDirectMessageList = () => {
     const list = []
     for (const conversation of conversations) {
-      if (
-        conversation.userIds.split(USERIDS_DIVIDER).length === 2 &&
-        conversation.messages.length !== 0
-      ) {
+      if (conversation.type === CONVERSATION_TYPE.DIRECT && conversation.messages.length !== 0) {
         list.push(conversation)
       }
     }

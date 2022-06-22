@@ -1,10 +1,12 @@
 import { View, Image } from 'react-native'
-import { Text, IconElement, Icon } from '@ui-kitten/components'
+import { Text } from '@ui-kitten/components'
 import styles from './styles'
 import { formatDate, formatTime } from '@src/utils'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import React, { useState } from 'react'
 import { LoadingView } from '../../loading-message'
+import { MESSAGE_TYPE } from '@src/models'
+import { SentIcon } from '@src/components'
 
 const SentMessage = ({ message, displayDate, displayTime }: any) => {
   const [isShowTime, setIsShowTime] = useState(displayTime)
@@ -33,6 +35,31 @@ const SentMessage = ({ message, displayDate, displayTime }: any) => {
     setIsLoadingImage(!isLoadingImage)
   }
 
+  const renderMessageContent = () => {
+    switch (message.type) {
+      case MESSAGE_TYPE.MESSAGE:
+        return (
+          <TouchableOpacity style={styles.messageContainer} onPress={changeDisplayTime}>
+            <Text style={styles.messageText}>{message.message}</Text>
+          </TouchableOpacity>
+        )
+      case MESSAGE_TYPE.IMAGE:
+        return (
+          <>
+            <Image
+              style={styles.imageMessage}
+              source={{ uri: message.image }}
+              onLoadStart={changeLoadingState}
+              onLoadEnd={changeLoadingState}
+            />
+            {isLoadingImage && <LoadingView />}
+          </>
+        )
+      default:
+        break
+    }
+  }
+
   return (
     <>
       {displayDate && (
@@ -43,7 +70,7 @@ const SentMessage = ({ message, displayDate, displayTime }: any) => {
 
       <View style={styles.container}>
         <View style={styles.mainTextContainer}>
-          {message.message ? (
+          {/* {message.message ? (
             <TouchableOpacity style={styles.messageContainer} onPress={changeDisplayTime}>
               <Text style={styles.messageText}>{message.message}</Text>
             </TouchableOpacity>
@@ -57,7 +84,8 @@ const SentMessage = ({ message, displayDate, displayTime }: any) => {
               />
               {isLoadingImage && <LoadingView />}
             </>
-          )}
+          )} */}
+          {renderMessageContent()}
           {isShowTime && (
             <View style={styles.statusContainer}>
               <SentIcon />
@@ -69,13 +97,5 @@ const SentMessage = ({ message, displayDate, displayTime }: any) => {
     </>
   )
 }
-
-export const SentIcon = (style: any): IconElement => (
-  <Icon {...style} style={{ width: 15, height: 15 }} name="done-all-outline" fill="#000" />
-)
-
-export const EyeIcon = (style: any): IconElement => (
-  <Icon {...style} style={{ width: 15, height: 15 }} name="eye-outline" fill="#000" />
-)
 
 export default SentMessage

@@ -1,4 +1,4 @@
-import { Message, User } from '@src/models'
+import { Message, MESSAGE_TYPE, User } from '@src/models'
 
 export const defaultUser: User = {
   id: '',
@@ -24,5 +24,6 @@ export const defaultMessage: Message = {
   senderId: '',
   message: '',
   image: '',
-  createdAt: 0
+  createdAt: 0,
+  type: MESSAGE_TYPE.MESSAGE
 }

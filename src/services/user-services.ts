@@ -15,7 +15,16 @@ import {
   signInWithCredential,
   signInWithEmailAndPassword
 } from 'firebase/auth'
-import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc } from 'firebase/firestore'
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  updateDoc,
+  where
+} from 'firebase/firestore'
 import Toast from 'react-native-toast-message'
 
 const createNewUser = (uid: string, username: string) => {
@@ -148,8 +157,8 @@ export const userService = {
     const q = query(collection(firestore, FIRESTORE_ENDPOINT.USERS))
 
     const querySnapshot = await getDocs(q)
-    querySnapshot.forEach(doc => {
-      const user = doc.data() as User
+    querySnapshot.forEach(data => {
+      const user = data.data() as User
       if (user.name.toLowerCase().includes(keyword.toLowerCase()) && user.id !== currentUserId) {
         allUser.push(user)
       }
@@ -164,21 +173,39 @@ export const userService = {
     })
     const newUserState = await userService.getUser(userId)
     if (newUserState) dispatch(onSetUser(newUserState))
+  },
+
+  getAllFollowingUser: async (followingIds: string[]) => {
+    if (followingIds.length === 0) return
+
+    const followingList: User[] = []
+    for (const followingId of followingIds) {
+      const user = await userService.getUser(followingId)
+      if (user) {
+        followingList.push(user)
+      }
+    }
+
+    return followingList
+  },
+
+  getAllFollowerUser: async (uid: string) => {
+    let users: User[] = []
+
+    const q = query(
+      collection(firestore, FIRESTORE_ENDPOINT.USERS),
+      where(FIRESTORE_ENDPOINT.USER_FOLLOWINGIDS, 'array-contains', uid)
+    )
+
+    const querySnapshot = await getDocs(q)
+
+    querySnapshot.docs.map(async _doc => {
+      if (_doc.exists()) {
+        const user = _doc.data() as User
+        users.push(user)
+      }
+    })
+
+    return users
   }
-
-  // getAllFollowingUser: async (followingIds: string[]) => {
-  //   if (followingIds.length === 0) return
-
-  //   const followingList: User[] = []
-  //   for(const followingId in followingIds) {
-  //     const user = await userService.getUser(followingId)
-  //     if (user) {
-  //       followingList.push(user)
-  //     }
-  //   }
-
-  //   console.log(followingList)
-
-  //   dispatch(onSetFollowingUsers(followingList))
-  // }
 }

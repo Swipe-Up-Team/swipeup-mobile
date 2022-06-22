@@ -10,7 +10,7 @@ import { shortenConversationText } from '@src/utils'
 import ChatAvatar from '../chat/components/chat-avatar'
 import { ChoseAsset } from '../add-post/components'
 import { getState, useArray, useSelector } from '@src/common'
-import { Message, User } from '@src/models'
+import { Message, MESSAGE_TYPE, User } from '@src/models'
 import * as MediaLibrary from 'expo-media-library'
 import SentMessage from './components/message/sent-message'
 import ReceivedMessage from './components/message/received-message'
@@ -101,6 +101,7 @@ export const ChatRoomScreen = (props: any) => {
 
     const message: Message = {
       senderId: userId!,
+      type: MESSAGE_TYPE.MESSAGE,
       message: inputMessage.trim(),
       image: '',
       createdAt: new Date().getTime()

@@ -1,13 +1,12 @@
-import { getRealDimensionsHeight } from '@src/utils'
-import { StyleSheet, StatusBar } from 'react-native'
+import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
   tabBar: {
-    alignSelf: 'center',
+    alignSelf: 'center'
   },
   indicator: {
     width: '70%',
-    height: 3,
+    height: 3
   }
 })
 

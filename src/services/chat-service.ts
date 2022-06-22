@@ -1,7 +1,7 @@
 import { dispatch } from '@src/common'
 import { database } from '@src/config'
 import { REALTIMEDB_ENDPOINT, STORAGE_ENDPOINT, USERIDS_DIVIDER } from '@src/constants'
-import { Conversation, Message } from '@src/models'
+import { Conversation, CONVERSATION_TYPE, Message, MESSAGE_TYPE } from '@src/models'
 import { onSetConversations } from '@src/store/reducers/chat-reducer'
 import { get, onValue, push, ref, update } from 'firebase/database'
 import * as MediaLibrary from 'expo-media-library'
@@ -14,18 +14,17 @@ export const chatService = {
       : push(ref(database, REALTIMEDB_ENDPOINT.CONVERSATIONS)).key || undefined
   },
 
-  createNewConversation: async (myId: string, friendId: string) => {
+  createNewConversation: async (myId: string, friendId: string, type: CONVERSATION_TYPE) => {
     const key = chatService.getKeyPush(undefined)
 
     await update(ref(database, `${REALTIMEDB_ENDPOINT.CONVERSATIONS}/${key}`), {
       id: key!,
       messages: [],
       userIds: myId + USERIDS_DIVIDER + friendId,
-      typingIds: ''
+      typingIds: '',
+      type: type
     })
 
-    // await chatService.sendTextMessage(message, key)
-    // await chatService.getConversations(myId)
     return key
   },
 
@@ -51,6 +50,7 @@ export const chatService = {
     urls.forEach(async url => {
       const message: Message = {
         senderId: userId,
+        type: MESSAGE_TYPE.IMAGE,
         message: '',
         image: url,
         createdAt: new Date().getTime()

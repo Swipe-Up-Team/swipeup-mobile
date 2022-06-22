@@ -21,8 +21,6 @@ import { HomeStack } from './home-stack'
 import styles from './styles'
 import { NotificationsScreen } from '@src/screens'
 import ProfileScreen from '@src/screens/profile/profile'
-import EditProfile from '@src/screens/edt-profile'
-import FollowScreen from '@src/screens/profile/components/follow-screen'
 import { SearchScreen } from '@src/screens/search'
 
 function getWidth() {

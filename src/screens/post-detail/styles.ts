@@ -21,8 +21,7 @@ const styles = StyleSheet.create({
   },
   commentListContainer: {
     // height
-    height: getRealDimensionsHeight() - 44 - (StatusBar.currentHeight ?? 60),
-    borderTopWidth: 1
+    height: getRealDimensionsHeight() - 44 - (StatusBar.currentHeight ?? 60)
   },
   commentsContentContainer: {}
 })

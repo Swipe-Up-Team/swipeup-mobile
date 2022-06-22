@@ -4,6 +4,7 @@ import { useSelector } from '@src/common'
 import { PostCard, StyledDivider } from '@src/components'
 import { defaultUser } from '@src/constants'
 import { Post, User } from '@src/models'
+import { navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN, AuthorizeParamsList } from '@src/navigation/screen-types'
 import { postService, userService } from '@src/services'
 import React, { useEffect, useState } from 'react'
@@ -96,10 +97,11 @@ export default function ProfileScreen({ navigation }: any) {
                 <Text style={styles.text_extra_info}>{allPost.length}</Text>
                 <Text>Posts</Text>
               </TouchableOpacity>
+
               <TouchableOpacity
-                // onPress={() => {
-                //   navigate(APP_SCREEN.FOLLOWING, {})
-                // }}
+                onPress={() => {
+                  navigate(APP_SCREEN.FOLLOWING, { user: currentUser })
+                }}
                 style={styles.touch_center}
               >
                 <Text style={styles.text_extra_info}>{currentUser.followingIDs?.length}</Text>

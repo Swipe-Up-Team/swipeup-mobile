@@ -8,7 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { PostFlatList } from './components/post-flat-list'
 import styles from './styles'
 
-const HomeScreenComponent = () => {
+const HomeScreenComponent = ({ navigation }: any) => {
   const [posts, setPosts] = useState<Post[]>([])
   // TODO: add skeleton post
   const [loading, setLoading] = useState(true)
@@ -66,6 +66,7 @@ const HomeScreenComponent = () => {
         hasMoreToLoad={hasMoreToLoad}
         onLoadMore={handleLoadMore}
         onRefresh={handleRefresh}
+        navigation={navigation}
       />
     </SafeAreaView>
   )

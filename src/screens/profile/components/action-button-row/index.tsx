@@ -1,7 +1,8 @@
 import { useSelector } from '@src/common'
 import { MessageProfileIcon, PersonAddIcon, PersonDoneIcon } from '@src/components'
+import { CONVERSATION_TYPE } from '@src/models'
 import { APP_SCREEN } from '@src/navigation/screen-types'
-import { notificationService, userService } from '@src/services'
+import { userService } from '@src/services'
 import { chatService } from '@src/services/chat-service'
 import { Button } from '@ui-kitten/components'
 import { cloneDeep } from 'lodash'
@@ -38,7 +39,11 @@ export const ActionButtonRow = ({ navigation, currentUser }: any) => {
     let key = conversationId
 
     if (!key) {
-      key = await chatService.createNewConversation(user?.id!, currentUser.id)
+      key = await chatService.createNewConversation(
+        user?.id!,
+        currentUser.id,
+        CONVERSATION_TYPE.DIRECT
+      )
     }
 
     navigation.push(APP_SCREEN.CHAT_ROOM, {

@@ -6,6 +6,7 @@ import React, { useState } from 'react'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { LoadingView } from '../../loading-message'
 import { DEFAULT_PHOTO_URI } from '@src/constants'
+import { MESSAGE_TYPE } from '@src/models'
 
 const ReceivedMessage = ({ message, date, displayTime, displayAvatar, friend }: any) => {
   const [isShowTime, setIsShowTime] = useState(displayTime)
@@ -34,6 +35,31 @@ const ReceivedMessage = ({ message, date, displayTime, displayAvatar, friend }: 
     setIsLoadingImage(!isLoadingImage)
   }
 
+  const renderMessageContent = () => {
+    switch (message.type) {
+      case MESSAGE_TYPE.MESSAGE:
+        return (
+          <TouchableOpacity style={styles.messageContainer} onPress={changeDisplayTime}>
+            <Text>{message.message}</Text>
+          </TouchableOpacity>
+        )
+      case MESSAGE_TYPE.IMAGE:
+        return (
+          <>
+            <Image
+              style={styles.imageMessage}
+              source={{ uri: message.image }}
+              onLoadStart={changeLoadingState}
+              onLoadEnd={changeLoadingState}
+            />
+            {isLoadingImage && <LoadingView />}
+          </>
+        )
+      default:
+        break
+    }
+  }
+
   return (
     <>
       {date && (
@@ -55,7 +81,7 @@ const ReceivedMessage = ({ message, date, displayTime, displayAvatar, friend }: 
 
         <View style={styles.mainContainer}>
           {isShowTime && <Text style={styles.timeText}>{formatTime(message.createdAt)}</Text>}
-          {message.message ? (
+          {/* {message.message ? (
             <TouchableOpacity style={styles.messageContainer} onPress={changeDisplayTime}>
               <Text>{message.message}</Text>
             </TouchableOpacity>
@@ -69,7 +95,8 @@ const ReceivedMessage = ({ message, date, displayTime, displayAvatar, friend }: 
               />
               {isLoadingImage && <LoadingView />}
             </>
-          )}
+          )} */}
+          {renderMessageContent()}
         </View>
       </View>
     </>
