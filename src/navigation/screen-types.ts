@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Post, User } from '@src/models'
+import { CONVERSATION_TYPE, Post, User } from '@src/models'
 import * as MediaLibrary from 'expo-media-library'
 
 export enum APP_SCREEN {
@@ -18,13 +18,17 @@ export enum APP_SCREEN {
 
   GALLERY_CHOOSER = 'GALLERY_CHOOSER',
   POST_STATUS_OPTIONS_MODAL = 'POST_STATUS_OPTIONS_MODAL',
+  CHAT_USER_INFO_MODAL = 'CHAT_USER_INFO_MODAL',
   POST_OPTIONS_MODAL = 'POST_OPTIONS_MODAL',
 
   SEARCH = 'SEARCH',
   NOTIFICATIONS = 'NOTIFICATIONS',
   MENU = 'MENU',
+
   CHAT = 'CHAT',
   CHAT_ROOM = 'CHAT_ROOM',
+  GROUP_MEMBER = 'GROUP_MEMBER',
+  ADD_MEMBER = 'ADD_MEMBER',
 
   PROFILE = 'PROFILE',
   EDIT_PROFILE = 'EDIT_PROFILE',
@@ -55,14 +59,23 @@ export type AuthorizeParamsList = {
     prevScreen?: APP_SCREEN.ADD_POST | APP_SCREEN.CHAT_ROOM
   }
   [APP_SCREEN.POST_STATUS_OPTIONS_MODAL]: undefined
+  [APP_SCREEN.CHAT_USER_INFO_MODAL]: {
+    conversationType: CONVERSATION_TYPE
+    conversationId: string
+  }
   [APP_SCREEN.POST_OPTIONS_MODAL]: {
     post: Post
   }
   [APP_SCREEN.CHAT]: undefined
   [APP_SCREEN.CHAT_ROOM]: {
     conversationId: string
-    friend: User
     selectedAssetIndexes?: number[]
+  }
+  [APP_SCREEN.GROUP_MEMBER]: {
+    listMembers: User[]
+  }
+  [APP_SCREEN.ADD_MEMBER]: {
+    conversationId: string
   }
   [APP_SCREEN.PROFILE]: {
     userId?: string

@@ -70,21 +70,6 @@ const SentMessage = ({ message, displayDate, displayTime }: any) => {
 
       <View style={styles.container}>
         <View style={styles.mainTextContainer}>
-          {/* {message.message ? (
-            <TouchableOpacity style={styles.messageContainer} onPress={changeDisplayTime}>
-              <Text style={styles.messageText}>{message.message}</Text>
-            </TouchableOpacity>
-          ) : (
-            <>
-              <Image
-                style={styles.imageMessage}
-                source={{ uri: message.image }}
-                onLoadStart={changeLoadingState}
-                onLoadEnd={changeLoadingState}
-              />
-              {isLoadingImage && <LoadingView />}
-            </>
-          )} */}
           {renderMessageContent()}
           {isShowTime && (
             <View style={styles.statusContainer}>

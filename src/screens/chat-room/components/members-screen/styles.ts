@@ -1,14 +1,11 @@
 import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
-  tabBar: {
-    alignSelf: 'center'
+  container: {
+    backgroundColor: '#fff'
   },
-  indicator: {
-    width: '70%',
-    height: 3
-  },
-  listContainer: {
+  list: {
+    height: '100%',
     backgroundColor: '#fff'
   }
 })

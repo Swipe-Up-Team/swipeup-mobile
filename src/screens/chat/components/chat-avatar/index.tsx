@@ -2,11 +2,12 @@ import { DEFAULT_PHOTO_URI } from '@src/constants'
 import { Avatar } from '@ui-kitten/components'
 import React from 'react'
 import { View } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 import styles from './styles'
 
-const ChatAvatar = ({ avatar }: any) => {
+const ChatAvatar = ({ avatar, onPress }: any) => {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <Avatar
         style={styles.avatar}
         size="giant"
@@ -14,7 +15,7 @@ const ChatAvatar = ({ avatar }: any) => {
         source={{ uri: avatar || DEFAULT_PHOTO_URI, cache: 'force-cache' }}
       />
       <View style={styles.circleStatus} />
-    </View>
+    </TouchableOpacity>
   )
 }
 

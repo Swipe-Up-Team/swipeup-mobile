@@ -14,6 +14,9 @@ import { UnAuthentication } from './un-authen'
 import EditProfile from '@src/screens/edt-profile'
 import FollowScreen from '@src/screens/profile/components/follow-screen'
 import ProfileScreen from '@src/screens/profile/profile'
+import { InfoBottomSheet } from '@src/screens/chat-room/components/bottom-sheet'
+import { GroupMemberScreen } from '@src/screens/chat-room/components/members-screen'
+import { AddMemberScreen } from '@src/screens/chat-room/components/add-member-screen'
 
 const RootStack = createStackNavigator<RootStackParamList>()
 
@@ -61,10 +64,20 @@ export const RootNavigation = ({ token }: { token?: string }) => {
             name={APP_SCREEN.POST_OPTIONS_MODAL}
             component={PostOptionsScreen}
           />
+          <RootStack.Screen
+            options={{
+              ...TransitionPresets.ModalTransition,
+              cardStyle: { backgroundColor: 'transparent' }
+            }}
+            name={APP_SCREEN.CHAT_USER_INFO_MODAL}
+            component={InfoBottomSheet}
+          />
           <RootStack.Screen name={APP_SCREEN.EDIT_PROFILE} component={EditProfile} />
           <RootStack.Screen name={APP_SCREEN.FOLLOWING} component={FollowScreen} />
           <RootStack.Screen name={APP_SCREEN.PROFILE} component={ProfileScreen} />
           <RootStack.Screen name={APP_SCREEN.POST_DETAILS} component={PostDetailScreen} />
+          <RootStack.Screen name={APP_SCREEN.GROUP_MEMBER} component={GroupMemberScreen} />
+          <RootStack.Screen name={APP_SCREEN.ADD_MEMBER} component={AddMemberScreen} />
         </>
       )}
     </RootStack.Navigator>

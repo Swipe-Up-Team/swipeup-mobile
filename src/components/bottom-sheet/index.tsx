@@ -11,7 +11,7 @@ import styles from './styles'
 import { Text } from '@ui-kitten/components'
 
 interface BottomSheetProps {
-  title: string
+  title?: string
   children: React.ReactNode
 }
 
@@ -74,10 +74,12 @@ export const BottomSheet = ({ title, children }: BottomSheetProps) => {
             ]
           }}
         >
-          <View style={styles.titleWrapper}>
-            <View style={styles.movableLine} />
-            <Text style={styles.titleText}>{title}</Text>
-          </View>
+          {title && (
+            <View style={styles.titleWrapper}>
+              <View style={styles.movableLine} />
+              <Text style={styles.titleText}>{title}</Text>
+            </View>
+          )}
           {children}
         </Animated.View>
       </PanGestureHandler>

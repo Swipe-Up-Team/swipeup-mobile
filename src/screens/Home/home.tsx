@@ -1,12 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { dispatch } from '@src/common'
 import { FirebasePagination, Post } from '@src/models'
 import { postService } from '@src/services'
+import { onSetToken } from '@src/store/reducers/app-reducer'
 import { Unsubscribe } from 'firebase/firestore'
 import React, { memo, useEffect, useState } from 'react'
 import isEqual from 'react-fast-compare'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { PostFlatList } from './components/post-flat-list'
 import styles from './styles'
+import { Text } from 'react-native'
 
 const HomeScreenComponent = ({ navigation }: any) => {
   const [posts, setPosts] = useState<Post[]>([])
@@ -61,6 +65,9 @@ const HomeScreenComponent = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TouchableOpacity onPress={() => dispatch(onSetToken(undefined))}>
+        <Text>Logout</Text>
+      </TouchableOpacity>
       <PostFlatList
         posts={posts}
         hasMoreToLoad={hasMoreToLoad}

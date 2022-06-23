@@ -1,5 +1,4 @@
 import { getState, useSelector } from '@src/common'
-import { USERIDS_DIVIDER } from '@src/constants'
 import { CONVERSATION_TYPE } from '@src/models'
 import { chatService } from '@src/services/chat-service'
 import { Text, TabView, Tab, List } from '@ui-kitten/components'
@@ -36,6 +35,21 @@ const TabViewSection = () => {
     return sortedList
   }
 
+  const getGroupMessageList = () => {
+    const list = []
+    for (const conversation of conversations) {
+      if (conversation.type === CONVERSATION_TYPE.GROUP && conversation.messages.length !== 0) {
+        list.push(conversation)
+      }
+    }
+
+    const sortedList = list.sort(
+      (a, b) =>
+        b.messages[b.messages.length - 1].createdAt - a.messages[a.messages.length - 1].createdAt
+    )
+    return sortedList
+  }
+
   useEffect(() => {
     chatService.getConversations(userId!)
   }, [])
@@ -47,14 +61,10 @@ const TabViewSection = () => {
       onSelect={index => setSelectedIndex(index)}
     >
       <Tab title={<TabTitle text="Direct Message" />}>
-        <List data={getDirectMessageList()} renderItem={renderItem} />
+        <List style={styles.listContainer} data={getDirectMessageList()} renderItem={renderItem} />
       </Tab>
       <Tab title={<TabTitle text="Group Chat" />}>
-        <></>
-        {/* <List
-          data={conversations.filter(conver => conver.messages.length !== 0)}
-          renderItem={renderItem}
-        /> */}
+        <List style={styles.listContainer} data={getGroupMessageList()} renderItem={renderItem} />
       </Tab>
     </TabView>
   )

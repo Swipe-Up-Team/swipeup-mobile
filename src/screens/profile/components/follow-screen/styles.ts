@@ -33,6 +33,10 @@ const styles = StyleSheet.create({
     width: '100%',
     marginVertical: 16,
     borderWidth: 0
+  },
+  list: {
+    height: '100%',
+    backgroundColor: '#fff'
   }
 })
 

@@ -46,7 +46,7 @@ export const TabUserView = ({ listUser, navigation }: Props) => {
         onSubmitEditing={onSearchUser}
       />
       <List
-        style={{ backgroundColor: '#fff' }}
+        style={styles.list}
         data={searchUserList.length !== 0 ? searchUserList : listUser}
         renderItem={renderItem}
       />

@@ -1,3 +1,5 @@
+import { User } from '.'
+
 /* eslint-disable @typescript-eslint/naming-convention */
 export enum CONVERSATION_TYPE {
   DIRECT = 'direct',
@@ -35,4 +37,9 @@ export interface Conversation {
   // total: number,
   // scrollHeight: number | null,
   // loaded: boolean;
+}
+
+export interface ConversationMembers {
+  conversationId: string
+  members: User[]
 }

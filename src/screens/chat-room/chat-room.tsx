@@ -6,18 +6,18 @@ import styles from './styles'
 import { BackIcon, ChatActionIcon, MicIcon, PaperPlaneIcon, PlusIcon, XIcon } from '@src/components'
 import { KeyboardAvoidingView, Platform, View } from 'react-native'
 import { Input, List, ListItem, Button } from '@ui-kitten/components'
-import { shortenConversationText } from '@src/utils'
 import ChatAvatar from '../chat/components/chat-avatar'
 import { ChoseAsset } from '../add-post/components'
 import { getState, useArray, useSelector } from '@src/common'
-import { Message, MESSAGE_TYPE, User } from '@src/models'
+import { CONVERSATION_TYPE, Message, MESSAGE_TYPE, User } from '@src/models'
 import * as MediaLibrary from 'expo-media-library'
 import SentMessage from './components/message/sent-message'
 import ReceivedMessage from './components/message/received-message'
 import { chatService } from '@src/services/chat-service'
 import { navigate } from '@src/navigation/navigation-service'
-import { USERIDS_DIVIDER } from '@src/constants'
+import { DEFAULT_GROUP_URI, USERIDS_DIVIDER } from '@src/constants'
 import TypingMessage from './components/message/typing-message'
+import { getConversationName } from '../chat/helper'
 
 const RightSection = () => (
   <View style={styles.topRightContainer}>
@@ -34,17 +34,21 @@ export const ChatRoomScreen = (props: any) => {
 
   const listRef = useRef<List>(null)
 
-  const [conversationId, setConversationId] = useState(route.params?.conversationId)
-  const [friend, setFriend] = useState<User>(route.params?.friend)
+  const [conversationId] = useState(route.params?.conversationId)
   const [inputMessage, setInputMessage] = useState('')
   const [messageList, setMessageList] = useState<Message[]>([])
   const [typingList, setTypingList] = useState<string[]>([])
   const [attachmentsMenuVisible, setAttachmentsMenuVisible] = useState<boolean>(false)
 
-  const conversation = useSelector(x => x.chat.conversations.find(x => x.id === conversationId))
-  const typingIds = useSelector(
-    x => x.chat.conversations.find(x => x.id === conversationId)?.typingIds
+  const conversation = useSelector(x =>
+    x.chat.conversations.find(conver => conver.id === conversationId)
   )
+  const typingIds = useSelector(
+    x => x.chat.conversations.find(conver => conver.id === conversationId)?.typingIds
+  )
+  const listFriend =
+    useSelector(x => x.chat.conversationMembers.find(con => con.conversationId === conversationId))
+      ?.members || []
 
   const [selectedAssets, selectedAssetsActions] = useArray<MediaLibrary.Asset>([])
 
@@ -71,6 +75,7 @@ export const ChatRoomScreen = (props: any) => {
     }
     // Received Message
     else {
+      const sender = listFriend.find(fr => fr.id === item.senderId)
       if (
         index === 0 ||
         new Date(messageList[index].createdAt).getDay() !==
@@ -79,16 +84,27 @@ export const ChatRoomScreen = (props: any) => {
         return (
           <ReceivedMessage
             message={item}
-            friend={friend}
+            friend={sender}
             date={messageList[index].createdAt}
             displayTime
             displayAvatar
+            conversationType={conversation?.type}
           />
         )
       } else if (messageList[index].senderId !== messageList[index - 1].senderId) {
-        return <ReceivedMessage message={item} friend={friend} displayTime displayAvatar />
+        return (
+          <ReceivedMessage
+            message={item}
+            friend={sender}
+            displayTime
+            displayAvatar
+            conversationType={conversation?.type}
+          />
+        )
       } else {
-        return <ReceivedMessage message={item} friend={friend} />
+        return (
+          <ReceivedMessage message={item} friend={sender} conversationType={conversation?.type} />
+        )
       }
     }
   }
@@ -160,6 +176,15 @@ export const ChatRoomScreen = (props: any) => {
     />
   )
 
+  const showInfoBottomSheet = () => {
+    if (!conversation) return
+
+    navigate(APP_SCREEN.CHAT_USER_INFO_MODAL, {
+      conversationType: conversation.type,
+      conversationId: conversation.id
+    })
+  }
+
   useEffect(() => {
     if (conversation) setMessageList(conversation?.messages)
     setTypingList(typingIds ? typingIds.split(USERIDS_DIVIDER) : [])
@@ -182,9 +207,19 @@ export const ChatRoomScreen = (props: any) => {
           {...props}
           disabled
           style={{ width: '95%' }}
-          title={shortenConversationText(friend.name)}
-          // description="Last seen 10:35"
-          accessoryLeft={<ChatAvatar avatar={friend.avatar} />}
+          title={getConversationName(conversation!, listFriend!)}
+          accessoryLeft={
+            <ChatAvatar
+              avatar={
+                listFriend.length !== 0 &&
+                conversation &&
+                (conversation.type === CONVERSATION_TYPE.DIRECT
+                  ? listFriend[0].avatar
+                  : DEFAULT_GROUP_URI)
+              }
+              onPress={showInfoBottomSheet}
+            />
+          }
           accessoryRight={<RightSection />}
         />
       </View>
