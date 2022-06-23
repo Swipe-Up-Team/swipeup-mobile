@@ -48,7 +48,7 @@ export const ActionButtonRow = ({ navigation, currentUser }: any) => {
 
     navigation.push(APP_SCREEN.CHAT_ROOM, {
       conversationId: key,
-      friend: currentUser
+      listFriend: [currentUser]
     })
   }
 

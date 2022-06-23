@@ -7,11 +7,12 @@ interface Props {
   icon: React.ReactNode
   backgroundColor: string
   description: string
+  onPress: () => void
 }
 
-export const ActionBtn = ({ icon, backgroundColor, description }: Props) => {
+export const ActionBtn = ({ icon, backgroundColor, description, onPress }: Props) => {
   return (
-    <TouchableOpacity style={styles.btnContainer}>
+    <TouchableOpacity style={styles.btnContainer} onPress={onPress}>
       <View style={[styles.actionBtn, { backgroundColor: backgroundColor }]}>{icon}</View>
       <Text style={styles.descText}>{description}</Text>
     </TouchableOpacity>

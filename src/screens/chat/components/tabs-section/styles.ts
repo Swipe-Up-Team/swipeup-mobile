@@ -7,6 +7,9 @@ const styles = StyleSheet.create({
   indicator: {
     width: '70%',
     height: 3
+  },
+  listContainer: {
+    backgroundColor: '#fff'
   }
 })
 

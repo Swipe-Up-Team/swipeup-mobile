@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { Text, View } from 'react-native'
-import { Avatar, ListItem } from '@ui-kitten/components'
+import { ListItem } from '@ui-kitten/components'
 import ChatAvatar from '../chat-avatar'
 import styles from './styles'
 import { APP_SCREEN } from '@src/navigation/screen-types'
 import { navigate } from '@src/navigation/navigation-service'
 import { getState } from '@src/common'
 import { formatTime, shortenConversationText } from '@src/utils'
-import { Message, User } from '@src/models'
-import { defaultUser, USERIDS_DIVIDER, defaultMessage } from '@src/constants'
+import { CONVERSATION_TYPE, Message, MESSAGE_TYPE, User } from '@src/models'
+import { USERIDS_DIVIDER, defaultMessage, DEFAULT_GROUP_URI } from '@src/constants'
 import { userService } from '@src/services'
+import { getConversationName } from '../../helper'
 
 // const SenderName = (prop: any) => <Text {...prop}>Sender Name</Text>
 
-const RightSection = ({ time, ...props }: any) => (
+const RightSection = ({ time }: any) => (
   <View style={styles.rightContainer}>
     <Text style={styles.timeText}>{formatTime(time)}</Text>
     {/* <View style={styles.unSeenContainer}>
@@ -25,15 +26,13 @@ const RightSection = ({ time, ...props }: any) => (
 const Conversation = ({ conversation, ...props }: any) => {
   const userId = getState('user').user?.id
 
-  const [friend, setFriend] = useState<User>(defaultUser)
+  const [listFriend, setListFriend] = useState<User[]>([])
   const [lastedMessage, setLastedMessage] = useState<Message>(defaultMessage)
-
-  // console.log('conversation: ', conversation.messages.length)
 
   const navigateToChatRoom = () => {
     navigate(APP_SCREEN.CHAT_ROOM, {
       conversationId: conversation.id,
-      friend: friend
+      listFriend: listFriend
     })
   }
 
@@ -43,15 +42,67 @@ const Conversation = ({ conversation, ...props }: any) => {
     setLastedMessage(lastMessage)
   }
 
+  const getDirectConversationDesc = () => {
+    if (lastedMessage.senderId === userId) {
+      if (lastedMessage.type === MESSAGE_TYPE.MESSAGE) {
+        return shortenConversationText('You: ' + lastedMessage!.message)
+      } else if (lastedMessage.type === MESSAGE_TYPE.IMAGE) {
+        return 'You: [image]'
+      }
+      return ''
+    } else {
+      if (lastedMessage.type === MESSAGE_TYPE.MESSAGE) {
+        return shortenConversationText(lastedMessage!.message)
+      } else if (lastedMessage.type === MESSAGE_TYPE.IMAGE) {
+        return '[image]'
+      }
+      return ''
+    }
+  }
+
+  const getGroupConversationDesc = () => {
+    if (lastedMessage.senderId === userId) {
+      if (lastedMessage.type === MESSAGE_TYPE.MESSAGE) {
+        return shortenConversationText('You: ' + lastedMessage!.message)
+      } else if (lastedMessage.type === MESSAGE_TYPE.IMAGE) {
+        return 'You: [image]'
+      }
+      return ''
+    } else {
+      const name = listFriend.find(fr => fr.id === lastedMessage.senderId)?.name
+      if (lastedMessage.type === MESSAGE_TYPE.MESSAGE) {
+        return shortenConversationText(name + ': ' + lastedMessage!.message)
+      } else if (lastedMessage.type === MESSAGE_TYPE.IMAGE) {
+        return name + ': [image]'
+      }
+      return ''
+    }
+  }
+
+  const getConversationDesc = () => {
+    if (conversation.type === CONVERSATION_TYPE.DIRECT) {
+      return getDirectConversationDesc()
+    } else if (conversation.type === CONVERSATION_TYPE.GROUP) {
+      return getGroupConversationDesc()
+    }
+    return ''
+  }
+
   useEffect(() => {
     const getConversationInfo = async () => {
+      const list: User[] = []
       const members = conversation.userIds.split(USERIDS_DIVIDER)
-      const friendId = members.find((id: string) => id !== userId)
 
-      const friend = await userService.getUser(friendId)
-      if (friend) {
-        setFriend(friend)
+      for (const memberId of members) {
+        if (memberId === userId) continue
+
+        const member = await userService.getUser(memberId)
+        if (member) {
+          list.push(member)
+        }
       }
+
+      setListFriend(list)
     }
 
     getConversationInfo()
@@ -60,17 +111,18 @@ const Conversation = ({ conversation, ...props }: any) => {
 
   return (
     <ListItem
-      title={shortenConversationText(friend?.name!)}
-      description={shortenConversationText(
-        lastedMessage.senderId === userId
-          ? lastedMessage!.message
-            ? 'You: ' + lastedMessage!.message
-            : 'You: [image]'
-          : lastedMessage!.message
-          ? lastedMessage!.message
-          : '[image]'
-      )}
-      accessoryLeft={<ChatAvatar avatar={friend.avatar} />}
+      title={getConversationName(conversation, listFriend)}
+      description={getConversationDesc()}
+      accessoryLeft={
+        <ChatAvatar
+          avatar={
+            listFriend.length !== 0 &&
+            (conversation.type === CONVERSATION_TYPE.DIRECT
+              ? listFriend[0].avatar
+              : DEFAULT_GROUP_URI)
+          }
+        />
+      }
       accessoryRight={<RightSection time={lastedMessage!.createdAt} />}
       style={[props.style, { height: 80 }]}
       onPress={navigateToChatRoom}

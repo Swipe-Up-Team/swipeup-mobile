@@ -23,6 +23,10 @@ export const ShareIcon = (props: ImageStyle): IconElement => (
   <Icon {...props} name="share-outline" width={24} height={24} fill={'#1d63d1'} />
 )
 
+export const GalleryIcon = (props: ImageStyle): IconElement => (
+  <Icon {...props} name="image-outline" width={24} height={24} fill={'#5243aa'} />
+)
+
 export const MoreIcon = (props: ImageStyle): IconElement => (
   <Icon {...props} name="more-horizontal-outline" width={24} height={24} fill={'#cacfd7'} />
 )

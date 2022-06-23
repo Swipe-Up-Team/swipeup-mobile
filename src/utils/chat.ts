@@ -27,6 +27,8 @@ export const formatDate = (time: number) => {
 }
 
 export const shortenConversationText = (text: string) => {
+  if (!text) return ''
+
   if (text.length > CONVERSATION_MAX_CHARACTERS) {
     return `${text.substring(0, CONVERSATION_MAX_CHARACTERS)}...`
   }

@@ -52,7 +52,7 @@ export const chatService = {
         senderId: userId,
         type: MESSAGE_TYPE.IMAGE,
         message: '',
-        image: url,
+        image: url.uri,
         createdAt: new Date().getTime()
       }
 

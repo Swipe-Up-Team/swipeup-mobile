@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Post, User } from '@src/models'
+import { CONVERSATION_TYPE, Post, User } from '@src/models'
 import * as MediaLibrary from 'expo-media-library'
 
 export enum APP_SCREEN {
@@ -56,7 +56,8 @@ export type AuthorizeParamsList = {
   }
   [APP_SCREEN.POST_STATUS_OPTIONS_MODAL]: undefined
   [APP_SCREEN.CHAT_USER_INFO_MODAL]: {
-    user: User
+    listFriend: User[]
+    conversationType: CONVERSATION_TYPE
   }
   [APP_SCREEN.POST_OPTIONS_MODAL]: {
     post: Post
@@ -64,7 +65,7 @@ export type AuthorizeParamsList = {
   [APP_SCREEN.CHAT]: undefined
   [APP_SCREEN.CHAT_ROOM]: {
     conversationId: string
-    friend: User
+    listFriend: User[]
     selectedAssetIndexes?: number[]
   }
   [APP_SCREEN.PROFILE]: {

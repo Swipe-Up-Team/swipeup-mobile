@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   actionBtnContainer: {
     flexDirection: 'row',
     width: '100%',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     marginBottom: 20
   },
   profileBtn: {
