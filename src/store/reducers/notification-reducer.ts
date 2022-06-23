@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { getState } from '@src/common'
+import { getState, useSelector } from '@src/common'
 import { firestore } from '@src/config'
 import { FIRESTORE_ENDPOINT, SLICE_NAME } from '@src/constants'
 import { doc, getDoc } from 'firebase/firestore'
@@ -15,7 +15,7 @@ const initialState: NotificationState = {
 }
 
 export const fetchNotifications = createAsyncThunk('notifications/fetchList', async () => {
-  const { user } = getState('user')
+  const { user } = useSelector(x => x.user)
   if (!user) return []
 
   const notiRef = doc(firestore, FIRESTORE_ENDPOINT.NOTIFICATIONS, user.id)

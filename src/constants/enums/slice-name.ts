@@ -3,6 +3,7 @@ export enum SLICE_NAME {
   APP = 'APP_',
   LOGIN = 'LOGIN_',
   CHAT = 'CHAT_',
+  VIDEO = 'VIDEO_',
   POST = 'POST_',
   SYSTEM_ASSETS = 'SYSTEM_ASSETS_',
   USER = 'USER_',

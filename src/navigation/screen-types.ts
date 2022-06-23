@@ -50,6 +50,7 @@ export type AuthorizeParamsList = {
     onSuccess?: (id: string) => void
   }
   [APP_SCREEN.GALLERY_CHOOSER]: {
+    mediaType?: MediaLibrary.MediaTypeValue
     selectedAssets?: MediaLibrary.Asset[]
     prevScreen?: APP_SCREEN.ADD_POST | APP_SCREEN.CHAT_ROOM
   }

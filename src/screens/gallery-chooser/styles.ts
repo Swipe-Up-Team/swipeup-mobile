@@ -35,6 +35,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 20
+  },
+  duration: {
+    position: 'absolute',
+    bottom: 5,
+    right: 5,
+    backgroundColor: '#fafafa',
+    opacity: 0.5,
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+    borderRadius: 6
   }
 })
 export default styles

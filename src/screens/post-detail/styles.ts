@@ -17,10 +17,9 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
     backgroundColor: '#fff',
-    padding: 10
+    paddingHorizontal: 15
   },
   commentListContainer: {
-    // height
     height: getRealDimensionsHeight() - 44 - (StatusBar.currentHeight ?? 60)
   },
   commentsContentContainer: {}

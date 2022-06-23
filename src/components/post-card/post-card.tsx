@@ -21,6 +21,7 @@ import { LikeButton } from '../like-button'
 import { UserAvatarSquare } from '../user-avatar-square'
 import { PostDescription, PostDescriptionType } from './post-description'
 import styles from './styles'
+import { PostVideo } from '../video-player/post-video'
 
 export interface PostCardProps {
   post: PostType
@@ -31,7 +32,7 @@ export interface PostCardProps {
 const PostCardComponent = ({ post, preview = false, navigation }: PostCardProps) => {
   const {
     comments,
-    content: { text, images },
+    content: { text, images, video },
     reacts
   } = post
 
@@ -165,6 +166,8 @@ const PostCardComponent = ({ post, preview = false, navigation }: PostCardProps)
           />
         </View>
       )}
+
+      {video && <PostVideo video={video} />}
 
       <View style={styles.buttonsContainer}>
         <TouchableOpacity

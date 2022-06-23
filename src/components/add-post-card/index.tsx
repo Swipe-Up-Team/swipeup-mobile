@@ -2,6 +2,7 @@ import { Text } from '@ui-kitten/components'
 import React, { memo } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { CommonActions, useNavigation } from '@react-navigation/native'
+import * as MediaLibrary from 'expo-media-library'
 
 import { navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN } from '@src/navigation/screen-types'
@@ -22,7 +23,19 @@ const AddPostCardComponent = () => {
         routes: [
           { name: APP_SCREEN.AUTHORIZE },
           { name: APP_SCREEN.ADD_POST },
-          { name: APP_SCREEN.GALLERY_CHOOSER }
+          { name: APP_SCREEN.GALLERY_CHOOSER, params: { mediaType: MediaLibrary.MediaType.photo } }
+        ]
+      })
+    )
+  }
+  const handleVideoUploadPress = () => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 1,
+        routes: [
+          { name: APP_SCREEN.AUTHORIZE },
+          { name: APP_SCREEN.ADD_POST },
+          { name: APP_SCREEN.GALLERY_CHOOSER, params: { mediaType: MediaLibrary.MediaType.video } }
         ]
       })
     )
@@ -58,7 +71,7 @@ const AddPostCardComponent = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={handlePhotoUploadPress}
+          onPress={handleVideoUploadPress}
           activeOpacity={0.5}
           style={styles.postOptionItemWrapper}
         >

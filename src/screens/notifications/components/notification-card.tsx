@@ -65,7 +65,6 @@ export function NotificationCard({ notification }: { notification: Notification 
       content = `like your comment.`
       break
     default:
-      content = ''
       break
   }
 
@@ -151,7 +150,7 @@ export function NotificationCard({ notification }: { notification: Notification 
     >
       <View style={styles.row}>
         <View style={styles.fromPreviewWrapper}>
-          {preview?.avatar && <UserAvatarSquare uri={preview?.avatar} />}
+          <UserAvatarSquare uri={preview?.avatar} />
         </View>
 
         <View
@@ -161,8 +160,8 @@ export function NotificationCard({ notification }: { notification: Notification 
           }}
         >
           <Text numberOfLines={3}>
-            <Text category="s1">{`${preview?.name} `}</Text>
-            <Text>{content} </Text>
+            <Text category="s1">{`${preview?.name || ''} `}</Text>
+            <Text>{content}</Text>
           </Text>
           {notification.createdAt && (
             <Text appearance="hint" category="c1">

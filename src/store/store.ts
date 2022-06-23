@@ -15,7 +15,7 @@ import {
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  blacklist: ['app', 'systemAssets']
+  blacklist: ['app', 'systemAssets', 'video']
 }
 const persistedReducer = persistReducer(persistConfig, allReducer)
 

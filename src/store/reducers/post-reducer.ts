@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { SLICE_NAME } from '@src/constants/enums'
 import { Post } from '@src/models'
-
+import Toast from 'react-native-toast-message'
 export interface PostState {
   editingId?: string
   draftPost?: Partial<Post>
@@ -24,6 +24,14 @@ const post = createSlice({
     },
     saveDraftPost: (state, { payload }: PayloadAction<Partial<Post>>) => {
       state.draftPost = payload
+
+      // timeout for sure application has changed screen yet
+      setTimeout(() => {
+        Toast.show({
+          type: 'success',
+          text1: 'Your post was saved as draft.'
+        })
+      }, 400)
     },
     clearDraftPost: state => {
       state.draftPost = undefined

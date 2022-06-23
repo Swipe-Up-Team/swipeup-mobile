@@ -7,6 +7,7 @@ import userReducer from './reducers/user-reducer'
 import chatReducer from './reducers/chat-reducer'
 import notificationReducer from './reducers/notification-reducer'
 import postReducer from './reducers/post-reducer'
+import videoReducer from './reducers/video-reducer'
 
 const appPersistConfig = {
   key: 'app',
@@ -24,6 +25,7 @@ export const allReducer = combineReducers({
   app: persistReducer(appPersistConfig, appReducer),
   user: userReducer,
   post: persistReducer(postPersistConfig, postReducer),
+  video: videoReducer,
   chat: chatReducer,
   systemAssets: systemAssetsReducer,
   expoToken: notificationReducer

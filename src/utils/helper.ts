@@ -92,10 +92,10 @@ export const handleParameter = <T extends ParamsNetwork>(
   }
 }
 
-export const fetchSystemImages = async (page?: number) => {
+export const fetchSystemAssets = async (page?: number, mediaType?: MediaLibrary.MediaTypeValue) => {
   const getPhotos = () =>
     MediaLibrary.getAssetsAsync({
-      mediaType: MediaLibrary.MediaType.photo,
+      mediaType: mediaType || MediaLibrary.MediaType.photo,
       first: page ? 20 * page : 20
     })
       .then(result => {
@@ -150,4 +150,28 @@ export const countReaction = (reactions: Reaction[], type?: ReactionType) => {
   reactions.forEach(reaction => reaction.type === reactionType && numberOfReaction++)
 
   return numberOfReaction
+}
+
+export const formatVideoDuration = (seconds: number): string => {
+  const date = new Date(0)
+  date.setSeconds(seconds)
+  return date.toTimeString().slice(seconds >= 3600 ? 0 : 3, 8)
+}
+export const getFileMetadata = (file: MediaLibrary.AssetInfo) => {
+  const MIME_TYPE = {
+    flv: 'video/x-flv',
+    mp4: 'video/mp4',
+    m3u8: 'application/x-mpegURL',
+    ts: 'video/MP2T',
+    '3gp': 'video/3gpp',
+    mov: 'video/quicktime',
+    avi: 'video/x-msvideo',
+    wmv: 'video/x-ms-wmv'
+  }
+  const ext = file.filename.split('.').pop()?.toLowerCase()
+  if (!ext) return {}
+  if (Object.keys(MIME_TYPE).includes(ext)) return { contentType: MIME_TYPE[ext] }
+  return {
+    contentType: `${file.mediaType === 'photo' ? 'image' : file.mediaType}/${ext}`
+  }
 }

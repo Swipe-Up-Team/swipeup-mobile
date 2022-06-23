@@ -13,6 +13,7 @@ export interface Post {
     sharedPostId?: string
     text: string
     images?: MediaLibrary.Asset[]
+    video: MediaLibrary.Asset | null
   }
   type?: string
   authorId?: string

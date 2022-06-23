@@ -1,24 +1,26 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { RouteProp, useRoute } from '@react-navigation/native'
 import { dispatch, getState } from '@src/common'
 import { CloseIcon, NavigationBar } from '@src/components'
 import { goBack, navigate } from '@src/navigation/navigation-service'
-import { APP_SCREEN, AuthorizeParamsList, RootStackParamList } from '@src/navigation/screen-types'
+import { APP_SCREEN, RootStackParamList } from '@src/navigation/screen-types'
 import {
   onSetSelectedAssetIndexes,
   onSetSystemAsset
 } from '@src/store/reducers/system-assets-reducer'
-import { fetchSystemImages } from '@src/utils'
+import { fetchSystemAssets, formatVideoDuration } from '@src/utils'
 import { Button } from '@ui-kitten/components'
 import React, { useEffect, useState } from 'react'
 import { FlatList, Text, TouchableOpacity, View, Image } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from './styles'
 
-export function GalleryChooserScreen({ isMultiple = true }: { isMultiple: boolean }) {
+export function GalleryChooserScreen() {
   const route = useRoute<RouteProp<RootStackParamList, APP_SCREEN.GALLERY_CHOOSER>>()
   const [loading, setLoading] = useState(true)
+  const [isMultiple, setIsMultiple] = useState(true)
   const [galleryPage, setGalleryPage] = useState(1)
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>([])
   const { systemAssets } = getState('systemAssets')
@@ -39,15 +41,18 @@ export function GalleryChooserScreen({ isMultiple = true }: { isMultiple: boolea
 
   useEffect(() => {
     ;(async () => {
+      if (route.params?.mediaType === 'video' && isMultiple) setIsMultiple(false)
+      if (route.params?.mediaType === 'photo' && !isMultiple) setIsMultiple(true)
+
       setLoading(true)
-      const result = await fetchSystemImages(galleryPage)
+      const result = await fetchSystemAssets(galleryPage, route.params?.mediaType)
 
       if (Array.isArray(result)) {
         dispatch(onSetSystemAsset(result))
       }
       setLoading(false)
     })()
-  }, [galleryPage])
+  }, [galleryPage, route.params?.mediaType])
 
   const handleLoadMoreAssets = () => {
     setGalleryPage(galleryPage + 1)
@@ -125,6 +130,11 @@ export function GalleryChooserScreen({ isMultiple = true }: { isMultiple: boolea
                 <Text style={{ color: '#fff', fontWeight: '600' }}>
                   {selectedIndexes.indexOf(index) + 1}
                 </Text>
+              </View>
+            )}
+            {item.duration > 0 && (
+              <View style={styles.duration}>
+                <Text style={{ fontWeight: '600' }}>{formatVideoDuration(item.duration)}</Text>
               </View>
             )}
           </TouchableOpacity>

@@ -79,7 +79,6 @@ const AddPostScreenComponent = () => {
 
   // Change to edit mode if has postId
   useEffect(() => {
-    console.log('🚀 ~ file: index.tsx ~ line 84 ~ ; ~ editingId', editingId)
     ;(async () => {
       if (editingId) {
         setMode('edit')
@@ -102,16 +101,19 @@ const AddPostScreenComponent = () => {
     })()
   }, [editingId])
 
-  // useEffect(() => {
-  //   if (draftPost && mode === 'add') {
-  //     console.log('has draft', draftPost)
-  //     if (draftPost.content?.text) setTextPost(draftPost.content?.text)
-  //     if (draftPost.content?.images) selectedAssetsActions.setValue(draftPost.content?.images)
-  //   }
-  // }, [draftPost])
-
-  const handleAddMediaPress = async () => {
-    navigate(APP_SCREEN.GALLERY_CHOOSER, { selectedAssets, prevScreen: APP_SCREEN.ADD_POST })
+  const handleAddImagesPress = async () => {
+    navigate(APP_SCREEN.GALLERY_CHOOSER, {
+      selectedAssets,
+      prevScreen: APP_SCREEN.ADD_POST,
+      mediaType: 'photo'
+    })
+  }
+  const handleAddVideoPress = async () => {
+    navigate(APP_SCREEN.GALLERY_CHOOSER, {
+      selectedAssets,
+      prevScreen: APP_SCREEN.ADD_POST,
+      mediaType: 'video'
+    })
   }
 
   const handleRemoveAsset = (idx: number) => {
@@ -135,11 +137,14 @@ const AddPostScreenComponent = () => {
 
     // upload images to firebase -> get storage url
     const files = await storageService.uploadMultipleFiles(selectedAssets, STORAGE_ENDPOINT.FILES)
+    const images = files.filter(file => file.mediaType === 'photo')
+    const videos = files.filter(file => file.mediaType === 'video')
 
     if (mode === 'add') {
       const newPost: Partial<PostPayload> = {
         content: {
-          images: files,
+          video: videos.length > 0 ? videos[0] : null,
+          images,
           text: textPost.trim()
         },
         authorId: user?.id
@@ -148,12 +153,13 @@ const AddPostScreenComponent = () => {
 
       if (draftPost) dispatch(clearDraftPost())
 
-      if (result && route.params.onSuccess) route.params.onSuccess(result.id)
+      if (result && route.params?.onSuccess) route.params.onSuccess(result.id)
     } else {
       const updatedPost: Partial<PostPayload> = {
         id: editingId,
         content: {
-          images: files,
+          video: videos.length > 0 ? videos[0] : null,
+          images,
           text: textPost.trim()
         }
       }
@@ -394,12 +400,20 @@ const AddPostScreenComponent = () => {
                   </View>
                 </View>
               </TouchableWithoutFeedback>
-              <TouchableOpacity onPress={handleAddMediaPress}>
+              <TouchableOpacity onPress={handleAddImagesPress}>
                 <View style={styles.optionContainer}>
                   <View style={{ ...styles.optionImage, width: 30, marginRight: 15 }}>
                     <PostPhotoBigIcon />
                   </View>
-                  <Text style={styles.optionText}>Image/Video</Text>
+                  <Text style={styles.optionText}>Images</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleAddVideoPress}>
+                <View style={styles.optionContainer}>
+                  <View style={{ ...styles.optionImage, width: 30, marginRight: 15 }}>
+                    <PostVideoBigIcon />
+                  </View>
+                  <Text style={styles.optionText}>Video</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => console.log('do not thing')}>

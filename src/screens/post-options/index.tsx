@@ -16,6 +16,7 @@ import { goBack, navigate } from '@src/navigation/navigation-service'
 import { onEditPostStart } from '@src/store/reducers/post-reducer'
 import { postService } from '@src/services'
 import { onEndProcess, onStartProcess } from '@src/store/reducers/app-reducer'
+import Toast from 'react-native-toast-message'
 
 export const PostOptionsScreen = () => {
   const navigation = useNavigation()
@@ -45,6 +46,11 @@ export const PostOptionsScreen = () => {
 
     goBack()
     dispatch(onEndProcess())
+
+    Toast.show({
+      type: 'success',
+      text1: 'Your post was deleted successfully'
+    })
   }
 
   const confirmDeletePost = () => {

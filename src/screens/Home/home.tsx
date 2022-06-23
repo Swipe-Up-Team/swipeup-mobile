@@ -55,8 +55,8 @@ const HomeScreenComponent = ({ navigation }: any) => {
   }
 
   const handleRefresh = () => {
-    setHasMoreToLoad(true)
     setPagination({ ...pagination, page: 1, startAfter: undefined })
+    setHasMoreToLoad(true)
   }
 
   return (
