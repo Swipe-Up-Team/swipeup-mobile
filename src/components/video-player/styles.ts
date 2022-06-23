@@ -107,7 +107,8 @@ const styles = StyleSheet.create({
   },
   videoWrapper: {
     position: 'relative',
-    width: '100%'
+    width: '100%',
+    backgroundColor: 'rgba(0,0,0,0.5)'
   },
   video: {
     backgroundColor: 'rgba(0,0,0,0)',

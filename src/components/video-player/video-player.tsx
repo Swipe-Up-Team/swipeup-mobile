@@ -25,6 +25,7 @@ import { Text } from '@ui-kitten/components'
 import { useInterpolate } from '@src/common/animated'
 import Animated, { Extrapolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { formatVideoDuration } from '@src/utils'
+import Toast from 'react-native-toast-message'
 
 const VIDEO_PLAYER_WIDTH = SCREEN_WIDTH - 30
 const maxTimeBarWidth = VIDEO_PLAYER_WIDTH - 40 - 100 - 20 - 7.5
@@ -46,7 +47,6 @@ const VideoPlayerComponent = (props: any) => {
     onFinish,
     isAutoToggleController
   } = props
-  console.log('🚀 ~ file: video-player.tsx ~ line 49 ~ VideoPlayerComponent ~ video', video)
 
   const [videoSize, setVideoSize] = useState({
     height: 230,
@@ -119,6 +119,10 @@ const VideoPlayerComponent = (props: any) => {
   }
 
   const onReadyForDisplay = async ({ naturalSize, status }: VideoReadyForDisplayEvent) => {
+    console.log(
+      '🚀 ~ file: video-player.tsx ~ line 139 ~ onReadyForDisplay ~ onReadyForDisplay',
+      onReadyForDisplay
+    )
     if (videoRef.current?.hasOwnProperty('_nativeRef') && !isPaused) {
       playBtnOpacity.value = 0
       await videoRef.current.replayAsync()
@@ -353,6 +357,13 @@ const VideoPlayerComponent = (props: any) => {
           progressUpdateIntervalMillis={500}
           onPlaybackStatusUpdate={onPlaybackStatusUpdateHandler}
           onReadyForDisplay={onReadyForDisplay}
+          onError={() => {
+            Toast.show({
+              type: 'error',
+              text1: 'Something has error.',
+              text2: 'Something has error when the system try to load video.'
+            })
+          }}
           style={{
             ...styles.video,
             width: VIDEO_PLAYER_WIDTH,
