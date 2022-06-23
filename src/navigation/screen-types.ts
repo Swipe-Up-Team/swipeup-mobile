@@ -24,8 +24,11 @@ export enum APP_SCREEN {
   SEARCH = 'SEARCH',
   NOTIFICATIONS = 'NOTIFICATIONS',
   MENU = 'MENU',
+
   CHAT = 'CHAT',
   CHAT_ROOM = 'CHAT_ROOM',
+  GROUP_MEMBER = 'GROUP_MEMBER',
+  ADD_MEMBER = 'ADD_MEMBER',
 
   PROFILE = 'PROFILE',
   EDIT_PROFILE = 'EDIT_PROFILE',
@@ -56,8 +59,8 @@ export type AuthorizeParamsList = {
   }
   [APP_SCREEN.POST_STATUS_OPTIONS_MODAL]: undefined
   [APP_SCREEN.CHAT_USER_INFO_MODAL]: {
-    listFriend: User[]
     conversationType: CONVERSATION_TYPE
+    conversationId: string
   }
   [APP_SCREEN.POST_OPTIONS_MODAL]: {
     post: Post
@@ -65,8 +68,13 @@ export type AuthorizeParamsList = {
   [APP_SCREEN.CHAT]: undefined
   [APP_SCREEN.CHAT_ROOM]: {
     conversationId: string
-    listFriend: User[]
     selectedAssetIndexes?: number[]
+  }
+  [APP_SCREEN.GROUP_MEMBER]: {
+    listMembers: User[]
+  }
+  [APP_SCREEN.ADD_MEMBER]: {
+    conversationId: string
   }
   [APP_SCREEN.PROFILE]: {
     userId?: string

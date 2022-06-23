@@ -5,12 +5,13 @@ import ChatAvatar from '../chat-avatar'
 import styles from './styles'
 import { APP_SCREEN } from '@src/navigation/screen-types'
 import { navigate } from '@src/navigation/navigation-service'
-import { getState } from '@src/common'
+import { dispatch, getState } from '@src/common'
 import { formatTime, shortenConversationText } from '@src/utils'
-import { CONVERSATION_TYPE, Message, MESSAGE_TYPE, User } from '@src/models'
+import { ConversationMembers, CONVERSATION_TYPE, Message, MESSAGE_TYPE, User } from '@src/models'
 import { USERIDS_DIVIDER, defaultMessage, DEFAULT_GROUP_URI } from '@src/constants'
 import { userService } from '@src/services'
 import { getConversationName } from '../../helper'
+import { onSetConversationMembers } from '@src/store/reducers/chat-reducer'
 
 // const SenderName = (prop: any) => <Text {...prop}>Sender Name</Text>
 
@@ -31,8 +32,7 @@ const Conversation = ({ conversation, ...props }: any) => {
 
   const navigateToChatRoom = () => {
     navigate(APP_SCREEN.CHAT_ROOM, {
-      conversationId: conversation.id,
-      listFriend: listFriend
+      conversationId: conversation.id
     })
   }
 
@@ -101,8 +101,13 @@ const Conversation = ({ conversation, ...props }: any) => {
           list.push(member)
         }
       }
-
       setListFriend(list)
+
+      const conversationMember = {
+        conversationId: conversation.id,
+        members: list
+      }
+      dispatch(onSetConversationMembers(conversationMember))
     }
 
     getConversationInfo()

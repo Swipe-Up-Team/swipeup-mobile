@@ -132,5 +132,13 @@ export const chatService = {
         [REALTIMEDB_ENDPOINT.CONVERSATIONS_TYPING]: newTypingIds
       })
     }
+  },
+
+  addMemberToGroup: async (newUserIds: string, conversationId: string) => {
+    if (!newUserIds) return
+
+    await update(ref(database, `${REALTIMEDB_ENDPOINT.CONVERSATIONS}/${conversationId}`), {
+      [REALTIMEDB_ENDPOINT.CONVERSATIONS_USERIDS]: newUserIds
+    })
   }
 }

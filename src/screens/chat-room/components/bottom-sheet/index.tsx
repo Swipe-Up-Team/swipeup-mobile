@@ -15,36 +15,51 @@ import { DEFAULT_GROUP_URI, DEFAULT_PHOTO_URI } from '@src/constants'
 import { RouteProp, useRoute } from '@react-navigation/native'
 import { APP_SCREEN, AuthorizeParamsList } from '@src/navigation/screen-types'
 import { chatService } from '@src/services/chat-service'
-import { getState } from '@src/common'
+import { getState, useSelector } from '@src/common'
 import { CONVERSATION_TYPE } from '@src/models'
 import { shortenConversationText } from '@src/utils'
 
 export const InfoBottomSheet = ({ navigation }: any) => {
-  const route = useRoute<RouteProp<AuthorizeParamsList, APP_SCREEN.CHAT_USER_INFO_MODAL>>()
-  const listFriend = route.params?.listFriend
-  const conversationType = route.params?.conversationType
-
   const userId = getState('user').user?.id
 
+  const route = useRoute<RouteProp<AuthorizeParamsList, APP_SCREEN.CHAT_USER_INFO_MODAL>>()
+
+  const conversationType = route.params?.conversationType
+  const conversationId = route.params?.conversationId
+
+  const listMembers =
+    useSelector(x => x.chat.conversationMembers.find(con => con.conversationId === conversationId))
+      ?.members || []
+
   const navigateToProfile = () => {
-    navigation.push(APP_SCREEN.PROFILE, { userId: listFriend[0].id })
+    navigation.push(APP_SCREEN.PROFILE, { userId: listMembers[0].id })
+  }
+
+  const navigateToGroupMember = () => {
+    navigation.push(APP_SCREEN.GROUP_MEMBER, { listMembers: listMembers })
+  }
+
+  const navigateToAddMember = () => {
+    navigation.push(APP_SCREEN.ADD_MEMBER, {
+      conversationId: conversationId
+    })
   }
 
   const createNewGroup = async () => {
     const key = await chatService.createNewConversation(
       userId!,
-      listFriend[0].id,
+      listMembers[0].id,
       CONVERSATION_TYPE.GROUP
     )
 
     navigation.push(APP_SCREEN.CHAT_ROOM, {
       conversationId: key,
-      listFriend: [listFriend[0]]
+      listFriend: [listMembers[0]]
     })
   }
 
   const getGroupName = () => {
-    const listNames = listFriend.map(fr => fr.name).join(', ')
+    const listNames = listMembers.map(fr => fr.name).join(', ')
     return shortenConversationText(`[Group]: ${listNames}`)
   }
 
@@ -56,10 +71,10 @@ export const InfoBottomSheet = ({ navigation }: any) => {
           width={100}
           height={100}
           shape="rounded"
-          source={{ uri: listFriend[0].avatar || DEFAULT_PHOTO_URI, cache: 'force-cache' }}
+          source={{ uri: listMembers[0].avatar || DEFAULT_PHOTO_URI, cache: 'force-cache' }}
         />
-        <Text style={styles.nameText}>{listFriend[0].name}</Text>
-        <Text style={styles.emailText}>{listFriend[0].email}</Text>
+        <Text style={styles.nameText}>{listMembers[0].name}</Text>
+        <Text style={styles.emailText}>{listMembers[0].email}</Text>
         <View style={styles.actionBtnContainer}>
           <ActionBtn
             icon={<PersonGroupIcon />}
@@ -114,7 +129,7 @@ export const InfoBottomSheet = ({ navigation }: any) => {
             icon={<GreenPersonAddIcon />}
             backgroundColor={'#e2ffee'}
             description={'Add'}
-            onPress={() => {}}
+            onPress={navigateToAddMember}
           />
           <ActionBtn
             icon={<GalleryIcon />}
@@ -126,7 +141,7 @@ export const InfoBottomSheet = ({ navigation }: any) => {
             icon={<PersonGroupIcon />}
             backgroundColor={'#fffae6'}
             description={'Member'}
-            onPress={() => {}}
+            onPress={navigateToGroupMember}
           />
           <ActionBtn
             icon={<MoreIcon />}

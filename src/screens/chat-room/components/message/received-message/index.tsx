@@ -6,9 +6,16 @@ import React, { useState } from 'react'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { LoadingView } from '../../loading-message'
 import { DEFAULT_PHOTO_URI } from '@src/constants'
-import { MESSAGE_TYPE } from '@src/models'
+import { CONVERSATION_TYPE, MESSAGE_TYPE } from '@src/models'
 
-const ReceivedMessage = ({ message, date, displayTime, displayAvatar, friend }: any) => {
+const ReceivedMessage = ({
+  message,
+  date,
+  displayTime,
+  displayAvatar,
+  friend,
+  conversationType
+}: any) => {
   const [isShowTime, setIsShowTime] = useState(displayTime)
   const [isLoadingImage, setIsLoadingImage] = useState(false)
 
@@ -60,6 +67,12 @@ const ReceivedMessage = ({ message, date, displayTime, displayAvatar, friend }: 
     }
   }
 
+  const getMessageTitle = () => {
+    return conversationType === CONVERSATION_TYPE.GROUP
+      ? friend.name + ', ' + formatTime(message.createdAt)
+      : formatTime(message.createdAt)
+  }
+
   return (
     <>
       {date && (
@@ -80,22 +93,7 @@ const ReceivedMessage = ({ message, date, displayTime, displayAvatar, friend }: 
         />
 
         <View style={styles.mainContainer}>
-          {isShowTime && <Text style={styles.timeText}>{formatTime(message.createdAt)}</Text>}
-          {/* {message.message ? (
-            <TouchableOpacity style={styles.messageContainer} onPress={changeDisplayTime}>
-              <Text>{message.message}</Text>
-            </TouchableOpacity>
-          ) : (
-            <>
-              <Image
-                style={styles.imageMessage}
-                source={{ uri: message.image }}
-                onLoadStart={changeLoadingState}
-                onLoadEnd={changeLoadingState}
-              />
-              {isLoadingImage && <LoadingView />}
-            </>
-          )} */}
+          {isShowTime && <Text style={styles.timeText}>{getMessageTitle()}</Text>}
           {renderMessageContent()}
         </View>
       </View>

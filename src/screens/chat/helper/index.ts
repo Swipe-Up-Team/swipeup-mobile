@@ -2,7 +2,7 @@ import { Conversation, CONVERSATION_TYPE, User } from '@src/models'
 import { shortenConversationText } from '@src/utils'
 
 export const getConversationName = (conversation: Conversation, listFriend: User[]) => {
-  if (!conversation) return ''
+  if (!conversation || !listFriend) return ''
 
   if (conversation.type === CONVERSATION_TYPE.DIRECT && listFriend.length !== 0) {
     return shortenConversationText(listFriend[0].name!)

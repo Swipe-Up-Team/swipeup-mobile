@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { useTheme } from '@ui-kitten/components'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Animated, Dimensions, View } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
@@ -22,6 +22,9 @@ import styles from './styles'
 import { NotificationsScreen } from '@src/screens'
 import ProfileScreen from '@src/screens/profile/profile'
 import { SearchScreen } from '@src/screens/search'
+import { userService } from '@src/services'
+import { dispatch, useSelector } from '@src/common'
+import { onSetFollowingUsers } from '@src/store/reducers/user-reducer'
 
 function getWidth() {
   let width = Dimensions.get('window').width
@@ -36,6 +39,17 @@ export const MainScreen = () => {
   const PRIMARY_COLOR = theme['color-primary-default']
   const GRAY_COLOR = theme['color-basic-500']
   const tabOffsetValue = useRef(new Animated.Value(0)).current
+
+  const user = useSelector(x => x.user).user
+
+  const getAllFollowingUsers = async () => {
+    const list = await userService.getAllFollowingUser(user?.followingIDs || [])
+    dispatch(onSetFollowingUsers(list || []))
+  }
+
+  useEffect(() => {
+    getAllFollowingUsers()
+  }, [user])
 
   return (
     <>
