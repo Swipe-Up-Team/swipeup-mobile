@@ -21,3 +21,7 @@ export const GreenPersonAddIcon = (props: ImageStyle): IconElement => (
 export const MessageProfileIcon = (props: ImageStyle): IconElement => (
   <Icon {...props} name="message-square-outline" width={20} height={20} />
 )
+
+export const LogoutIcon = (props: ImageStyle): IconElement => (
+  <Icon {...props} name="log-out-outline" width={26} height={26} fill={'#CC251C'} />
+)
