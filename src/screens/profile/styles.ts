@@ -1,23 +1,38 @@
-import { BOTTOM_TAB_BAR_HEIGHT, SCREEN_WIDTH } from '@src/constants'
+import { SCREEN_WIDTH } from '@src/constants'
 import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     width: '100%',
-    height: '100%'
+    height: '100%',
+    position: 'relative'
+  },
+
+  navigationBar: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    zIndex: 9999999999,
+    backgroundColor: '#fff',
+    height: 44
   },
   profileContainer: {
-    width: SCREEN_WIDTH
+    width: SCREEN_WIDTH,
+    height: '100%',
+    position: 'relative'
   },
 
   w_full: {
     width: '100%'
   },
   posts: {
+    marginTop: 44,
     flex: 1,
-    marginBottom: BOTTOM_TAB_BAR_HEIGHT + 50,
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
+    width: '100%',
+    height: '100%'
   },
   spinnerContainer: {
     height: 40,
@@ -68,6 +83,17 @@ const styles = StyleSheet.create({
   emailText: {
     color: 'grey',
     marginTop: 4
+  },
+
+  footerContainer: {
+    marginBottom: 30,
+    marginTop: 10,
+    paddingHorizontal: 30,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  footerText: {
+    fontWeight: '400'
   }
 })
 

@@ -1,15 +1,17 @@
 /* eslint-disable react-native/no-inline-styles */
 import { RouteProp, useRoute } from '@react-navigation/native'
 import { useSelector } from '@src/common'
-import { PostCard, StyledDivider } from '@src/components'
+import { ArrowBack, PostCard, StyledDivider } from '@src/components'
+import navigationBarStyles from '@src/components/navigation-bar/styles'
 import { defaultUser } from '@src/constants'
 import { Post, User } from '@src/models'
-import { navigate } from '@src/navigation/navigation-service'
+import { goBack, navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN, AuthorizeParamsList } from '@src/navigation/screen-types'
 import { postService, userService } from '@src/services'
+import { Text } from '@ui-kitten/components'
 import React, { useEffect, useState } from 'react'
-import { RefreshControl, Text, View } from 'react-native'
-import { FlatList, ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
+import { View } from 'react-native'
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ActionButtonRow } from './components/action-button-row'
 import ProfileHeader from './components/profile-header'
@@ -26,21 +28,13 @@ export default function ProfileScreen({ navigation }: any) {
 
   // const handleLoadMore = async () => {}
 
-  const renderFooter = () => {
-    // if (!loading || !hasMoreToLoad) return null
-    // return (
-    //   <View style={styles.spinnerContainer}>
-    //     <Spinner />
-    //   </View>
-    // )
-    return null
-  }
-
-  // const onFollow = () => {}
-
-  // const onUnfollow = () => {}
-
-  // const onClickFollow = () => {}
+  const renderFooter = () => (
+    <View style={styles.footerContainer}>
+      <Text style={styles.footerText} appearance={'hint'}>
+        No posts yet
+      </Text>
+    </View>
+  )
 
   const getFriendUser = async () => {
     const friend = await userService.getUser(friendUserId!)
@@ -76,56 +70,63 @@ export default function ProfileScreen({ navigation }: any) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileContainer}>
-        <ScrollView
-          style={styles.w_full}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
-        >
-          <View>
-            <ProfileHeader user={currentUser} />
-
-            <View style={styles.bioWrapper}>
-              <Text style={styles.nameText}>{currentUser.name}</Text>
-              <Text style={styles.emailText}>{currentUser.email}</Text>
-            </View>
-
-            {friendUserId && friendUserId !== user?.id && (
-              <ActionButtonRow currentUser={currentUser} navigation={navigation} />
-            )}
-
-            <View style={styles.extraInfoWrapper}>
-              <TouchableOpacity style={styles.touch_center}>
-                <Text style={styles.text_extra_info}>{allPost.length}</Text>
-                <Text>Posts</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => {
-                  navigate(APP_SCREEN.FOLLOWING, { user: currentUser })
-                }}
-                style={styles.touch_center}
-              >
-                <Text style={styles.text_extra_info}>{currentUser.followingIDs?.length}</Text>
-                <Text>Following</Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={{ backgroundColor: '#fff' }}>
-              <FlatList
-                data={allPost}
-                showsVerticalScrollIndicator={false}
-                style={styles.posts}
-                keyExtractor={item => item?.id}
-                ItemSeparatorComponent={StyledDivider}
-                ListFooterComponent={renderFooter}
-                onEndReachedThreshold={0.5}
-                renderItem={renderPostItem}
-                // ListEmptyComponent={ListEmpty}
-                // onEndReached={hasMoreToLoad ? handleLoadMore : null}
-                // ListHeaderComponent={loginUser.id === userInfo.user.id ? <AddPostCard /> : null}
-              />
-            </View>
+        <View style={styles.navigationBar}>
+          {user?.id !== currentUser.id && (
+            <TouchableOpacity onPress={goBack} style={navigationBarStyles.btnBack}>
+              <ArrowBack />
+            </TouchableOpacity>
+          )}
+          <View style={navigationBarStyles.titleContainer}>
+            <Text style={navigationBarStyles.title}>{currentUser.name}</Text>
           </View>
-        </ScrollView>
+          {/* <View style={navigationBarStyles.accessoryRight}>{accessoryRight}</View> */}
+        </View>
+        <FlatList
+          data={allPost}
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+          showsVerticalScrollIndicator={false}
+          style={styles.posts}
+          keyExtractor={item => item?.id}
+          ItemSeparatorComponent={StyledDivider}
+          ListHeaderComponent={
+            <>
+              <ProfileHeader viewedUser={currentUser} />
+
+              <View style={styles.bioWrapper}>
+                <Text style={styles.nameText}>{currentUser.name}</Text>
+                <Text style={styles.emailText}>{currentUser.email}</Text>
+              </View>
+
+              {friendUserId && friendUserId !== user?.id && (
+                <ActionButtonRow currentUser={currentUser} navigation={navigation} />
+              )}
+
+              <View style={styles.extraInfoWrapper}>
+                <TouchableOpacity style={styles.touch_center}>
+                  <Text style={styles.text_extra_info}>{allPost.length}</Text>
+                  <Text>Posts</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => {
+                    navigate(APP_SCREEN.FOLLOWING, { user: currentUser })
+                  }}
+                  style={styles.touch_center}
+                >
+                  <Text style={styles.text_extra_info}>{currentUser.followingIDs?.length}</Text>
+                  <Text>Following</Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          }
+          ListFooterComponent={renderFooter}
+          onEndReachedThreshold={0.5}
+          renderItem={renderPostItem}
+          // ListEmptyComponent={ListEmpty}
+          // onEndReached={hasMoreToLoad ? handleLoadMore : null}
+          // ListHeaderComponent={loginUser.id === userInfo.user.id ? <AddPostCard /> : null}
+        />
       </View>
     </SafeAreaView>
   )

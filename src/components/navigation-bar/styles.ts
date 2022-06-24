@@ -17,7 +17,10 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     position: 'absolute',
-    width: '100%'
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   title: {
     fontSize: 16,

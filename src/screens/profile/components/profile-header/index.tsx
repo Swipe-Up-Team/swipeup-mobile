@@ -1,4 +1,4 @@
-import { NavigationBar } from '@src/components'
+import { useSelector } from '@src/common'
 import { DEFAULT_PHOTO_URI } from '@src/constants'
 import { User } from '@src/models'
 import ExpoFastImage from 'expo-fast-image'
@@ -6,22 +6,19 @@ import React from 'react'
 import { View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import styles from './styles'
-
 interface Props {
-  user: User
+  viewedUser: User
 }
 
-export default function ProfileHeader({ user }: Props) {
+export default function ProfileHeader({ viewedUser }: Props) {
   return (
     <View>
-      <NavigationBar title={user.name} showLeftIcon={false} />
-
       <View style={styles.infoWrapper}>
         <TouchableOpacity style={styles.avatarWrapper}>
           <ExpoFastImage
             style={styles.mainAvatar}
             source={{
-              uri: user?.avatar || DEFAULT_PHOTO_URI,
+              uri: viewedUser?.avatar || DEFAULT_PHOTO_URI,
               cache: 'force-cache'
             }}
           />
