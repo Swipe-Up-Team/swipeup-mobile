@@ -103,7 +103,8 @@ const styles = StyleSheet.create({
   },
   btnSetting: {
     width: 40,
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
+    marginRight: 3
   },
   videoWrapper: {
     position: 'relative',

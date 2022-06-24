@@ -16,7 +16,13 @@ export const ImageItem = ({ image, index, onPress }: ImageItemProps) => {
       style={styles.image_view}
       onPress={event => onPress(image, index, event)}
     >
-      <Image style={styles.image} uri={image.uri} />
+      <Image
+        onError={error => {
+          console.log('error load image: ', error)
+        }}
+        style={styles.image}
+        uri={image.uri}
+      />
       {/* <LightBox source={{ uri: image }} style={styles.image} /> */}
     </TouchableOpacity>
   ) : (

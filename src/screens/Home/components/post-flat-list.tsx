@@ -83,11 +83,9 @@ const PostFlatListComponent = ({
       renderItem={renderItem}
       ListHeaderComponent={<AddPostCard />}
       // try to optimize performance
-      // removeClippedSubviews={true}
-      // initialNumToRender={5}
-      // maxToRenderPerBatch={1}
-      // updateCellsBatchingPeriod={100}
-      // windowSize={10}
+      initialNumToRender={3}
+      maxToRenderPerBatch={1}
+      removeClippedSubviews
     />
   )
 }

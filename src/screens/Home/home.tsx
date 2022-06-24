@@ -19,7 +19,7 @@ const HomeScreenComponent = ({ navigation }: any) => {
   const [hasMoreToLoad, setHasMoreToLoad] = useState(true)
   const [pagination, setPagination] = useState<FirebasePagination>({
     page: 1,
-    limit: 10
+    limit: 5
   })
 
   const onLoadPostsSuccess = (result: { posts: any; lastDoc: any; isLast: any }) => {

@@ -20,7 +20,7 @@ import {
 } from '@src/store/reducers/video-reducer'
 import { dispatch } from '@src/common'
 import isEqual from 'react-fast-compare'
-import { PauseFillIcon, PlayFillIcon, SettingFillIcon } from '../icons'
+import { FullLightIcon, PauseFillIcon, PlayFillIcon, SettingFillIcon } from '../icons'
 import { Text } from '@ui-kitten/components'
 import { useInterpolate } from '@src/common/animated'
 import Animated, { Extrapolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
@@ -103,11 +103,12 @@ const VideoPlayerComponent = (props: any) => {
   }, [isPaused])
 
   const onPressOptionIconHandler = () => {
-    RNAnimated.timing(_optionRight, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true
-    }).start(() => (_isShowOptions = true))
+    videoRef.current?.presentFullscreenPlayerAsync()
+    // RNAnimated.timing(_optionRight, {
+    //   toValue: 0,
+    //   duration: 300,
+    //   useNativeDriver: true
+    // }).start(() => (_isShowOptions = true))
   }
 
   const onPressBackdropOptionListHandler = () => {
@@ -119,10 +120,6 @@ const VideoPlayerComponent = (props: any) => {
   }
 
   const onReadyForDisplay = async ({ naturalSize, status }: VideoReadyForDisplayEvent) => {
-    console.log(
-      '🚀 ~ file: video-player.tsx ~ line 139 ~ onReadyForDisplay ~ onReadyForDisplay',
-      onReadyForDisplay
-    )
     if (videoRef.current?.hasOwnProperty('_nativeRef') && !isPaused) {
       playBtnOpacity.value = 0
       await videoRef.current.replayAsync()
@@ -357,11 +354,12 @@ const VideoPlayerComponent = (props: any) => {
           progressUpdateIntervalMillis={500}
           onPlaybackStatusUpdate={onPlaybackStatusUpdateHandler}
           onReadyForDisplay={onReadyForDisplay}
-          onError={() => {
+          onError={error => {
+            console.log(error)
             Toast.show({
               type: 'error',
               text1: 'Something has error.',
-              text2: 'Something has error when the system try to load video.'
+              text2: error
             })
           }}
           style={{
@@ -369,7 +367,7 @@ const VideoPlayerComponent = (props: any) => {
             width: VIDEO_PLAYER_WIDTH,
             height: fixedVideoHeight
           }}
-          source={source}
+          source={{ uri: video.uri }}
         />
 
         <Animated.View style={[styles.postContentWrapper, postContentWrapperStyle]}>
@@ -415,7 +413,8 @@ const VideoPlayerComponent = (props: any) => {
                 <Text style={styles.maxTime}>{maxTimeString || '00:00'}</Text>
               </View>
               <TouchableOpacity onPress={onPressOptionIconHandler} style={styles.btnSetting}>
-                <SettingFillIcon />
+                {/* <SettingFillIcon /> */}
+                <FullLightIcon />
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
