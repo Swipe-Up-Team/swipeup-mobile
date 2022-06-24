@@ -5,6 +5,7 @@ import Carousel, { AdditionalParallaxProps, Pagination } from 'react-native-snap
 
 import styles from './styles'
 import * as MediaLibrary from 'expo-media-library'
+import { ImageItem } from '../image-grid/image-item'
 
 const { width: screenWidth } = Dimensions.get('window')
 
@@ -18,14 +19,7 @@ export const ImagesCarousel = ({ images }: { images: MediaLibrary.Asset[] }) => 
   ) => {
     return (
       <View style={styles.imageContainer}>
-        <Image
-          // source={{ uri: item }}
-          uri={item.uri}
-          // containerStyle={styles.imageContainer}
-          style={styles.image}
-          // parallaxFactor={0.4}
-          {...parallaxProps}
-        />
+        <ImageItem image={item} {...parallaxProps} />
       </View>
     )
   }

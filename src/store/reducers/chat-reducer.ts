@@ -34,6 +34,10 @@ const chat = createSlice({
       } else {
         state.conversationMembers[index] = payload
       }
+    },
+    onClearChatState: state => {
+      state.conversations = []
+      state.conversationMembers = []
     }
   }
 })
@@ -42,4 +46,4 @@ const chatReducer = chat.reducer
 
 export default chatReducer
 
-export const { onSetConversations, onSetConversationMembers } = chat.actions
+export const { onSetConversations, onSetConversationMembers, onClearChatState } = chat.actions
