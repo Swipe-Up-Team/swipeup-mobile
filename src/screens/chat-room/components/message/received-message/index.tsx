@@ -7,6 +7,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { LoadingView } from '../../loading-message'
 import { DEFAULT_PHOTO_URI } from '@src/constants'
 import { CONVERSATION_TYPE, MESSAGE_TYPE } from '@src/models'
+import { navigate } from '@src/navigation/navigation-service'
+import { APP_SCREEN } from '@src/navigation/screen-types'
 
 const ReceivedMessage = ({
   message,
@@ -42,6 +44,10 @@ const ReceivedMessage = ({
     setIsLoadingImage(!isLoadingImage)
   }
 
+  const navigateToImageDetail = () => {
+    navigate(APP_SCREEN.IMAGE_DETAIL, { imageUrl: message.image })
+  }
+
   const renderMessageContent = () => {
     switch (message.type) {
       case MESSAGE_TYPE.MESSAGE:
@@ -52,7 +58,7 @@ const ReceivedMessage = ({
         )
       case MESSAGE_TYPE.IMAGE:
         return (
-          <>
+          <TouchableOpacity onPress={navigateToImageDetail}>
             <Image
               style={styles.imageMessage}
               source={{ uri: message.image }}
@@ -60,7 +66,7 @@ const ReceivedMessage = ({
               onLoadEnd={changeLoadingState}
             />
             {isLoadingImage && <LoadingView />}
-          </>
+          </TouchableOpacity>
         )
       default:
         break

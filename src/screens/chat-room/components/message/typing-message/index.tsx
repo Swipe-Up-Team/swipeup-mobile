@@ -1,16 +1,21 @@
-import { View } from 'react-native'
-import { Text, Avatar, IconElement, Icon } from '@ui-kitten/components'
-import styles from './styles'
+import React from 'react'
+import { useSelector } from '@src/common'
+import { DEFAULT_PHOTO_URI } from '@src/constants'
+import { Avatar } from '@ui-kitten/components'
 import LottieView from 'lottie-react-native'
+import { View } from 'react-native'
+import styles from './styles'
 
-const TypingMessage = () => {
+const TypingMessage = ({ typingId }: any) => {
+  const typingUser = useSelector(x => x.user.followingUsers?.find(user => user.id === typingId))
+
   return (
     <View style={styles.container}>
       <Avatar
         style={styles.avatar}
         size="medium"
         borderRadius={4}
-        source={require('@assets/image/img-avatar.jpg')}
+        source={{ uri: typingUser?.avatar || DEFAULT_PHOTO_URI }}
       />
       <View style={styles.messageContainer}>
         <LottieView

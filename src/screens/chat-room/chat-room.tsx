@@ -8,7 +8,7 @@ import { KeyboardAvoidingView, Platform, View } from 'react-native'
 import { Input, List, ListItem, Button } from '@ui-kitten/components'
 import ChatAvatar from '../chat/components/chat-avatar'
 import { ChoseAsset } from '../add-post/components'
-import { getState, useArray, useSelector } from '@src/common'
+import { dispatch, getState, useArray, useSelector } from '@src/common'
 import { CONVERSATION_TYPE, Message, MESSAGE_TYPE, User } from '@src/models'
 import * as MediaLibrary from 'expo-media-library'
 import SentMessage from './components/message/sent-message'
@@ -18,6 +18,7 @@ import { navigate } from '@src/navigation/navigation-service'
 import { DEFAULT_GROUP_URI, USERIDS_DIVIDER } from '@src/constants'
 import TypingMessage from './components/message/typing-message'
 import { getConversationName } from '../chat/helper'
+import { onEndProcess, onStartProcess } from '@src/store/reducers/app-reducer'
 
 const RightSection = () => (
   <View style={styles.topRightContainer}>
@@ -131,8 +132,10 @@ export const ChatRoomScreen = (props: any) => {
   }
 
   const sendImageMessage = async () => {
+    dispatch(onStartProcess())
     await chatService.sendImageMessage(selectedAssets, userId!, conversationId)
     selectedAssetsActions.clear()
+    dispatch(onEndProcess())
   }
 
   const sendMessage = async () => {
@@ -241,7 +244,7 @@ export const ChatRoomScreen = (props: any) => {
               <View>
                 {typingList.map(typingId => {
                   if (typingId && typingId !== userId) {
-                    return <TypingMessage />
+                    return <TypingMessage typingId={typingId} />
                   }
                   return null
                 })}

@@ -26,7 +26,7 @@ const user = createSlice({
   name: SLICE_NAME.USER,
   initialState: initialState,
   reducers: {
-    onSetUser: (state, { payload }: PayloadAction<User>) => {
+    onSetUser: (state, { payload }: PayloadAction<User | undefined>) => {
       state.user = payload
     },
     onSetFollowingUsers: (state, { payload }: PayloadAction<User[]>) => {

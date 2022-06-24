@@ -7,6 +7,8 @@ import React, { useState } from 'react'
 import { LoadingView } from '../../loading-message'
 import { MESSAGE_TYPE } from '@src/models'
 import { SentIcon } from '@src/components'
+import { APP_SCREEN } from '@src/navigation/screen-types'
+import { navigate } from '@src/navigation/navigation-service'
 
 const SentMessage = ({ message, displayDate, displayTime }: any) => {
   const [isShowTime, setIsShowTime] = useState(displayTime)
@@ -35,6 +37,10 @@ const SentMessage = ({ message, displayDate, displayTime }: any) => {
     setIsLoadingImage(!isLoadingImage)
   }
 
+  const navigateToImageDetail = () => {
+    navigate(APP_SCREEN.IMAGE_DETAIL, { imageUrl: message.image })
+  }
+
   const renderMessageContent = () => {
     switch (message.type) {
       case MESSAGE_TYPE.MESSAGE:
@@ -45,7 +51,7 @@ const SentMessage = ({ message, displayDate, displayTime }: any) => {
         )
       case MESSAGE_TYPE.IMAGE:
         return (
-          <>
+          <TouchableOpacity onPress={navigateToImageDetail}>
             <Image
               style={styles.imageMessage}
               source={{ uri: message.image }}
@@ -53,7 +59,7 @@ const SentMessage = ({ message, displayDate, displayTime }: any) => {
               onLoadEnd={changeLoadingState}
             />
             {isLoadingImage && <LoadingView />}
-          </>
+          </TouchableOpacity>
         )
       default:
         break
