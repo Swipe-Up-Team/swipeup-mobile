@@ -1,6 +1,8 @@
-import { useSelector } from '@src/common'
+import { CameraFillIcon } from '@src/components'
 import { DEFAULT_PHOTO_URI } from '@src/constants'
 import { User } from '@src/models'
+import { navigate } from '@src/navigation/navigation-service'
+import { APP_SCREEN } from '@src/navigation/screen-types'
 import ExpoFastImage from 'expo-fast-image'
 import React from 'react'
 import { View } from 'react-native'
@@ -11,10 +13,17 @@ interface Props {
 }
 
 export default function ProfileHeader({ viewedUser }: Props) {
+  const handleChangeAvatarPress = () => {
+    navigate(APP_SCREEN.GALLERY_CHOOSER, {
+      mediaType: 'photo',
+      isMultiple: false,
+      prevScreen: APP_SCREEN.PROFILE
+    })
+  }
   return (
     <View>
       <View style={styles.infoWrapper}>
-        <TouchableOpacity style={styles.avatarWrapper}>
+        <TouchableOpacity style={styles.avatarWrapper} onPress={handleChangeAvatarPress}>
           <ExpoFastImage
             style={styles.mainAvatar}
             source={{
@@ -22,9 +31,9 @@ export default function ProfileHeader({ viewedUser }: Props) {
               cache: 'force-cache'
             }}
           />
-          {/* <View style={styles.plusIcon}>
-            <Icon width={16} height={16} fill="#fff" name="plus" />
-          </View> */}
+          <TouchableOpacity style={styles.changeAvatarBtn} onPress={handleChangeAvatarPress}>
+            <CameraFillIcon />
+          </TouchableOpacity>
         </TouchableOpacity>
         {/* {user.id === useSelector(state => state.user).user?.id ? (
           <TouchableOpacity

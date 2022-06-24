@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import { RouteProp, useRoute } from '@react-navigation/native'
 import { useSelector } from '@src/common'
@@ -8,6 +9,7 @@ import { Post, User } from '@src/models'
 import { goBack, navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN, AuthorizeParamsList } from '@src/navigation/screen-types'
 import { postService, userService } from '@src/services'
+import { updateAvatar } from '@src/store/reducers/user-reducer'
 import { Text } from '@ui-kitten/components'
 import React, { useEffect, useState } from 'react'
 import { View } from 'react-native'
@@ -16,6 +18,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { ActionButtonRow } from './components/action-button-row'
 import ProfileHeader from './components/profile-header'
 import styles from './styles'
+import * as MediaLibrary from 'expo-media-library'
+import Toast from 'react-native-toast-message'
 
 export default function ProfileScreen({ navigation }: any) {
   const route = useRoute<RouteProp<AuthorizeParamsList, APP_SCREEN.PROFILE>>()
@@ -66,6 +70,25 @@ export default function ProfileScreen({ navigation }: any) {
   useEffect(() => {
     getAllPost()
   }, [])
+
+  useEffect(() => {
+    ;(async () => {
+      console.log('route.params?.newAvatar: ', route.params?.newAvatar)
+      if (route.params?.newAvatar) {
+        const newAvatar = route.params?.newAvatar as MediaLibrary.Asset
+        try {
+          await updateAvatar(newAvatar)
+          if (user) setCurrentUser(user)
+          Toast.show({
+            type: 'success',
+            text1: 'Avatar updated successfully.'
+          })
+        } catch (error) {
+          console.log(error)
+        }
+      }
+    })()
+  }, [route.params?.newAvatar])
 
   return (
     <SafeAreaView style={styles.container}>

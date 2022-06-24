@@ -75,7 +75,6 @@ export function SearchScreen({ navigation }: any) {
       >
         <View style={styles.container}>
           <Input
-            autoFocus
             style={styles.input}
             placeholder="Find your friends"
             accessoryLeft={<ChatSearchIcon />}
