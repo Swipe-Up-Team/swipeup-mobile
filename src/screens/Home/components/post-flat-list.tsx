@@ -65,6 +65,12 @@ const PostFlatListComponent = ({
     await onRefresh()
     setRefreshing(false)
   }
+
+  const handleLoadMore = async () => {
+    if (refreshing) return
+
+    onLoadMore()
+  }
   return (
     <FlatList
       data={posts}
@@ -79,7 +85,7 @@ const PostFlatListComponent = ({
       ItemSeparatorComponent={StyledDivider}
       ListFooterComponent={renderFooter}
       onEndReachedThreshold={0.5}
-      onEndReached={onLoadMore}
+      onEndReached={handleLoadMore}
       renderItem={renderItem}
       ListHeaderComponent={<AddPostCard />}
       // try to optimize performance

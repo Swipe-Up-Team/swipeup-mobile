@@ -1,7 +1,7 @@
 // import { ResponseBase } from '@src/models'
 // import { NetWorkResponseType } from './network-service'
 // import { userApi } from '@src/api/user-api'
-import { dispatch } from '@src/common'
+import { dispatch, getState } from '@src/common'
 import { firestore } from '@src/config'
 import { authentication } from '@src/config/firebase-config'
 import { FIREBASE_ERROR_CODE, FIRESTORE_ENDPOINT } from '@src/constants'
@@ -151,7 +151,12 @@ export const userService = {
   },
 
   updateAvatar: async (uri: string) => {
-    const result = await updateDoc(doc(firestore, FIRESTORE_ENDPOINT.USERS), { avatar: uri })
+    const { user } = getState('user')
+    if (!user) return
+
+    const result = await updateDoc(doc(firestore, FIRESTORE_ENDPOINT.USERS, user.id), {
+      avatar: uri
+    })
     return result
   },
 
