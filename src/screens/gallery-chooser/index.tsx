@@ -10,12 +10,17 @@ import {
   onSetSelectedAssetIndexes,
   onSetSystemAsset
 } from '@src/store/reducers/system-assets-reducer'
+import { updateAvatar } from '@src/store/reducers/user-reducer'
 import { fetchSystemAssets, formatVideoDuration } from '@src/utils'
 import { Button } from '@ui-kitten/components'
 import React, { useEffect, useState } from 'react'
 import { FlatList, Text, TouchableOpacity, View, Image } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import * as MediaLibrary from 'expo-media-library'
 import styles from './styles'
+import { STORAGE_ENDPOINT } from '@src/constants'
+import { storageService, userService } from '@src/services'
+import { onEndProcess, onStartProcess } from '@src/store/reducers/app-reducer'
 
 export function GalleryChooserScreen() {
   const route = useRoute<RouteProp<RootStackParamList, APP_SCREEN.GALLERY_CHOOSER>>()
@@ -83,13 +88,29 @@ export function GalleryChooserScreen() {
   //   // navigate('Camera')
   // }
 
-  const handleGoBack = () => {
+  const handleUpdateAvatar = async () => {
+    dispatch(onStartProcess())
+    try {
+      const newAvatar = systemAssets[selectedIndexes[0]]
+      const uploadedImage = await storageService.uploadSingleFile(
+        newAvatar,
+        STORAGE_ENDPOINT.FILES,
+        {}
+      )
+      dispatch(updateAvatar(uploadedImage.uri))
+      await userService.updateAvatar(uploadedImage.uri)
+    } catch (error) {
+      console.log(error)
+    }
+    dispatch(onEndProcess())
+  }
+
+  const handleGoBack = async () => {
     const prevScreen = route.params?.prevScreen
 
     if (prevScreen === APP_SCREEN.PROFILE) {
-      return navigate(APP_SCREEN.PROFILE, {
-        newAvatar: systemAssets[selectedIndexes[0]]
-      })
+      await handleUpdateAvatar()
+      goBack()
     }
 
     return navigate(prevScreen || APP_SCREEN.ADD_POST, {
