@@ -20,7 +20,7 @@ import {
 } from '@src/store/reducers/video-reducer'
 import { dispatch } from '@src/common'
 import isEqual from 'react-fast-compare'
-import { FullLightIcon, PauseFillIcon, PlayFillIcon, SettingFillIcon } from '../icons'
+import { FullLightIcon, PauseFillIcon, PlayFillIcon } from '../icons'
 import { Text } from '@ui-kitten/components'
 import { useInterpolate } from '@src/common/animated'
 import Animated, { Extrapolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
@@ -34,7 +34,6 @@ const VideoPlayerComponent = (props: any) => {
   const {
     onRefReady,
     shouldPlay,
-    source,
     containerStyle,
     isCenterVertical,
     video,
@@ -103,6 +102,8 @@ const VideoPlayerComponent = (props: any) => {
   }, [isPaused])
 
   const onPressOptionIconHandler = async () => {
+    await videoRef.current?.pauseAsync()
+
     if (isInThreadList) dispatch(setThreadWatchingStatus({ playingId: video.id, isPlaying: false }))
     await videoRef.current?.presentFullscreenPlayerAsync()
     // RNAnimated.timing(_optionRight, {

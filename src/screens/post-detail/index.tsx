@@ -61,7 +61,7 @@ export function PostDetailScreen() {
   }
 
   const saveNotiLikeComment = async (commentId: string) => {
-    if (!user || user.id === postDetails?.authorId) return
+    if (!user) return
 
     const noti: Omit<Notification, 'id'> = {
       userId: postDetails?.authorId!,
@@ -75,9 +75,9 @@ export function PostDetailScreen() {
     await notificationService.saveNotificationToFirestore(noti)
     await notificationService.sendPushNotification(noti)
   }
-  const handleLikeCommentPress = async (commentId: string, isLiked: boolean) => {
+  const handleLikeCommentPress = async (commentId: string, isLiked: boolean, sentNoti: boolean) => {
     await commentService.likeComment(route.params.postId, commentId, isLiked)
-    if (isLiked) saveNotiLikeComment(commentId)
+    if (sentNoti) saveNotiLikeComment(commentId)
   }
 
   // load comment list + post details

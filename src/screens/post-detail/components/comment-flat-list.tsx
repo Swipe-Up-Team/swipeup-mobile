@@ -10,7 +10,7 @@ import { EmptyComment } from './empty-comment'
 export interface CommentFlatListComponentProps {
   comments: CommentResponseData[]
   postDetails?: Post
-  onLikeComment: (commentId: string, isLiked: boolean) => void
+  onLikeComment: (commentId: string, isLiked: boolean, sendNoti: boolean) => void
 }
 
 const CommentFlatListComponent = forwardRef(

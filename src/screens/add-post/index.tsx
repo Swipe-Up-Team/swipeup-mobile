@@ -6,6 +6,7 @@ import { dispatch, getState, useArray, useSelector } from '@src/common'
 import {
   CloseIcon,
   NavigationBar,
+  PostCard,
   PostPhotoBigIcon,
   PostTagFriendBigIcon,
   PostVideoBigIcon,
@@ -60,6 +61,7 @@ const AddPostScreenComponent = () => {
   const [textPost, setTextPost] = useState('')
   const [mode, setMode] = useState<'add' | 'edit'>()
   const [editingPost, setEditingPost] = useState<Post>()
+  const [sharedPost, setSharedPost] = useState<Post>()
 
   // ANIMATION VARS
   const editorWrapperHeight = useSharedValue(100)
@@ -87,8 +89,14 @@ const AddPostScreenComponent = () => {
 
         const postDetails = await postService.getSinglePostById(editingId)
         if (postDetails) {
-          const images = postDetails.content.images || []
-          selectedAssetsActions.setValue(images)
+          if (postDetails.content.sharedPostId) {
+            const result = await postService.getSinglePostById(postDetails.content.sharedPostId)
+            if (result) setSharedPost(result)
+          } else {
+            const images = postDetails.content.images || []
+            const video = postDetails.content.video
+            selectedAssetsActions.setValue(video ? [video] : images)
+          }
           setTextPost(postDetails.content.text)
           setEditingPost(postDetails)
         }
@@ -371,17 +379,36 @@ const AddPostScreenComponent = () => {
           </Animated.View>
         </View>
 
-        {/* TODO: handle remove/onPress for each image */}
-        <FlatList
-          horizontal
-          data={selectedAssets}
-          keyExtractor={data => data.id}
-          style={styles.selectedAssetsWrapper}
-          contentContainerStyle={styles.selectedAssetsContentWrapper}
-          renderItem={({ item, index }) => (
-            <ChoseAsset key={item.id} item={item} onRemove={() => handleRemoveAsset(index)} />
-          )}
-        />
+        {sharedPost ? (
+          <View
+            style={{
+              paddingHorizontal: 15
+            }}
+          >
+            <View
+              style={{
+                borderWidth: 1.2,
+                borderRadius: 5,
+                borderColor: '#F5F2F2',
+                borderStyle: 'solid',
+                padding: 2
+              }}
+            >
+              <PostCard shared post={sharedPost} />
+            </View>
+          </View>
+        ) : (
+          <FlatList
+            horizontal
+            data={selectedAssets}
+            keyExtractor={data => data.id}
+            style={styles.selectedAssetsWrapper}
+            contentContainerStyle={styles.selectedAssetsContentWrapper}
+            renderItem={({ item, index }) => (
+              <ChoseAsset key={item.id} item={item} onRemove={() => handleRemoveAsset(index)} />
+            )}
+          />
+        )}
 
         <RNAnimated.View style={styles.toolOptionsWrapper}>
           <PanGestureHandler

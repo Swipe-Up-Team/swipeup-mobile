@@ -68,25 +68,6 @@ export default function ProfileScreen({ navigation }: any) {
     getAllPost()
   }, [])
 
-  // useEffect(() => {
-  //   ;(async () => {
-  //     console.log('route.params?.newAvatar: ', route.params?.newAvatar)
-  //     if (route.params?.newAvatar) {
-  //       const newAvatar = route.params?.newAvatar as MediaLibrary.Asset
-  //       try {
-  //         await updateAvatar(newAvatar)
-  //         if (user) setCurrentUser(user)
-  //         Toast.show({
-  //           type: 'success',
-  //           text1: 'Avatar updated successfully.'
-  //         })
-  //       } catch (error) {
-  //         console.log(error)
-  //       }
-  //     }
-  //   })()
-  // }, [route.params?.newAvatar])
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileContainer}>
@@ -98,11 +79,13 @@ export default function ProfileScreen({ navigation }: any) {
           )}
           <View style={navigationBarStyles.titleContainer}>
             <Text style={navigationBarStyles.title}>{currentUser.name}</Text>
-            <MoreVerticalIcon
-              onPress={() => {
-                navigate(APP_SCREEN.PROFILE_OPTIONS_MODAL)
-              }}
-            />
+            {currentUser.id === user?.id && (
+              <MoreVerticalIcon
+                onPress={() => {
+                  navigate(APP_SCREEN.PROFILE_OPTIONS_MODAL)
+                }}
+              />
+            )}
           </View>
           {/* <View style={navigationBarStyles.accessoryRight}>{accessoryRight}</View> */}
         </View>

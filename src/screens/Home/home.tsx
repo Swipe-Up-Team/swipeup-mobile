@@ -29,7 +29,8 @@ const HomeScreenComponent = ({ navigation }: any) => {
       setPosts([...posts, ...result.posts])
     }
     setPagination({ ...pagination, startAfter: result.lastDoc })
-    if (result.isLast) setHasMoreToLoad(false)
+    if (!result.isLast && !hasMoreToLoad) setHasMoreToLoad(true)
+    if (result.isLast && hasMoreToLoad) setHasMoreToLoad(false)
   }
 
   useEffect(() => {
@@ -60,7 +61,7 @@ const HomeScreenComponent = ({ navigation }: any) => {
 
   const handleRefresh = () => {
     setPagination({ ...pagination, page: 1, startAfter: undefined })
-    setHasMoreToLoad(true)
+    // setHasMoreToLoad(true)
   }
 
   return (

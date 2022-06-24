@@ -11,6 +11,8 @@ import { countReaction } from '@src/utils'
 import { LikeButton } from '../like-button'
 import { UserAvatarSquare } from '../user-avatar-square'
 import styles from './styles'
+import { navigate } from '@src/navigation/navigation-service'
+import { APP_SCREEN } from '@src/navigation/screen-types'
 
 export const CommentCard = ({
   item,
@@ -18,7 +20,7 @@ export const CommentCard = ({
 }: {
   item: CommentResponseData
   onSharePress: () => void
-  onLikeComment: (commentId: string, isLiked: boolean) => void
+  onLikeComment: (commentId: string, isLiked: boolean, sendNoti: boolean) => void
 }) => {
   const { author, createdAt, text } = item
   const { user } = getState('user')
@@ -35,7 +37,7 @@ export const CommentCard = ({
   const debouncedLikePost = useRef(debounce(onLikeComment, 300)).current
 
   const handleLikeCommentPress = async (commentId: string, _isLiked: boolean) => {
-    debouncedLikePost(commentId, _isLiked)
+    debouncedLikePost(commentId, _isLiked, user?.id !== item.author.id)
   }
 
   const handleLikePress = async () => {
@@ -48,9 +50,13 @@ export const CommentCard = ({
   return (
     <View style={styles.commentContainer}>
       <View style={styles.innerContainer}>
-        <View>
+        <TouchableOpacity
+          onPress={() => {
+            navigate(APP_SCREEN.PROFILE, { userId: author.id })
+          }}
+        >
           <UserAvatarSquare uri={author.avatar} />
-        </View>
+        </TouchableOpacity>
 
         <View style={styles.commentSection}>
           <View style={styles.userInfo}>
