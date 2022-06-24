@@ -60,6 +60,7 @@ const HomeScreenComponent = ({ navigation }: any) => {
   }
 
   const handleRefresh = () => {
+    // setPosts([])
     setPagination({ ...pagination, page: 1, startAfter: undefined })
     // setHasMoreToLoad(true)
   }

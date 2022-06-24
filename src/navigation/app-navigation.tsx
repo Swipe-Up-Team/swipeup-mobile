@@ -82,6 +82,7 @@ export const AppContainer = () => {
 
   useEffect(() => {
     notificationService.registerForPushNotifications().then(_token => {
+      console.log('registerForPushNotifications token: ', _token)
       if (token) {
         notificationService.saveExpoPushTokenToFirestore(_token)
         dispatch(onSetExpoPushToken(_token))

@@ -90,9 +90,9 @@ export const SharePostScreen = () => {
               onChangeText={setTextPost}
             />
           </View>
-          <View style={[styles.sharedPostContainer]}>
+          {/* <View style={[styles.sharedPostContainer]}>
             <PostCard post={sharedPost} shared />
-          </View>
+          </View> */}
           <View style={styles.btnContainer}>
             <Button onPress={handleSubmitSharePostPress}>Share Now</Button>
           </View>
