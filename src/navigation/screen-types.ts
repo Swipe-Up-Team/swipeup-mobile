@@ -21,6 +21,7 @@ export enum APP_SCREEN {
   CHAT_USER_INFO_MODAL = 'CHAT_USER_INFO_MODAL',
   POST_OPTIONS_MODAL = 'POST_OPTIONS_MODAL',
   SHARE_POST = 'SHARE_POST',
+  IMAGE_DETAIL = 'IMAGE_DETAIL',
 
   SEARCH = 'SEARCH',
   NOTIFICATIONS = 'NOTIFICATIONS',
@@ -87,6 +88,9 @@ export type AuthorizeParamsList = {
   [APP_SCREEN.EDIT_PROFILE]: undefined
   [APP_SCREEN.FOLLOWING]: {
     user: User
+  }
+  [APP_SCREEN.IMAGE_DETAIL]: {
+    imageUrl: string
   }
 }
 

@@ -18,6 +18,7 @@ import ProfileScreen from '@src/screens/profile/profile'
 import { InfoBottomSheet } from '@src/screens/chat-room/components/bottom-sheet'
 import { GroupMemberScreen } from '@src/screens/chat-room/components/members-screen'
 import { AddMemberScreen } from '@src/screens/chat-room/components/add-member-screen'
+import { ImageDetail } from '@src/screens/image-detail'
 
 const RootStack = createStackNavigator<RootStackParamList>()
 
@@ -87,6 +88,7 @@ export const RootNavigation = ({ token }: { token?: string }) => {
           <RootStack.Screen name={APP_SCREEN.POST_DETAILS} component={PostDetailScreen} />
           <RootStack.Screen name={APP_SCREEN.GROUP_MEMBER} component={GroupMemberScreen} />
           <RootStack.Screen name={APP_SCREEN.ADD_MEMBER} component={AddMemberScreen} />
+          <RootStack.Screen name={APP_SCREEN.IMAGE_DETAIL} component={ImageDetail} />
         </>
       )}
     </RootStack.Navigator>
