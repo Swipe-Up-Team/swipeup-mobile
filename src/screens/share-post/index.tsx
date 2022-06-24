@@ -14,7 +14,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-na
 import Toast from 'react-native-toast-message'
 import styles from './styles'
 
-export const SharePostScreen = () => {
+export const SharePostScreen = ({ navigation }: any) => {
   const route = useRoute<RouteProp<RootStackParamList, APP_SCREEN.SHARE_POST>>()
   const { user } = getState('user')
   const { post } = route.params
@@ -91,7 +91,7 @@ export const SharePostScreen = () => {
             />
           </View>
           <View style={[styles.sharedPostContainer]}>
-            <PostCard post={sharedPost} shared />
+            <PostCard post={sharedPost} shared navigation={navigation} />
           </View>
           <View style={styles.btnContainer}>
             <Button onPress={handleSubmitSharePostPress}>Share Now</Button>

@@ -16,7 +16,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { CommentFlatList } from './components/comment-flat-list'
 import styles from './styles'
 
-export function PostDetailScreen() {
+export function PostDetailScreen({ navigation }: any) {
   const commentListRef = useRef<FlatList<CommentResponseData>>(null)
 
   const route = useRoute<RouteProp<RootStackParamList, APP_SCREEN.POST_DETAILS>>()
@@ -121,6 +121,7 @@ export function PostDetailScreen() {
           </View>
         ) : (
           <CommentFlatList
+            navigation={navigation}
             ref={commentListRef}
             postDetails={postDetails}
             comments={comments}

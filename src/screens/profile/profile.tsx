@@ -47,7 +47,7 @@ export default function ProfileScreen({ navigation }: any) {
     setAllPost(posts)
   }
 
-  const renderPostItem = ({ item }: any) => <PostCard post={item} />
+  const renderPostItem = ({ item }: any) => <PostCard post={item} navigation={navigation} />
 
   const handleRefresh = async () => {
     setRefreshing(true)
