@@ -19,6 +19,7 @@ import { InfoBottomSheet } from '@src/screens/chat-room/components/bottom-sheet'
 import { GroupMemberScreen } from '@src/screens/chat-room/components/members-screen'
 import { AddMemberScreen } from '@src/screens/chat-room/components/add-member-screen'
 import { ImageDetail } from '@src/screens/image-detail'
+import { ProfileOptionBottomSheet } from '@src/screens/profile/components/option-bottomsheet'
 
 const RootStack = createStackNavigator<RootStackParamList>()
 
@@ -81,6 +82,14 @@ export const RootNavigation = ({ token }: { token?: string }) => {
             }}
             name={APP_SCREEN.CHAT_USER_INFO_MODAL}
             component={InfoBottomSheet}
+          />
+          <RootStack.Screen
+            options={{
+              ...TransitionPresets.ModalTransition,
+              cardStyle: { backgroundColor: 'transparent' }
+            }}
+            name={APP_SCREEN.PROFILE_OPTIONS_MODAL}
+            component={ProfileOptionBottomSheet}
           />
           <RootStack.Screen name={APP_SCREEN.EDIT_PROFILE} component={EditProfile} />
           <RootStack.Screen name={APP_SCREEN.FOLLOWING} component={FollowScreen} />

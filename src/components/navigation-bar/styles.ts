@@ -19,13 +19,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center'
+    flexDirection: 'row',
+    alignItems: 'center'
+    // justifyContent: 'center'
   },
   title: {
     fontSize: 16,
     fontWeight: '600',
-    textAlign: 'center'
+    textAlign: 'center',
+    flex: 1,
+    marginLeft: 24
   },
   accessoryRight: {
     height: '100%',

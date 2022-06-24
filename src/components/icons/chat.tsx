@@ -31,6 +31,19 @@ export const MoreIcon = (props: ImageStyle): IconElement => (
   <Icon {...props} name="more-horizontal-outline" width={24} height={24} fill={'#cacfd7'} />
 )
 
+export const MoreVerticalIcon = ({ onPress, ...style }: any): IconElement => (
+  <TouchableOpacity onPress={onPress}>
+    <Icon
+      {...style}
+      style={{ marginRight: 4 }}
+      name="more-vertical-outline"
+      width={24}
+      height={24}
+      fill={'#000'}
+    />
+  </TouchableOpacity>
+)
+
 export const SentIcon = (style: any): IconElement => (
   <Icon {...style} style={{ width: 15, height: 15 }} name="done-all-outline" fill="#000" />
 )

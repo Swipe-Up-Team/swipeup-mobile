@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import { RouteProp, useRoute } from '@react-navigation/native'
 import { useSelector } from '@src/common'
-import { ArrowBack, PostCard, StyledDivider } from '@src/components'
+import { ArrowBack, MoreVerticalIcon, PostCard, StyledDivider } from '@src/components'
 import navigationBarStyles from '@src/components/navigation-bar/styles'
 import { defaultUser } from '@src/constants'
 import { Post, User } from '@src/models'
@@ -78,6 +78,11 @@ export default function ProfileScreen({ navigation }: any) {
           )}
           <View style={navigationBarStyles.titleContainer}>
             <Text style={navigationBarStyles.title}>{currentUser.name}</Text>
+            <MoreVerticalIcon
+              onPress={() => {
+                navigate(APP_SCREEN.PROFILE_OPTIONS_MODAL)
+              }}
+            />
           </View>
           {/* <View style={navigationBarStyles.accessoryRight}>{accessoryRight}</View> */}
         </View>
