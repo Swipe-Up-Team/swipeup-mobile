@@ -20,6 +20,11 @@ const chat = createSlice({
       state.conversations = payload
     },
     onSetConversationMembers: (state, { payload }: PayloadAction<ConversationMembers>) => {
+      if (!state.conversationMembers || state.conversationMembers.length === 0) {
+        state.conversationMembers = [payload]
+        return
+      }
+
       const index = state.conversationMembers.findIndex(
         x => x.conversationId === payload.conversationId
       )
