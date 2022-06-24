@@ -103,6 +103,7 @@ const VideoPlayerComponent = (props: any) => {
   }, [isPaused])
 
   const onPressOptionIconHandler = async () => {
+    if (isInThreadList) dispatch(setThreadWatchingStatus({ playingId: video.id, isPlaying: false }))
     await videoRef.current?.presentFullscreenPlayerAsync()
     // RNAnimated.timing(_optionRight, {
     //   toValue: 0,

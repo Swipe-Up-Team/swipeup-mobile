@@ -56,8 +56,9 @@ export type AuthorizeParamsList = {
   }
   [APP_SCREEN.GALLERY_CHOOSER]: {
     mediaType?: MediaLibrary.MediaTypeValue
+    isMultiple?: boolean
     selectedAssets?: MediaLibrary.Asset[]
-    prevScreen?: APP_SCREEN.ADD_POST | APP_SCREEN.CHAT_ROOM
+    prevScreen?: APP_SCREEN.ADD_POST | APP_SCREEN.CHAT_ROOM | APP_SCREEN.PROFILE
   }
   [APP_SCREEN.POST_STATUS_OPTIONS_MODAL]: undefined
   [APP_SCREEN.CHAT_USER_INFO_MODAL]: {
@@ -83,6 +84,7 @@ export type AuthorizeParamsList = {
   }
   [APP_SCREEN.PROFILE]: {
     userId?: string
+    newAvatar?: MediaLibrary.Asset
   }
   [APP_SCREEN.EDIT_PROFILE]: undefined
   [APP_SCREEN.FOLLOWING]: {

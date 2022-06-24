@@ -1,6 +1,6 @@
 import { nanoid } from '@reduxjs/toolkit'
 import { storage } from '@src/config'
-import { getBlobFromUri, getFileMetadata } from '@src/utils'
+import { getBlobFromUri } from '@src/utils'
 import * as MediaLibrary from 'expo-media-library'
 import { getDownloadURL, ref, uploadBytesResumable, UploadTask } from 'firebase/storage'
 
@@ -21,8 +21,6 @@ export const storageService = {
 
     const storageRef = ref(storage, `${path}/${nanoid(8)}${file.filename.split('.')[0]}`)
     const blobFile = await getBlobFromUri(fileInfo.localUri || '')
-    const metadata = getFileMetadata(file)
-    console.log('🚀 ~ file: storage-services.ts ~ line 17 ~ file', blobFile.type, metadata)
 
     const uploadTask: UploadTask = uploadBytesResumable(storageRef, blobFile)
     uploadTask.on(

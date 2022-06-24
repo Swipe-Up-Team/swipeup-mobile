@@ -41,8 +41,12 @@ export function GalleryChooserScreen() {
 
   useEffect(() => {
     ;(async () => {
-      if (route.params?.mediaType === 'video' && isMultiple) setIsMultiple(false)
-      if (route.params?.mediaType === 'photo' && !isMultiple) setIsMultiple(true)
+      if (route.params?.isMultiple === undefined) {
+        if (route.params?.mediaType === 'video' && isMultiple) setIsMultiple(false)
+        if (route.params?.mediaType === 'photo' && !isMultiple) setIsMultiple(true)
+      } else {
+        setIsMultiple(route.params?.isMultiple)
+      }
 
       setLoading(true)
       const result = await fetchSystemAssets(galleryPage, route.params?.mediaType)
@@ -52,7 +56,7 @@ export function GalleryChooserScreen() {
       }
       setLoading(false)
     })()
-  }, [galleryPage, route.params?.mediaType])
+  }, [galleryPage, route.params?.mediaType, route.params?.isMultiple])
 
   const handleLoadMoreAssets = () => {
     setGalleryPage(galleryPage + 1)
@@ -80,7 +84,15 @@ export function GalleryChooserScreen() {
   // }
 
   const handleGoBack = () => {
-    return navigate(route.params?.prevScreen || APP_SCREEN.ADD_POST, {
+    const prevScreen = route.params?.prevScreen
+
+    if (prevScreen === APP_SCREEN.PROFILE) {
+      return navigate(APP_SCREEN.PROFILE, {
+        newAvatar: systemAssets[selectedIndexes[0]]
+      })
+    }
+
+    return navigate(prevScreen || APP_SCREEN.ADD_POST, {
       selectedAssetIndexes: selectedIndexes
     })
   }

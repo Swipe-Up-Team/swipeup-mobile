@@ -150,6 +150,11 @@ export const userService = {
     return snapshot.data() as User
   },
 
+  updateAvatar: async (uri: string) => {
+    const result = await updateDoc(doc(firestore, FIRESTORE_ENDPOINT.USERS), { avatar: uri })
+    return result
+  },
+
   getUsersWithKeyWord: async (currentUserId: string, keyword: string) => {
     //TODO: temp solution, will remake later
     const allUser: User[] = []

@@ -13,7 +13,8 @@ const styles = StyleSheet.create({
     height: 44,
     width: 44,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    zIndex: 99
   },
   titleContainer: {
     position: 'absolute',

@@ -18,6 +18,22 @@ const styles = StyleSheet.create({
     width: 100,
     borderRadius: 100
   },
+  changeAvatarBtn: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: '#fff',
+    padding: 3,
+    borderRadius: 24,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -2
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 5
+  },
   plusIcon: {
     width: 24,
     height: 24,
