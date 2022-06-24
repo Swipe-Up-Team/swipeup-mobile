@@ -15,7 +15,7 @@ export interface CommentFlatListComponentProps {
 
 const CommentFlatListComponent = forwardRef(
   (
-    { comments, onLikeComment, postDetails }: CommentFlatListComponentProps,
+    { comments, onLikeComment, postDetails, navigation }: CommentFlatListComponentProps,
     ref: React.ForwardedRef<FlatList>
   ) => {
     const renderItem = useCallback(
@@ -41,7 +41,9 @@ const CommentFlatListComponent = forwardRef(
         contentContainerStyle={styles.commentsContentContainer}
         style={styles.commentListContainer}
         keyExtractor={keyExtractor}
-        ListHeaderComponent={postDetails ? <PostCard post={postDetails} /> : null}
+        ListHeaderComponent={
+          postDetails ? <PostCard post={postDetails} navigation={navigation} /> : null
+        }
         ListEmptyComponent={ListEmptyComponent}
         renderItem={renderItem}
         onContentSizeChange={() => ref?.current && ref?.current.scrollToEnd()}

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { RouteProp, useRoute } from '@react-navigation/native'
-import { dispatch, getState, useKeyboardHeight, useSelector } from '@src/common'
-import { BottomSheet, PostCard } from '@src/components'
+import { dispatch, getState, useKeyboardHeight } from '@src/common'
+import { BottomSheet } from '@src/components'
 import { Post, PostPayload } from '@src/models'
 import { goBack } from '@src/navigation/navigation-service'
 import { APP_SCREEN, RootStackParamList } from '@src/navigation/screen-types'
@@ -14,7 +14,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-na
 import Toast from 'react-native-toast-message'
 import styles from './styles'
 
-export const SharePostScreen = () => {
+export const SharePostScreen = ({ navigation }: any) => {
   const route = useRoute<RouteProp<RootStackParamList, APP_SCREEN.SHARE_POST>>()
   const { user } = getState('user')
   const { post } = route.params

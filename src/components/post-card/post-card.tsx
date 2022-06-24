@@ -180,7 +180,7 @@ const PostCardComponent = ({
 
       {!!sharedPostId && sharedPost && (
         <View style={styles.sharedPostContainer}>
-          <PostCard post={sharedPost} shared />
+          <PostCard post={sharedPost} shared navigation={navigation} />
         </View>
       )}
 
