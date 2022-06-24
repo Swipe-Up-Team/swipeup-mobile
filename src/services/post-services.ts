@@ -194,7 +194,11 @@ export const postService = {
   getAllPostByUserId: async (uid: string) => {
     let allPost: Post[] = []
 
-    const q = query(collection(firestore, FIRESTORE_ENDPOINT.POSTS), where('authorId', '==', uid))
+    const q = query(
+      collection(firestore, FIRESTORE_ENDPOINT.POSTS),
+      orderBy('createdAt', 'desc'),
+      where('authorId', '==', uid)
+    )
 
     const querySnapshot = await getDocs(q)
 
@@ -214,5 +218,18 @@ export const postService = {
 
     allPost = await Promise.all(promises)
     return allPost
+  },
+
+  getFirstSharedPost: async (post: Post) => {
+    let sharedPost = post
+
+    while (sharedPost.content.sharedPostId) {
+      const result = await postService.getSinglePostById(sharedPost.content.sharedPostId)
+      if (!result) return result
+
+      sharedPost = result
+    }
+
+    return sharedPost
   }
 }

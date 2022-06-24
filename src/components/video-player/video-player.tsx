@@ -102,8 +102,8 @@ const VideoPlayerComponent = (props: any) => {
     }
   }, [isPaused])
 
-  const onPressOptionIconHandler = () => {
-    videoRef.current?.presentFullscreenPlayerAsync()
+  const onPressOptionIconHandler = async () => {
+    await videoRef.current?.presentFullscreenPlayerAsync()
     // RNAnimated.timing(_optionRight, {
     //   toValue: 0,
     //   duration: 300,

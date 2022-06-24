@@ -10,7 +10,14 @@ import React, {
   useRef,
   useState
 } from 'react'
-import { BackHandler, EmitterSubscription, Keyboard, LayoutAnimation, Platform } from 'react-native'
+import {
+  BackHandler,
+  EmitterSubscription,
+  Keyboard,
+  KeyboardEvent,
+  LayoutAnimation,
+  Platform
+} from 'react-native'
 
 import isEqual from 'react-fast-compare'
 // import { useTranslation } from 'react-i18next'
@@ -420,6 +427,30 @@ function useIsKeyboardShown() {
   }, [])
 
   return isKeyboardShown
+}
+
+export const useKeyboardHeight = () => {
+  const [keyboardHeight, setKeyboardHeight] = useState(0)
+
+  function onKeyboardDidShow(e: KeyboardEvent) {
+    // Remove type here if not using TypeScript
+    setKeyboardHeight(e.endCoordinates.height)
+  }
+
+  function onKeyboardDidHide() {
+    setKeyboardHeight(0)
+  }
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', onKeyboardDidShow)
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', onKeyboardDidHide)
+    return () => {
+      showSubscription.remove()
+      hideSubscription.remove()
+    }
+  }, [])
+
+  return keyboardHeight
 }
 
 function useDisableBackHandler(disabled: boolean, callback?: () => void) {

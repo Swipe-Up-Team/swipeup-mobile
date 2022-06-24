@@ -4,7 +4,8 @@ import {
   ChatRoomScreen,
   GalleryChooserScreen,
   PostDetailScreen,
-  PostOptionsScreen
+  PostOptionsScreen,
+  SharePostScreen
 } from '@src/screens'
 import { PostStatusOptionsScreen } from '@src/screens/post-status-options'
 import React from 'react'
@@ -63,6 +64,14 @@ export const RootNavigation = ({ token }: { token?: string }) => {
             }}
             name={APP_SCREEN.POST_OPTIONS_MODAL}
             component={PostOptionsScreen}
+          />
+          <RootStack.Screen
+            options={{
+              ...TransitionPresets.ModalTransition,
+              cardStyle: { backgroundColor: 'transparent' }
+            }}
+            name={APP_SCREEN.SHARE_POST}
+            component={SharePostScreen}
           />
           <RootStack.Screen
             options={{

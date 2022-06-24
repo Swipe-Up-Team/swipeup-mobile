@@ -7,11 +7,12 @@ import {
 } from 'react-native-gesture-handler'
 
 import { goBack } from '@src/navigation/navigation-service'
-import styles from './styles'
 import { Text } from '@ui-kitten/components'
+import styles from './styles'
 
 interface BottomSheetProps {
   title?: string
+  useKeyboard?: boolean
   children: React.ReactNode
 }
 

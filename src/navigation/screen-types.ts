@@ -20,6 +20,7 @@ export enum APP_SCREEN {
   POST_STATUS_OPTIONS_MODAL = 'POST_STATUS_OPTIONS_MODAL',
   CHAT_USER_INFO_MODAL = 'CHAT_USER_INFO_MODAL',
   POST_OPTIONS_MODAL = 'POST_OPTIONS_MODAL',
+  SHARE_POST = 'SHARE_POST',
 
   SEARCH = 'SEARCH',
   NOTIFICATIONS = 'NOTIFICATIONS',
@@ -64,6 +65,9 @@ export type AuthorizeParamsList = {
     conversationId: string
   }
   [APP_SCREEN.POST_OPTIONS_MODAL]: {
+    post: Post
+  }
+  [APP_SCREEN.SHARE_POST]: {
     post: Post
   }
   [APP_SCREEN.CHAT]: undefined

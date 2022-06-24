@@ -45,6 +45,7 @@ const PostCardComponent = ({
   const { user } = getState('user')
   const descRef = useRef<PostDescriptionType>(null)
   const route = useRoute()
+  const showOptionsBtn = route.name !== APP_SCREEN.SHARE_POST
 
   const [isLiked, setIsLiked] = useState(() => {
     let liked = false
@@ -109,7 +110,9 @@ const PostCardComponent = ({
   }
 
   const handleSharePress = () => {
-    alert('Share')
+    navigate(APP_SCREEN.SHARE_POST, {
+      post
+    })
   }
 
   const handleOptionsPress = () => {
@@ -153,9 +156,11 @@ const PostCardComponent = ({
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={handleOptionsPress} style={styles.dots}>
-            <DotsHorizontal width={28} height={28} />
-          </TouchableOpacity>
+          {showOptionsBtn && (
+            <TouchableOpacity onPress={handleOptionsPress} style={styles.dots}>
+              <DotsHorizontal width={28} height={28} />
+            </TouchableOpacity>
+          )}
         </View>
       ) : null}
 
