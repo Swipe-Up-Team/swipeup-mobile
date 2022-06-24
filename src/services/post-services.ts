@@ -56,33 +56,37 @@ export const postService = {
   },
 
   getSinglePostById: async (id: string) => {
-    const docRef = doc(firestore, FIRESTORE_ENDPOINT.POSTS, id)
-    const docSnapshot = await getDoc(docRef)
+    try {
+      const docRef = doc(firestore, FIRESTORE_ENDPOINT.POSTS, id)
+      const docSnapshot = await getDoc(docRef)
 
-    const commentsRef = collection(
-      firestore,
-      FIRESTORE_ENDPOINT.POSTS,
-      docSnapshot.id,
-      FIRESTORE_ENDPOINT.COMMENTS
-    )
-    const creatorDocRef = docSnapshot.data()?.creator
-    const reactsRef = collection(
-      firestore,
-      FIRESTORE_ENDPOINT.POSTS,
-      docSnapshot.id,
-      FIRESTORE_ENDPOINT.REACTIONS
-    )
-    const commentDocs = await getDocs(query(commentsRef))
-    const creator = await getDoc(creatorDocRef)
-    const reactDocs = await getDocs(query(reactsRef))
+      const commentsRef = collection(
+        firestore,
+        FIRESTORE_ENDPOINT.POSTS,
+        docSnapshot.id,
+        FIRESTORE_ENDPOINT.COMMENTS
+      )
+      const creatorDocRef = docSnapshot.data()?.creator
+      const reactsRef = collection(
+        firestore,
+        FIRESTORE_ENDPOINT.POSTS,
+        docSnapshot.id,
+        FIRESTORE_ENDPOINT.REACTIONS
+      )
+      const commentDocs = await getDocs(query(commentsRef))
+      const creator = await getDoc(creatorDocRef)
+      const reactDocs = await getDocs(query(reactsRef))
 
-    return {
-      id: docSnapshot.id,
-      ...docSnapshot.data(),
-      comments: commentDocs.size,
-      creator: creator.data(),
-      reacts: reactDocs.docs.map(_ => _.data())
-    } as unknown as Post
+      return {
+        id: docSnapshot.id,
+        ...docSnapshot.data(),
+        comments: commentDocs.size,
+        creator: creator.data(),
+        reacts: reactDocs.docs.map(_ => _.data())
+      } as unknown as Post
+    } catch (error) {
+      return
+    }
   },
 
   likePost: async (postId: string, _isLiked: boolean) => {

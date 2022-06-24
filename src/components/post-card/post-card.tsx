@@ -4,7 +4,7 @@
 import { useRoute } from '@react-navigation/native'
 import { getState } from '@src/common'
 import { NotificationParentTypes, NotificationSeenType, NotificationTypes } from '@src/constants'
-import { Notification, Post as PostType } from '@src/models'
+import { Notification, Post, Post as PostType } from '@src/models'
 import { navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN } from '@src/navigation/screen-types'
 import { notificationService, postService } from '@src/services'
@@ -12,7 +12,7 @@ import { countReaction } from '@src/utils'
 import { Text } from '@ui-kitten/components'
 import { formatDistanceToNow } from 'date-fns'
 import debounce from 'lodash/debounce'
-import React, { memo, useRef, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import isEqual from 'react-fast-compare'
 import { GestureResponderEvent, TouchableOpacity, View } from 'react-native'
 import { DotsHorizontal, ExportIcon, PostCommentIcon } from '../icons'
@@ -25,14 +25,20 @@ import { PostVideo } from '../video-player/post-video'
 
 export interface PostCardProps {
   post: PostType
+  shared?: boolean
   preview?: boolean
   navigation?: any
 }
 
-const PostCardComponent = ({ post, preview = false, navigation }: PostCardProps) => {
+const PostCardComponent = ({
+  post,
+  shared = false,
+  preview = false,
+  navigation
+}: PostCardProps) => {
   const {
     comments,
-    content: { text, images, video },
+    content: { text, images, video, sharedPostId },
     reacts
   } = post
 
@@ -48,6 +54,16 @@ const PostCardComponent = ({ post, preview = false, navigation }: PostCardProps)
     return liked
   })
   const [totalReaction, setTotalReaction] = useState(countReaction(reacts || [], 'like'))
+  const [sharedPost, setSharedPost] = useState<Post>()
+
+  useEffect(() => {
+    if (sharedPostId) {
+      ;(async () => {
+        const result = await postService.getSinglePostById(sharedPostId)
+        setSharedPost(result)
+      })()
+    }
+  }, [])
 
   const saveNoti = async () => {
     if (!user || user.id === post.authorId) return
@@ -117,7 +133,7 @@ const PostCardComponent = ({ post, preview = false, navigation }: PostCardProps)
   }
 
   return (
-    <View style={styles.post}>
+    <View style={[styles.post, shared ? { paddingTop: 0 } : null]}>
       {post.creator ? (
         <View style={[styles.header, styles.row]}>
           <TouchableOpacity onPress={handleProfilePress} style={styles.row}>
@@ -157,7 +173,13 @@ const PostCardComponent = ({ post, preview = false, navigation }: PostCardProps)
         </TouchableOpacity>
       ) : null}
 
-      {images && images.length > 0 && (
+      {!!sharedPostId && sharedPost && (
+        <View style={styles.sharedPostContainer}>
+          <PostCard post={sharedPost} shared />
+        </View>
+      )}
+
+      {!sharedPostId && images && images.length > 0 && (
         <View style={{ height: 300 }}>
           <ImageGrid
             style={{ height: 300, paddingBottom: 10 }}
@@ -167,38 +189,40 @@ const PostCardComponent = ({ post, preview = false, navigation }: PostCardProps)
         </View>
       )}
 
-      {video && <PostVideo video={video} />}
+      {!sharedPostId && video && <PostVideo video={video} />}
 
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={[styles.buttonContainer, { marginLeft: -10 }]}
-          onPress={handleLikePress}
-        >
-          <LikeButton isLiked={isLiked} />
-          <Text style={[styles.buttonText, { marginLeft: -5 }]}>
-            {totalReaction > 0 ? totalReaction : ' '} {totalReaction > 1 ? 'Likes' : 'Like'}
-          </Text>
-        </TouchableOpacity>
+      {!shared && (
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={[styles.buttonContainer, { marginLeft: -10 }]}
+            onPress={handleLikePress}
+          >
+            <LikeButton isLiked={isLiked} />
+            <Text style={[styles.buttonText, { marginLeft: -5 }]}>
+              {totalReaction > 0 ? totalReaction : ''} {totalReaction > 1 ? 'Likes' : 'Like'}
+            </Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={styles.buttonContainer}
-          onPress={handleCommentPress}
-        >
-          <PostCommentIcon />
-          <Text style={styles.buttonText}>{renderCommentText()}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.buttonContainer}
+            onPress={handleCommentPress}
+          >
+            <PostCommentIcon />
+            <Text style={styles.buttonText}>{renderCommentText()}</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={styles.buttonContainer}
-          onPress={handleSharePress}
-        >
-          <ExportIcon />
-          <Text style={styles.buttonText}>Share</Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.buttonContainer}
+            onPress={handleSharePress}
+          >
+            <ExportIcon />
+            <Text style={styles.buttonText}>Share</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   )
 }

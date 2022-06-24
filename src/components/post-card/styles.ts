@@ -40,6 +40,13 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     backgroundColor: '#fff'
   },
+  sharedPostContainer: {
+    padding: 5,
+    borderWidth: 1.2,
+    borderRadius: 5,
+    borderColor: '#F5F2F2',
+    borderStyle: 'solid'
+  },
   image: {
     height: 300,
     width: '100%'

@@ -59,6 +59,7 @@ const AddPostScreenComponent = () => {
   const [selectedAssets, selectedAssetsActions] = useArray<MediaLibrary.Asset>([])
   const [textPost, setTextPost] = useState('')
   const [mode, setMode] = useState<'add' | 'edit'>()
+  const [editingPost, setEditingPost] = useState<Post>()
 
   // ANIMATION VARS
   const editorWrapperHeight = useSharedValue(100)
@@ -85,9 +86,12 @@ const AddPostScreenComponent = () => {
         dispatch(onStartProcess())
 
         const postDetails = await postService.getSinglePostById(editingId)
-        const images = postDetails.content.images || []
-        selectedAssetsActions.setValue(images)
-        setTextPost(postDetails.content.text)
+        if (postDetails) {
+          const images = postDetails.content.images || []
+          selectedAssetsActions.setValue(images)
+          setTextPost(postDetails.content.text)
+          setEditingPost(postDetails)
+        }
 
         dispatch(onEndProcess())
       } else {
@@ -145,7 +149,8 @@ const AddPostScreenComponent = () => {
         content: {
           video: videos.length > 0 ? videos[0] : null,
           images,
-          text: textPost.trim()
+          text: textPost.trim(),
+          sharedPostId: null
         },
         authorId: user?.id
       }
@@ -160,7 +165,8 @@ const AddPostScreenComponent = () => {
         content: {
           video: videos.length > 0 ? videos[0] : null,
           images,
-          text: textPost.trim()
+          text: textPost.trim(),
+          sharedPostId: editingPost?.content?.sharedPostId || null
         }
       }
       await postService.updatePost(updatedPost)
@@ -277,10 +283,15 @@ const AddPostScreenComponent = () => {
 
   // handle go back click
   const savePostAsDraft = () => {
+    const images = selectedAssets.filter(file => file.mediaType === 'photo')
+    const videos = selectedAssets.filter(file => file.mediaType === 'video')
+
     const _draftPost: Partial<Post> = {
       content: {
+        sharedPostId: null,
         text: textPost,
-        images: selectedAssets
+        images,
+        video: videos.length > 0 ? videos[0] : null
       }
     }
 

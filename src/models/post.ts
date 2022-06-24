@@ -10,7 +10,7 @@ export interface Post {
   createdAt?: number
   updatedAt?: number
   content: {
-    sharedPostId?: string
+    sharedPostId: string | null
     text: string
     images?: MediaLibrary.Asset[]
     video: MediaLibrary.Asset | null

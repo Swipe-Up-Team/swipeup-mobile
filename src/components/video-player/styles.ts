@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   timeBar: {
     flexDirection: 'row',
-    width: SCREEN_WIDTH - 30 - 40,
+    // width: SCREEN_WIDTH - 30 - 40 - 10,
     alignItems: 'center',
     flex: 1
   },
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: SCREEN_WIDTH - 40 - 100 - 20 - 25,
     height: 5,
-    marginHorizontal: 10,
+    marginHorizontal: 4,
     backgroundColor: 'rgba(255,255,255,0.4)'
   },
   playedBar: {
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   btnSetting: {
     width: 40,
     alignItems: 'flex-end',
-    marginRight: 3
+    marginRight: 10
   },
   videoWrapper: {
     position: 'relative',
