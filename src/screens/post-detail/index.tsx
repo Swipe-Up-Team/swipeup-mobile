@@ -60,11 +60,11 @@ export function PostDetailScreen({ navigation }: any) {
     saveNotiAddComment()
   }
 
-  const saveNotiLikeComment = async (commentId: string) => {
+  const saveNotiLikeComment = async (receiverId: string, commentId: string) => {
     if (!user) return
 
     const noti: Omit<Notification, 'id'> = {
-      userId: postDetails?.authorId!,
+      userId: receiverId,
       activityType: NotificationTypes.SomeoneReactYourComment,
       sourceId: route.params.postId,
       parentId: commentId,
@@ -75,9 +75,13 @@ export function PostDetailScreen({ navigation }: any) {
     await notificationService.saveNotificationToFirestore(noti)
     await notificationService.sendPushNotification(noti)
   }
-  const handleLikeCommentPress = async (commentId: string, isLiked: boolean, sentNoti: boolean) => {
+  const handleLikeCommentPress = async (
+    commentId: string,
+    isLiked: boolean,
+    receiverId: string
+  ) => {
     await commentService.likeComment(route.params.postId, commentId, isLiked)
-    if (sentNoti) saveNotiLikeComment(commentId)
+    if (receiverId) saveNotiLikeComment(receiverId, commentId)
   }
 
   // load comment list + post details

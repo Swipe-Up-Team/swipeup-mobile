@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { RouteProp, useRoute } from '@react-navigation/native'
-import { dispatch, getState, useKeyboardHeight, useSelector } from '@src/common'
-import { BottomSheet, PostCard } from '@src/components'
+import { dispatch, getState, useKeyboardHeight } from '@src/common'
+import { BottomSheet } from '@src/components'
 import { Post, PostPayload } from '@src/models'
 import { goBack } from '@src/navigation/navigation-service'
 import { APP_SCREEN, RootStackParamList } from '@src/navigation/screen-types'
@@ -90,9 +90,9 @@ export const SharePostScreen = ({ navigation }: any) => {
               onChangeText={setTextPost}
             />
           </View>
-          <View style={[styles.sharedPostContainer]}>
-            <PostCard post={sharedPost} shared navigation={navigation} />
-          </View>
+          {/* <View style={[styles.sharedPostContainer]}>
+            <PostCard post={sharedPost} shared />
+          </View> */}
           <View style={styles.btnContainer}>
             <Button onPress={handleSubmitSharePostPress}>Share Now</Button>
           </View>

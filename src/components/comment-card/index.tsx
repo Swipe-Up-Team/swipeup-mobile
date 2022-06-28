@@ -20,7 +20,7 @@ export const CommentCard = ({
 }: {
   item: CommentResponseData
   onSharePress: () => void
-  onLikeComment: (commentId: string, isLiked: boolean, sendNoti: boolean) => void
+  onLikeComment: (commentId: string, isLiked: boolean, receiverId: string) => void
 }) => {
   const { author, createdAt, text } = item
   const { user } = getState('user')
@@ -37,7 +37,7 @@ export const CommentCard = ({
   const debouncedLikePost = useRef(debounce(onLikeComment, 300)).current
 
   const handleLikeCommentPress = async (commentId: string, _isLiked: boolean) => {
-    debouncedLikePost(commentId, _isLiked, user?.id !== item.author.id)
+    debouncedLikePost(commentId, _isLiked, author.id)
   }
 
   const handleLikePress = async () => {
