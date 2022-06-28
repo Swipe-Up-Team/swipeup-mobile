@@ -33,6 +33,7 @@ export enum APP_SCREEN {
   CHAT_ROOM = 'CHAT_ROOM',
   GROUP_MEMBER = 'GROUP_MEMBER',
   ADD_MEMBER = 'ADD_MEMBER',
+  CHATBOT_ROOM = 'CHATBOT_ROOM',
 
   PROFILE = 'PROFILE',
   EDIT_PROFILE = 'EDIT_PROFILE',
@@ -79,6 +80,7 @@ export type AuthorizeParamsList = {
     conversationId: string
     selectedAssetIndexes?: number[]
   }
+  [APP_SCREEN.CHATBOT_ROOM]: undefined
   [APP_SCREEN.GROUP_MEMBER]: {
     listMembers: User[]
   }

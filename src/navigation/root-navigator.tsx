@@ -20,6 +20,7 @@ import { GroupMemberScreen } from '@src/screens/chat-room/components/members-scr
 import { AddMemberScreen } from '@src/screens/chat-room/components/add-member-screen'
 import { ImageDetail } from '@src/screens/image-detail'
 import { ProfileOptionBottomSheet } from '@src/screens/profile/components/option-bottomsheet'
+import { ChatBotRoomScreen } from '@src/screens/chat-room/components/chat-bot'
 
 const RootStack = createStackNavigator<RootStackParamList>()
 
@@ -41,6 +42,7 @@ export const RootNavigation = ({ token }: { token?: string }) => {
             component={MainScreen}
           />
           <RootStack.Screen name={APP_SCREEN.CHAT_ROOM} component={ChatRoomScreen} />
+          <RootStack.Screen name={APP_SCREEN.CHATBOT_ROOM} component={ChatBotRoomScreen} />
           <RootStack.Screen
             options={{ ...TransitionPresets.ModalSlideFromBottomIOS, gestureEnabled: false }}
             name={APP_SCREEN.ADD_POST}

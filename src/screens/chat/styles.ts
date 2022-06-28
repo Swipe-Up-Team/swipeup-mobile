@@ -11,6 +11,12 @@ const styles = StyleSheet.create({
     paddingTop: StatusBar.currentHeight ?? 60,
     paddingBottom: 30
   },
+  headerContainer: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
   friendOnlineContainer: {
     width: '100%',
     flexDirection: 'row',
