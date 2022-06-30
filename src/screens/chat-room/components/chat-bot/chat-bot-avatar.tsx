@@ -1,8 +1,8 @@
 import { Avatar } from '@ui-kitten/components'
 import { StyleSheet } from 'react-native'
 import React from 'react'
+import { CHATBOT_AVATAR } from '@src/constants'
 
-const CHATBOT_AVATAR = require('@assets/icon/icon-robot.png')
 
 const styles = StyleSheet.create({
   avatar: {

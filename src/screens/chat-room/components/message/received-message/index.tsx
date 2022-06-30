@@ -5,7 +5,7 @@ import { formatDate, formatTime } from '@src/utils'
 import React, { useState } from 'react'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { LoadingView } from '../../loading-message'
-import { DEFAULT_PHOTO_URI } from '@src/constants'
+import { BOT_ID, CHATBOT_AVATAR, DEFAULT_PHOTO_URI } from '@src/constants'
 import { CONVERSATION_TYPE, MESSAGE_TYPE } from '@src/models'
 import { navigate } from '@src/navigation/navigation-service'
 import { APP_SCREEN } from '@src/navigation/screen-types'
@@ -92,10 +92,14 @@ const ReceivedMessage = ({
           style={displayAvatar ? styles.avatar : [styles.avatar, { opacity: 0 }]}
           size="medium"
           borderRadius={4}
-          source={{
-            uri: friend.avatar || DEFAULT_PHOTO_URI,
-            cache: 'force-cache'
-          }}
+          source={
+            friend.id === BOT_ID
+              ? CHATBOT_AVATAR
+              : {
+                  uri: friend.avatar || DEFAULT_PHOTO_URI,
+                  cache: 'force-cache'
+                }
+          }
         />
 
         <View style={styles.mainContainer}>

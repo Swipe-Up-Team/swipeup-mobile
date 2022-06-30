@@ -6,6 +6,7 @@ import { onSetConversations } from '@src/store/reducers/chat-reducer'
 import { get, onValue, push, ref, update } from 'firebase/database'
 import * as MediaLibrary from 'expo-media-library'
 import { storageService } from './storage-services'
+// import { Dialogflow_V2 } from 'react-native-dialogflow'
 
 export const chatService = {
   getKeyPush: (conversationId: string | undefined) => {
@@ -140,5 +141,17 @@ export const chatService = {
     await update(ref(database, `${REALTIMEDB_ENDPOINT.CONVERSATIONS}/${conversationId}`), {
       [REALTIMEDB_ENDPOINT.CONVERSATIONS_USERIDS]: newUserIds
     })
+  },
+
+  chabotHandleSendMessage: async (message: string) => {
+    // await Dialogflow_V2.requestQuery(
+    //   message,
+    //   result => {
+    //     const text = result.queryResult.fulfillmentMessages[0].text.text[0]
+    //     console.log(text)
+    //     return text
+    //   },
+    //   error => console.log(error)
+    // )
   }
 }

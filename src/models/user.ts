@@ -1,12 +1,12 @@
 export enum UserGender {
   MALE = 0,
   FEMALE = 1,
-  OTHER = 2,
+  OTHER = 2
 }
 
 export enum UserStatus {
   PRIVATE = 0,
-  PUBLIC = 1,
+  PUBLIC = 1
 }
 
 export interface BirthDay {
@@ -19,7 +19,7 @@ export interface User {
   id: string
   email: string
   name: string
-  status: UserStatus
+  status?: UserStatus
   avatar?: string
   bio?: string
   birthDay?: BirthDay

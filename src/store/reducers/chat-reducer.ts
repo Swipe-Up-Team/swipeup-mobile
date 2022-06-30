@@ -1,15 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { initialChatbotMessages } from '@src/constants'
 import { SLICE_NAME } from '@src/constants/enums'
-import { Conversation, ConversationMembers } from '@src/models'
+import { Conversation, ConversationMembers, Message } from '@src/models'
 
 export interface ListConversationState {
   conversations: Conversation[]
   conversationMembers: ConversationMembers[]
+  chatbotConversation: Message[]
 }
 
 const initialState: ListConversationState = {
   conversations: [],
-  conversationMembers: []
+  conversationMembers: [],
+  chatbotConversation: initialChatbotMessages
 }
 
 const chat = createSlice({
@@ -35,9 +38,13 @@ const chat = createSlice({
         state.conversationMembers[index] = payload
       }
     },
+    onAddChatbotMessage: (state, { payload }: PayloadAction<Message>) => {
+      state.chatbotConversation.push(payload)
+    },
     onClearChatState: state => {
       state.conversations = []
       state.conversationMembers = []
+      state.chatbotConversation = initialChatbotMessages
     }
   }
 })
